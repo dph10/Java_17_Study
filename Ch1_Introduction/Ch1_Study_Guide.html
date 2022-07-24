@@ -1,0 +1,139 @@
+<!DocType=html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="../style/mystyle.css">
+	</head>
+	<body>
+		<h1>Ch1 Introduction</h1>
+		<h2>The Java Environment</h2>
+		<ul>
+			<li>
+				The Java Development Kit (<b>JDK</b>) contains the compiler (<code>javac</code>)
+				 and the java runtime executable (<code>java</code>)
+			</li>
+			<li>Java <a href="#classstructureheader">Class files</a> run on the Java Runtime Environment (JVM).  
+				The JVM can be installed on any machine, allowing the class files to run on any machine. 
+			</li>
+		<li>
+			The versions of your java and java compiler can be checked with the following at the command line:
+			<code class="codeblock">javac -version
+java -version</code>
+		</li>
+		</ul>
+		<h2 id="classstructureheader">Class Structure</h2>
+		<ul>
+			<li> the Java <b>Class</b> 
+			<ul>
+				<li>Composed of <i>fields</i> and <i>methods</i>
+				which together are called the <i>members</i> of the class.
+				</li>
+				<li>Contained in source files ending in <code>.java</code>
+					<ul>
+						<li>
+							Each file can contain only <i>one</i> <code>public</code> class,
+							but may contain more class definitions as long as they are <b>package-private</b>
+							(no <code>public</code> or other <i>access-modifier</i> in front of 
+							the <code>class</code> keyword)
+						</li>
+						<li>The filename must match the class name (including case) and have the
+							<code>.java</code> extension.
+						</li>
+						<li> If the Java class is an entry point for the program, 
+							it must contain a valid <code><a href="#mainmethodheader">main()</a></code> method.
+						</li>
+					</ul>
+				</li>
+				<li><h3>Ordering of Class parts in a .java file:</h3>
+					<ol>
+						<li>Package declaration (<code">package abc;</code>  not required)</li>
+						<li>Import statements (<code>import java.util.*;</code>  not required)</li>
+						<li>Top-level type declaration (<code> public Class MyClass{}</code>  required)</li>
+						<li>Field declarations (<code>int value1;</code>  not required)</li>
+						<li>Method declarations (<code>void method1(){}</code>  not required)</li>
+					</ol>
+				</li>
+			</ul>
+			</li>
+		</ul>
+		<h2 id="mainmethodheader">The <code>main()</code> Method</h2>
+		<ul>
+			<li>Java programs begin execution at the main method.
+			</li>
+			<li>Example main method:
+				<code class="codeblock">public class MainClass {
+	<b>public static final void main(final String[] args)</b> {
+		System.out.println("Hello World!")
+		if (args!=null) {
+			System.out.println(java.util.Arrays.toString(args));
+		}
+	}
+}</code>
+			<ul>
+				<li>Note that the <code>final</code> keyword is an optional-modifier that is not required, but is good practice.
+				</li>
+				<li>This program can be called with the following command-line input:
+					<code>javac MainClass.java
+java MainClass Arg1 Arg2 Arg3...
+					</code>
+				</li>
+			</ul>
+			</li>
+		</ul>
+		<h2>
+			Package Declarations and Imports		
+		</h2>
+		<ul>
+			<li>Java classes are grouped logically in <b>packages</b></li>
+			<li>The <code>import</code> statement tells the compiler where classes are located</li>
+			<li>Example: <code>import java.util.Random;</code></li>
+			<li><i>Wildcards</i> can be used to import all the classes located in a package
+				<ul>
+					<li>
+						Example: <code>import java.util.*;</code>
+					</li>
+				</ul>
+			</li>
+			<li>The <code>java.lang</code> is automatically imported</li>
+			<li><h3>Naming Conflicts</h3>
+				<ul>
+					<li>Packages allow you to use class names that do not need to be unique by using the <i>full qualified class name</i></li>
+					<code class="codeblock">public class Conflicts {
+	java.util.Date date;
+	java.sql.Date sqlData;
+}</code>					
+				</ul>
+			</li>
+			<li><i>Wildcards</i> can be used to compile all the classes in a package:
+				<code class="codeblock">javac packagea/*.java packageb/*.java packagec/*.java</code>
+			</li>
+			<li>
+				The java compiler can compile to another directory using the <code>-d</code> (directory) option.  
+				Then the <code>-cp</code> (classpath) option can be used to run the program with the new class directory. 
+				<code class="codeblock">javac -d &lt;classesFolderPath&gt; com.packagea/*.java com.packageb/*.java
+java -cp &lt;classesFolderPath&gt; com.packagea.MainClass 					
+				</code>
+			</li>
+		</ul>
+		<h2>JAR Files</h2>
+		<ul>
+			<li><i>Java archive</i> files (<b>JAR</b>) is a compressed file (similar to a zip file) of java class files, and possible other types of files.</li>
+			<li>Creating a jar file: <code">jar -cvf &lt;newFileName.jar&gt; -C &lt;classDirectory&gt;</code>
+				<ul>
+					<li><code>-cvf</code> is short hand for the create, verbose, and filename options</li>
+					<li><code>-C</code>(<i>capitalized</i> C) is the directory option specifying the directory for the class files to be used to create the JAR file. 
+						This option is not needed if the current directory from which the command is the root directory for your files. </li>
+				</ul>
+			</li>
+			<li>Compiling with JAR files and/or multiple class path directories:
+				<code class="codeblock">java -cp ".;C:\path1\myJar.jar;C:\path2\myJar2.jar;C:\path3\directoryWithJars\*" myMainPackage.MainClass</code>
+				<ul>
+					<li>On windows, directories are separated with the semi-colon (;), while other os's use the colon (:) to separate directories</li>
+					<li>The period (.) specifies the current directory should be included in the class path</li>
+				</ul>
+			</li>
+		</ul>
+	</body>
+</html>
+
+

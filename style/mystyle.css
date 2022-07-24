@@ -1,0 +1,36 @@
+body {
+	color: whitesmoke;
+	background-color: rgb(30,30,20);
+	
+	font-size: 103%;
+	font-family: Arial, Verdana, sans-serif;
+}
+
+@media print {
+	body {
+		color: black;
+		background-color: white;
+	}
+}
+
+code, .codeblock {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 96%;
+	tab-size: 40px;
+	padding-left: 2px;
+	padding-right:2px;
+}
+
+.codeblock {
+	padding: 10px;
+	border-radius: 10px;
+	white-space: pre-wrap;
+	display: block;	
+	background-color: rgba(55, 50, 120, 0.75);
+	margin: 5px;
+}
+
+a {
+	font-weight: bold;
+	color: rgb(29, 136, 218);
+}
