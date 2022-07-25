@@ -1,4 +1,4 @@
-<!DocType=html>
+﻿<!DocType=html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
@@ -189,55 +189,197 @@ public class InitializationExampleClass {
 				<ul>
 					<li> Java contains 8 <i>primitive types</i>, which are used to build all of the more complex Java objects</li>
 					<li> Primitive data types are not objects, they are a value in memory</li>
+					<li> Integer values can be written in different bases:
+						<ul>
+							<li>Octal uses 0 as the prefix: <code>017</code></li>
+							<li>Hexadecimal uses 0x or 0X as the prefix: <code>0xFD1A</code></li>
+							<li>Binary uses 0b or 0B as the prefix: <code>0b10110101</code></li>
+						</ul>
+					</li>
+					<li>Literal values may contains underscores to make them easier to read, as long as they don't start or stop with 
+					the underscore, and the underscore is located directly before or afer a decimal (.): <code>final double val = 1_000_000.032_981</code></li>
 				</ul>
 				<p class="tableheader">Primitive Types</p>				
-				<div class="tablecontainer"><table>
+				<div class="tablecontainer"><table id="primitive-types-table">
 					<tr>
 						<th>Keyword</th><th>Type</th><th>Min val</th><th>Max val</th>
-						<th>Default val</th><th>Example</th>
+						<th>Default val</th><th>Example</th> <th>Wrapper class</th>
 					</tr>
 					<tr>
 						<td><code>boolean</code></td> <td><code>true</code> or <code>false</code></td>
-						<td>n/a</td> <td>n/a</td> <td><code>false</code></td> <td><code>true</code></td>
+						<td>n/a</td> <td>n/a</td> <td><code>false</code></td> <td><code>true</code></td> <td><code>Boolean</code></td>
 					</tr>
 					<tr>
 						<td><code>byte</code></td> <td>8-bit integer</td>
 						<td><code>-128 (-2<sup>-7</sup>)</code></td> <td><code>127 (2<sup>7</sup>-1)</code></td>
-						<td><code>0</code></td> <td><code>87</code></td>
+						<td><code>0</code></td> <td><code>87</code></td> <td><code>Byte</code></td>
 					</tr>
 					<tr>
 						<td><code>short</code></td> <td>16-bit integer</td>
 						<td><code>-32,768 (-2<sup>-15</sup>)</code></td> <td><code>32,767 (2<sup>15</sup>-1)</code></td>
-						<td><code>0</code></td> <td><code>87</code></td>
+						<td><code>0</code></td> <td><code>87</code></td> <td><code>Short</code></td>
 					</tr>
 					<tr>
 						<td><code>int</code></td> <td>32-bit integer</td>
 						<td><code>-2,147483,648 (-2<sup>-31</sup>)</code></td> <td><code>2,147,483,647 (2<sup>31</sup>-1)</code></td>
-						<td><code>0</code></td> <td><code>87</code></td>
+						<td><code>0</code></td> <td><code>87</code></td> <td><code>Integer</code></td>
 					</tr>
 					<tr>
 						<td><code>long</code></td> <td>64-bit integer</td>
 						<td><code>-2<sup>-63</sup></code></td> <td><code>2<sup>63</sup>-1</code></td>
-						<td><code>0L</code></td> <td><code>87L</code></td>
+						<td><code>0L</code></td> <td><code>87L</code></td> <td><code>Long</code></td>
 					</tr>
 					<tr>
 						<td><code>float</code></td> <td>32-bit floating point value</td>
 						<td>n/a</td> <td>n/a</td>
 						<td><code>0.0f</code></td> <td><code>123.45f</code></td>
+						<td><code>Float</code></td>
 					</tr>
 					<tr>
 						<td><code>double</code></td> <td>64-bit floating point value</td>
 						<td>n/a</td> <td>n/a</td>
-						<td><code>0.0</code></td> <td><code>123.456</code></td>
+						<td><code>0.0</code></td> <td><code>123.456</code></td> <td><code>Double</code></td>
 					</tr>
 					<tr>
 						<td><code>char</code></td> <td>16-bit unicode value</td>
 						<td><code>0</code></td> <td><code>65,535</code></td>
-						<td><code>\u0000</code></td> <td><code>'a'</code></td>
+						<td><code>\u0000</code></td> <td><code>'a'</code></td> <td><code>Character</code></td>
 					</tr>
 				</table></div>
 			</li>
-			<li>Reference Types</li>
+			<li>Reference Types
+				<ul>
+					<li><i>Reference types</i> refer to an object (instance of a class)</li>
+					<li>A <i>reference</i> points to an object's address in memory
+						<ul>
+							<li>Can be assigned to another object of the same compatible type</li>
+							<li>Can be assigned to a new object using the <code>new</code> keyword</li>
+						</ul>
+					</li>
+					<li>Refernce types can be used to call methods that act on the object (primitive types cannot)</li>
+					<li>
+						An object and a reference are two separate entities.  The reference is a variable that has a name and can be used to access an object's data.
+						The reference can also be assigned to reference another object(if not <code>final</code>), can reference another reference, passed to a method, or returned from a method.
+						The objects sits on the heap, does not have a name, and can only be accessed through a reference.
+					</li>
+					<li>All the primitive types have wrapper classes with useful functions, and can also be used to store a
+					<code>null</code>value (primitive types cannot), as depicted in the last column of <a href="#primitive-types-table">the table above.</a></li>
+					<li>Text blocks
+						<ul>
+							<li>Allows for multiline strings</li>
+							<li>Starts and ends with three double quotes (""")</li>
+							<li>Incidental white space:  whitespace that may be used to make code easier to read but not actually included, to the left of the left-most
+							non-white-space character</li>
+							<li>Essential white space:  white space included as part of the <code>String</code></li>
+							<pre><code class="codeblock">
+final String pyramid = """ // non incidental white space is in this string
+  *      // 2 two essential white space characters
+ * *     // 1 essentail white space characters							
+* * *    // no essential white space characters
+"""      // as new line character is included at the end of this string 
+         // since the closing triple quotations is on a new line							
+								</code></pre>
+						</ul>
+					</li>
+				</ul>
+			</li>
 		</ol>
+		<h2>Declaring Variables</h2>
+		<ul>
+			<li>A <i>variable</i> is a piece of memory that stores data</li>
+			<li>An <i>identifier</i> is the name of a variable, class, interface, or package.  They have a set of 4 rules that must be followed:
+				<ol>
+					<li>Identifiers must begin with a letter, a currency symbol ( <code>$</code> ), or an underscore ( <code>_</code> )</li>
+					<li>May include numbers but <i>cannot</i> start with them</li>
+					<li>A single underscore does not qualify as an identifier (but more than one does!)</li>
+					<li>Cannot used the same name as a Java <i>reserved word</i></li>
+				</ol>
+			</li>
+			<li><b>Declaring multiple variables:</b>
+				<ul>
+					<li>Many variables may be declares and initialized in the same statement</li>
+					<li>Any or all of those values can be initialized inline</li>
+					<li>There is only 1 type definition, located at the beginning of the statement, and each variable is comma-separated.  This
+					means that all variables declared in a single statement must be the same type and share the same declaration.</li>
+					<pre><code class="codeblock">
+boolean b1, b2;            // legal, 2 variables declared
+String s1 = "one", s2;     // legal, 2 variables declared, 1 initialized inline 
+int i1; int i2;            // legal, but this is just two java statements, not a multiple-declaration
+double d1, double d2;      // illegal, as there are 2 type declarations.
+int i3; i4;                // illegal because the variable names are not comma separated.
+						</code></pre>
+				</ul>
+			</li>
+		</ul>
+		<h2>Initializing Variables</h2>
+		<ul>
+			<li>A <i>local variable</i> is defined withint a constructor, method, initializer block, or other types of code blocks</li>
+			<li>The <b><code>final</code></b> keyword is used to declare a local primitive variable as a constant.  This <i>modifier</i> can be used on
+			reference variables as well, but this only makes the object the reference is point to constant, not the underlying object data itself.</li>
+			<li>Local varibles are not valid until initalized:
+				<pre><code class="codeblock">
+final int y = 10;
+int x;
+final int reply = x + y; // does not compile, as x has not been initialized					
+					</code></pre>
+			</li>
+			<li>Variables passed to a constructor or method are known as <i>constructor parameters</i>, or <i>method parameters</i>, respectively. 
+			The caller is responsible for initializing these variables before passing them to the constructor or method.</li>
+			<li>A field variable defined within a class definition, also known an <i>instance variable</i>, is a value defined
+			for a specific instance of an class object.</li>
+			<li>A <i>class variable</i> is defined on the class variable and shared among all the instances of the class, and is designed using
+			the <code>static</code> keyword.  Instance variables <i>do not</i> require explicit initialization, as they are automatically initialized
+			to their default values.</li>
+			<li><b>Local variable type inference</b>
+				<ul>
+					<li>The <code>var</code> keyword can be used instead of an explicit type declaration for local variables only.</li>
+					<li>The local variable must be declared and immediately intialized inline in the same statement. (<code>final var value = 10L;</code>)</li>
+					<li>The compiler only looks at the variable declaration statement to infer its type, so the variable cannot change type at a later point.</li>
+					<li>Note that <code>var</code> <i>is not</i> a reserved Java keyword:
+					<pre><code class="codeblock">
+package var;
+
+public class Var {   // this is all legal code
+
+	public void var() {
+		final var var = "var";				
+	}
+	public void Var() {
+		final Var var = new Var();
+	}
+}
+						</code></pre>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<h2>Managing Variable Scope</h2>
+		<ul>
+			<li>Local variables are declared within a code block:  <code>{ // this is a code block}</code></li>
+			<li>Local variabes never have a scope larger than the method or code block they are defined within. 
+			Local variables go out-of-scope with their containint block's closing bracket ( <code>}</code> )</li>
+			<li>Variables defined in outer-blocks can be reference by contained inner-blocks</li>
+			<li>Instance variables are available as soon as they are initialized and last for the full lifetime of its specific class instance.</li>
+			<li>Class variables are in-scope as soon as they are delcared and last the entire life of the Java program</li>
+		</ul>
+		<h2>Object Destruction</h2>
+		<ul>
+			<li>Note that primitive local-variables are allocated to the <i>stack</i>, and removed from the stack when the execution of its containing code-block is completed.</li>
+			<li>All Java objects are allocated and stored on the <i>heap</i>, which is free memory allocated for the program.</li>
+			<li><i>Garbage collection</i> is the automatic Java process of automatically freeing memory on the heap by deleting objects that 
+			are not longer reachable by the program.  The object is what gets garbage-collected, not its reference.</li>
+			<li><b>Garbage collection eligibility</b>
+				<ul>
+					<li>The object's reference variable is allocated on the stack, and once it goes out-of-scope then the object is eligible for garbage collection.</li>
+					<li>Eligibility criteria:
+						<ol>
+							<li>The object no longer has any references pointing to it (unreachable object), or the references themselves are not-longer reachable.</li>
+							<li>All references to the object have gone out of scope.</li>
+						</ol>
+					</li>
+					<li>The method <code>System.gc();</code> suggests that garbage collection be run, but is not <i>guaranteed</i> to do anything.</li>
+				</ul>
+			</li>
+		</ul>
 	</body>
 </html>
