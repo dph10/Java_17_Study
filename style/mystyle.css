@@ -1,36 +1,84 @@
 body {
 	color: whitesmoke;
-	background-color: rgb(30,30,20);
+	background-color: rgb(25,25,20);
 	
 	font-size: 103%;
 	font-family: Arial, Verdana, sans-serif;
 }
+
+code, .codeblock {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 96%;
+	padding-left: 2px;
+	padding-right:2px;
+}
+
+.codeblock {
+	padding: 0px 15px;
+	border-radius: 7px;
+	tab-size: 32px;
+	display: block;	
+	background-color: rgba(40, 30, 90, 0.6);
+	margin: 3px;
+	word-wrap: break-word;
+	border-style: ridge;
+	border-width: 6px;
+	border-color:rgb(30, 100, 180);
+	width: fit-content;
+	height: fit-content;
+	box-shadow: 0px 0px 4px 4px rgba(40, 30, 90, 0.8);
+}
+
+a {
+	font-weight: bold;
+	color: rgb(30, 130, 230);
+}
+
+tr:nth-child(even) {
+	background-color: rgba(80, 80, 80, .7);
+}
+tr:nth-child(odd) {
+	background-color: rgba(45,45,40,.8);
+}
+
+th {
+	font-weight: bold;
+}
+
+th, td {
+	padding: 8px;
+	border: 1px solid rgb(120,120,120);
+}
+
+table {
+	border-collapse: collapse;
+	/*width: 90%;*/
+	min-width: 700px;
+	text-align: left;
+	margin: 1px 5px 15px 5px;
+}
+
+.tableheader {
+	font-size: 115%;
+	font-weight: bold;
+	text-indent: 30px;
+	margin: 10px 5px 2px 5px;
+}
+
+div[class~="tablecontainer"] {
+	overflow-x:auto;
+}
+
 
 @media print {
 	body {
 		color: black;
 		background-color: white;
 	}
-}
-
-code, .codeblock {
-	font-family: "Courier New", Courier, monospace;
-	font-size: 96%;
-	tab-size: 40px;
-	padding-left: 2px;
-	padding-right:2px;
-}
-
-.codeblock {
-	padding: 10px;
-	border-radius: 10px;
-	white-space: pre-wrap;
-	display: block;	
-	background-color: rgba(55, 50, 120, 0.75);
-	margin: 5px;
-}
-
-a {
-	font-weight: bold;
-	color: rgb(29, 136, 218);
+	.codeblock {
+		background-color: white;
+		border-style: double;
+		border-width: 4px;
+		border-color: black;
+	}
 }
