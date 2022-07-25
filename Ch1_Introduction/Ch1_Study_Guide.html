@@ -17,8 +17,10 @@
 			</li>
 		<li>
 			The versions of your java and java compiler can be checked with the following at the command line:
-			<code class="codeblock">javac -version
-java -version</code>
+			<pre><code class="codeblock">
+javac -version
+java -version
+			</code></pre>
 		</li>
 		</ul>
 		<h2 id="classstructureheader">Class Structure</h2>
@@ -61,14 +63,16 @@ java -version</code>
 			<li>Java programs begin execution at the main method.
 			</li>
 			<li>Example main method:
-				<code class="codeblock">public class MainClass {
+				<pre><code class="codeblock">
+public class MainClass {
 	<b>public static final void main(final String[] args)</b> {
 		System.out.println("Hello World!")
 		if (args!=null) {
 			System.out.println(java.util.Arrays.toString(args));
 		}
 	}
-}</code>
+}
+				</code></pre>
 			<ul>
 				<li>Note that the <code>final</code> keyword is an optional-modifier that is not required, but is good practice.
 				</li>
@@ -98,21 +102,26 @@ java MainClass Arg1 Arg2 Arg3...
 			<li><h3>Naming Conflicts</h3>
 				<ul>
 					<li>Packages allow you to use class names that do not need to be unique by using the <i>full qualified class name</i></li>
-					<code class="codeblock">public class Conflicts {
+					<pre><code class="codeblock">
+public class Conflicts {
 	java.util.Date date;
 	java.sql.Date sqlData;
-}</code>					
+}		
+					</code></pre>					
 				</ul>
 			</li>
 			<li><i>Wildcards</i> can be used to compile all the classes in a package:
-				<code class="codeblock">javac packagea/*.java packageb/*.java packagec/*.java</code>
+				<pre><code class="codeblock">
+javac packagea/*.java packageb/*.java packagec/*.java
+				</code></pre>
 			</li>
 			<li>
 				The java compiler can compile to another directory using the <code>-d</code> (directory) option.  
 				Then the <code>-cp</code> (classpath) option can be used to run the program with the new class directory. 
-				<code class="codeblock">javac -d &lt;classesFolderPath&gt; com.packagea/*.java com.packageb/*.java
-java -cp &lt;classesFolderPath&gt; com.packagea.MainClass 					
-				</code>
+				<pre><code class="codeblock">
+javac -d &lt;classesFolderPath&gt; com.packagea/*.java com.packageb/*.java
+java -cp &lt;classesFolderPath&gt; com.packagea.MainClass
+				</code></pre>
 			</li>
 		</ul>
 		<h2>JAR Files</h2>
@@ -126,14 +135,109 @@ java -cp &lt;classesFolderPath&gt; com.packagea.MainClass
 				</ul>
 			</li>
 			<li>Compiling with JAR files and/or multiple class path directories:
-				<code class="codeblock">java -cp ".;C:\path1\myJar.jar;C:\path2\myJar2.jar;C:\path3\directoryWithJars\*" myMainPackage.MainClass</code>
+				<pre><code class="codeblock">
+java -cp ".;C:\path1\myJar.jar;C:\path2\myJar2.jar;C:\path3\directoryWithJars\*" myMainPackage.MainClass
+				</code></pre>
 				<ul>
 					<li>On windows, directories are separated with the semi-colon (;), while other os's use the colon (:) to separate directories</li>
 					<li>The period (.) specifies the current directory should be included in the class path</li>
 				</ul>
 			</li>
 		</ul>
+		<h3 id="java-objects-section">Java Objects</h3>
+		<ul>
+			<li>Constructors
+				<ul>
+					<li>Constructors are called to create a new instance of a class</li>
+					<li>Requirements:
+						<ol>
+							<li>The construtor name must match the name of the class</li>
+							<li>There is no return type</li>
+						</ol>
+					</li>
+				</ul>
+			</li>
+			<li>Class Instance Initialization Order
+				<ol>
+					<li>Fields and instance initializer blocks run in order they appear</li>
+					<li>Constructor runs after all fields and instance initializer blocks have run</li>
+				</ol>
+				<pre><code class="codeblock">
+public class InitializationExampleClass {
+	private String name = "Bill"; // field initialization runs first
+	{ System.out.print(name + ", "); // instance initializer block runs 2nd
+		name = "Molly";
+		System.out.print(name + ", ");
+	}
+	public InitializationExampleClass() { // constructor runs 3rd
+		name = "Sarah";
+		System.out.print(name);
+	}
+					
+	public static void main(final String args[]) {
+		final InitializationExampleClass ex = new InitializationExampleClass();
+		// code output: Bill, Molly, Sarah
+	}
+}
+				</code></pre>
+			</li>
+		</ul>
+		<h2 id="java-data-types-section">Java Data Types</h2>
+		Java applications contain two different types of data: primitive types and references types
+		<ol>
+			<li>Primitive Types
+				<ul>
+					<li> Java contains 8 <i>primitive types</i>, which are used to build all of the more complex Java objects</li>
+					<li> Primitive data types are not objects, they are a value in memory</li>
+				</ul>
+				<p class="tableheader">Primitive Types</p>				
+				<div class="tablecontainer"><table>
+					<tr>
+						<th>Keyword</th><th>Type</th><th>Min val</th><th>Max val</th>
+						<th>Default val</th><th>Example</th>
+					</tr>
+					<tr>
+						<td><code>boolean</code></td> <td><code>true</code> or <code>false</code></td>
+						<td>n/a</td> <td>n/a</td> <td><code>false</code></td> <td><code>true</code></td>
+					</tr>
+					<tr>
+						<td><code>byte</code></td> <td>8-bit integer</td>
+						<td><code>-128 (-2<sup>-7</sup>)</code></td> <td><code>127 (2<sup>7</sup>-1)</code></td>
+						<td><code>0</code></td> <td><code>87</code></td>
+					</tr>
+					<tr>
+						<td><code>short</code></td> <td>16-bit integer</td>
+						<td><code>-32,768 (-2<sup>-15</sup>)</code></td> <td><code>32,767 (2<sup>15</sup>-1)</code></td>
+						<td><code>0</code></td> <td><code>87</code></td>
+					</tr>
+					<tr>
+						<td><code>int</code></td> <td>32-bit integer</td>
+						<td><code>-2,147483,648 (-2<sup>-31</sup>)</code></td> <td><code>2,147,483,647 (2<sup>31</sup>-1)</code></td>
+						<td><code>0</code></td> <td><code>87</code></td>
+					</tr>
+					<tr>
+						<td><code>long</code></td> <td>64-bit integer</td>
+						<td><code>-2<sup>-63</sup></code></td> <td><code>2<sup>63</sup>-1</code></td>
+						<td><code>0L</code></td> <td><code>87L</code></td>
+					</tr>
+					<tr>
+						<td><code>float</code></td> <td>32-bit floating point value</td>
+						<td>n/a</td> <td>n/a</td>
+						<td><code>0.0f</code></td> <td><code>123.45f</code></td>
+					</tr>
+					<tr>
+						<td><code>double</code></td> <td><code>64-bit floating poitn value</code></td>
+						<td>n/a</td> <td>n/a</td>
+						<td><code>0.0</code></td> <td><code>123.456</code></td>
+					</tr>
+					<tr>
+						<td><code>char</code></td> <td><code>16-bit unicode value</code></td>
+						<td><code>0</code></td> <td><code>65,535</code></td>
+						<td><code>\u0000</code></td> <td><code>'a'</code></td>
+					</tr>
+				</table></div>
+			</li>
+			<li>Reference Types</li>
+		</ol>
 	</body>
 </html>
-
-
