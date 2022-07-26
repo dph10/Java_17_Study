@@ -13,6 +13,14 @@ code, .codeblock {
 	padding-right:2px;
 }
 
+h1 {
+	text-indent: 100px;
+}
+
+h2 {
+	text-indent: 15px;
+}
+
 .codeblock {
 	padding: 0px 15px;
 	border-radius: 7px;
@@ -53,13 +61,14 @@ th, td {
 table {
 	border-collapse: collapse;
 	/*width: 90%;*/
-	min-width: 700px;
+	/*min-width: 700px;*/
 	text-align: left;
 	margin: 1px 5px 15px 5px;
+	font-size: 96%;
 }
 
 .tableheader {
-	font-size: 115%;
+	font-size: 105%;
 	font-weight: bold;
 	text-indent: 30px;
 	margin: 10px 5px 2px 5px;

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="../style/mystyle.css">
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h1>Ch2: Operators</h1>
+    <h2 id="java-operators-section">Java Operators</h2>
+    <ul>
+        <li>Java has 3 types of operators: unary, binary, and ternary, for 1, 2, and 3 operands respectively</li>
+        <li><code>final var result = operand_1 + operand_2; // + is the operator</code></li>
+        <li><b>Operator Precedence</b>
+            <ul>
+                <li>Java operators follow the order of operator precedence,
+                    by decreasing order of operator precedence (unless overridden with parentheses).
+                </li>
+                <li>Two operators with the same precedence are evaluated from left to right.</li>
+                <li>Operator precedence only applies when multiple operators act on a single operand and specifies where
+                    the
+                    parenthesis are <i>implied</i>. But this <i>DOES NOT</i> determine the order of evaluation.
+                </li>
+                <li>After operator precedence is applied by adding the missing parentheses, the order of evaluation
+                    is then determined by the associativity of expression operators.
+                </li>
+                <p class="tableheader">Java Order of Operator Precedence</p>
+                <div class="tablecontainer">
+                    <table id="operator-table">
+                        <tr>
+                            <th>Operator</th>
+                            <th>Symbols</th>
+                            <th>Associativity</th>
+                        </tr>
+                        <tr>
+                            <td>Access operators</td>
+                            <td><code>(), [], .</code></td>
+                            <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Post-unary operators</td>
+                            <td><code>a++, a--</code></td>
+                            <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Other unary operators</td>
+                            <td><code>~, !, -, +, (type)</code></td>
+                            <td>right to left</td>
+                        </tr>
+                        <tr>
+                            <td>Cast</td>
+                            <td><code>(Type)reference</code></td>
+                            <td>right to left</td>
+                        <tr>
+                            <td>Multiplication, division, modulus</td>
+                            <td><code>+, -, %</code></td>
+                            <td>left to right</td>
+                        </tr>
+                        </tr>
+                        <tr>
+                            <td>Addition/Subtraction</td>
+                            <td><code>+, -</code></td>
+                            <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Shift Operators</td> <td><code>&lt;&lt;, &gt;&gt;, &gt;&gt;&gt;</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Relational Operators</td> <td><code>&lt;, &gt;, &lt;=, &gt;=, instanceof</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Equal/Not Equal to</td> <td><code>==, !=</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Logical AND</td> <td><code>&</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Logical exclusive OR</td> <td><code>^</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Logical inclusive OR</td> <td><code>|</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Conditional AND</td> <td><code>&&</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Conditional OR</td> <td><code>||</code></td> <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Ternary Operator</td> <td><code><i>boolean expression</i> ? <i>expression1</i> : <i>expression2</i></code></td> 
+                            <td>right to left</td>
+                        </tr>
+                        <tr>
+                            <td>Assignment Operators</td>  <td><code>=, +=, -=, *=, /=, %=, &=, ^=, |=, &lt;&lt;=, &gt;&gt;=, &gt;&gt;&gt;=</code></td>
+                            <td>right to left</td>
+                        </tr>
+                        <tr>
+                            <td>Arrow Operator (lamdas)</td> <td><code>-&gt;</code></td> <td>right to left</td>
+                        </tr>
+                    </table>
+                </div>
+                <li>Code example:
+                    <pre><code class="codeblock">
+public class OperatorEvaluationEx1 {	
+	public static void main(String[] args)
+    {
+        int a = 5;
+        int i = ++a + ++a + a--; // (++a) + (++a) + (a--) = 6+7+7, 8=>a
+        System.out.println(a);  // outputs 6
+        System.out.println(i);  // outputs 20
+        
+        a=5;
+        i = a-- + ++a + ++a;    // (a--) + (++a) + (++a) = (5, 4=>a)+(5)+(6)=16
+        System.out.println(a);  // outputs 16
+        System.out.println(i);  // outputs 6
+        
+        a=5;
+        i = ++a + a-- + ++a;    // (++a)+(a--)+(++a) = (6)+(6, 5=>a)+(6)=18
+        System.out.println(a);  // outputs 6
+        System.out.println(i);  // outputs 18
+        
+        int r=7;
+        boolean r1 = r == r++;  // r1=(r==(r++)) r1=true, r=8
+        boolean r2 = r++ == r;  // r2=((r++)==r) r2=false, r=9
+        System.out.println(r1); // outputs true
+        System.out.println(r2); // outputs false
+        System.out.println(r);  // outputs 9
+        
+        int c = 10;
+        System.out.println(++c * c--); // (++c) *(c--) = (11)*(11, 10=>c), outputs 121, c=10
+        System.out.println(c-- * ++c); // (c--)*(++c) = (10, 9=>r)*(10), outputs 100, c=10
+    }
+}
+                    </code></pre>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h2 id="unary-ops-section">Unary Operators</h2>
+    <ul>
+        <li>Unary operators require one operand</li>
+        <li>All unary operators precedence is applied before any surrounding binary or ternary operators</li>     
+        <p class="tableheader">Unary Operators</p>
+        <div class="tablecontainer">
+            <table id="unary-op-table">
+                <tr><th>Operator</th> <th>Examples</th> <th>Description</th> <th>Associativity</th></tr>
+                <tr>
+                    <td>Parentheses</td> <td><code>(a+3)</code></td> <td>Used to change the order of ops</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Array access</td> <td><code>arr1[ii]</code></td> <td>Access array index</td> <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Member access</td>
+                    <td><code>obj1.func1(), obj1.field1</code></td>
+                    <td>Access class instance method or field</td> <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Post-increment</td>
+                    <td><code>++x</code></td>
+                    <td>Return the original value, then increment variable by 1</td> <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Post-decrement</td>
+                    <td><code>--y</code></td>
+                    <td>Return original value, then increment variable by 1</td> <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Pre-increment</td> <td><code>++x</code></td> <td>Increase variable by 1 and return new value</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Pre-decrement</td> <td><code>--y</code></td> <td>Decrease variable by 1 and return new value</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Logical Complement</td> <td><code>!a</code></td> <td>Inverts a boolean's logical value</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Bitwise Complement</td> <td><code>~b</code></td> <td>Inverts all 0s and 1s in a number</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Positive</td> <td><code>+c</code></td> <td>Indicates a number or expression is positive</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Negative</td> <td><code>-d</code></td> <td>Indicates literal number is negative, or negates an expression</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Cast</td> <td><code>(Integer)i, (String)obj</code></td> <td>Casts a value to a specific type</td>
+                    <td>r to l</td>
+                </tr>
+                </table></div>
+        <li>
+            Bitwise Complement formula: multiply by (-1) and then substract 1
+            <pre><code class="codeblock">
+final int val = 3;
+final int complement = ~val; // -1*val - 1 = -4;
+System.out.println(~complemment) // -1*complement -1 = 3;
+            </code></pre>
+        </li>
+        <li>Note that types cannot be mixed for boolean and integer operator operands:
+            <pre><code class="codeblock">
+var val1 = !5;  // does not compile
+var val2 = ++true;  // does not compile
+            </code></pre>
+        </li>
+    </ul>
+    <h2 id="binary-ops-section">Binary Operators</h2>
+    <ul>
+        <li>Binary operators require two operands, and operand types cannot be mixed</li>
+        <li>Parentheses can be used to override operator precedence</li>
+        <p class="tableheader">Binary Operators</p>
+        <div class="tablecontainer">
+            <table id="binary-ops-table" style="margin-right: 50px;">
+                <tr><th>Operator</th> <th>Example</th> <th>Description</th> <th>Associativity</th></tr>
+                <tr>
+                    <td>Multiplication</td> <td><code>x * y</code></td> <td>Multiplies two numeric values</td> <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Division</td> <td><code>x / y</code></td> <td>Divides the first numeric value by the second</td> <td>l to r</td>
+                </tr>
+                <tr><td>Modulus</td> <td><code>x % y</code></td><td>Returns the remainder after division of the first value divided after the second</td> <td>l to r</td> </tr>
+                <tr><td>Addition</td> <td><code>x+y</code></td> <td>Adds two numeric values</td> <td>l to r</td> </tr>
+                <tr><td>Subtraction</td> <td><code>x-y</code></td> <td>Subtracts the second value from the first value</td> <td>l to r</td></tr> 
+                <tr>
+                    <td>Less Than</td> <td><code>a &lt; 5</code></td> <td>returns <code>true</code> if value on left is strictly less than right value</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Less than or equal to</td> <td><code>b &lt;= 7</code></td> <td>returns <code>true</code> if left value is less than or equal to the right value/td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Greater Than</td> <td><code>c &gt; 10</code></td> <td>returns <code>true</code> if left value is strictly greater than right value</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Greater than or equal to</td> <td><code>d &gt;= 4</code></td> <td>returns <code>true</code> if left value is greater than or equal to right value</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Type Comparison</td> <td><code>f instanceof String</code></td> <td>returns <code>true</code> if reference on left is an instanceof of the type on the right</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Equality</td> <td><code>a == 10</code></td> <td>returns <code>true</code>if two values are equal, otherwise <code>false</code></td> 
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Inequality</td> <td><code>c != 17;</code></td> <td>returns <code>true</code>if the two values are not equal, otherwise returns <code>false</code></td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Logical AND</td> <td><code>a & b</code></td> <td>return is <code>true</code> only if both values are true</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Logical inclusive OR</td> <td><code>c | d</code></td> <td>returns <code>true</code> if at least one value is true</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Logical exclusive OR</td> <td><code>x ^ y</code></td> <td>returns <code>true</code> only if one value is <code>true</code> and the other is <code>false</code></td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Conditional AND</td> <td><code>a && b</code></td> <td>returns <code>true</code> only if both values are true. If left value is false, then right value is not evaluated.</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Conditional OR</td> <td><code>c || d</code></td> <td>returns <code>true</code> if at least one value is true. If left value is <code>true</code>, then right value is not evaluated.</td>
+                    <td>l to r</td>
+                </tr>
+                <tr>
+                    <td>Assignment Op</td> <td><code>int a = 50;</code></td> <td>Assigns the value on the right to the left variable</td> <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Multiplication Assignment</td> <td><code>x *= 3;</code></td> <td>Multiplies right value to the left variable, and assigns the resulting product to the left variable</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Division Assignment</td> <td><code>y /= 2;</code></td> <td>Divides left variable by the right value, and assigns the resulting quotient to the left variable</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Modulus Assignment</td> <td><code>z %= 3;</code></td> <td>Divides left variable by the right value, and assigns the resulting remainded to the left variable</td>
+                    <td>r to l</td>
+                </tr>
+                <tr> <td>Addition assignment</td> <td><code>a += 5</code></td> <td>Adds value on the right to the variable on the left, and assigns the sum to the variable</td>
+                    <td>r to l</td>
+                </tr>
+                <tr>
+                    <td>Subtraction assignment</td> <td><code>b-=0.5</code></td> <td>Subtract value on the right to the left variable, and assigns result to the left variable</td>
+                    <td>r to l</td>
+                </tr>
+            </table>
+        </div>
+        <li>Integer division and the modulus operator:
+            <pre><code class="codeblock">
+System.out.println(9 / 3); // 3
+System.out.println(9 % 3); // 0
+
+System.out.println(10 / 3); // 3
+System.out.println(10 % 3); // 1
+
+System.out.println(11 / 3); // 3
+System.out.println(10 % 3); // 2
+            </code></pre>
+        </li>
+        <li>
+            The result of an assingment operator is an expression itself.  
+            The value on the right is assigned to the variable on the left, and then the value of that assignment is returned:
+            <pre><code class="codeblock">
+// asignment ops are evaluated right to left   
+long a = 5;
+long b = a = 3; // b = (a = 3) = 3;  b => 3, a => 3;
+
+            </code></pre>
+        </li>
+    </ul>
+    <h2 id="ternary-op-section">Ternary Operator</h2>
+    <ul>
+        <li>Java has one ternary operator</li>
+        <li><code>booleanExpression ? expression1 : expression2</code></li>
+        <li>The first operand is a boolean expression (returns a boolean value), while the 2nd and 3rd operands are
+            both expressions that return the same type value
+        </li>
+        <li>Note that <i>only</i> one expression on the right is evaluated at runtime</li>
+    </ul>
+    <h2 id="numeric-promotion-section">Numeric Promotion</h2>
+    <ul>
+        <li>
+            Rules:
+            <ol>
+                <li>
+                    If two values have different date types, one of the values will be promoted to the larger of the two data types.
+                </li>
+                <li>
+                    If one of the values is an integer and the other is floating-point, the integer will be promoted to the floating-point value's data type.
+                </li>
+                <li>
+                    Smaller integer data types (<code>byte, short, char</code>) are first promoted to <code>int</code> any time they're 
+                    used with a binary arithmetic operator with a variabe, even when neither values are an int.  Note this 
+                    does not apply to literal integer values.
+                </li>
+                <li>
+                    After promotions are completed and operands have the same data type, the result of the operation
+                    will have the same data type as the promoted operands.
+                </li>
+            </ol>
+        </li>
+        <li>
+            Examples:
+            <pre><code class="codeblock">
+int x = 2;
+long y = 33;
+var z = x * y;  // z is a long with value 66L
+
+short x = 5;
+short y = 2;
+var z = x * y; // x and y are promoted to int, so z is an int with value 10
+
+double x = 39.2;
+float y = 2.0f;
+var z = x + y; // y is promoted to double, so z is a double with value 78.4
+
+short w = 14;
+float x = 13;
+double y = 30;
+var z = w * x / y; // w and x are promoted to doubles, z is double with value 6.0667
+            </code></pre>
+        </li>
+    </ul>
+    <h2 id="casting-section">Casting Values</h2>
+    <ul>
+        <li>Casting is a unary operation where on data type is explicitly interpreted as another specified data type</li>
+        <li>Casting is optional when converting to larger/widening data type:
+            <pre><code  class="codeblock">
+double c = 3.7f;
+            </code></pre>
+        </li>
+        <li>Casting is required when converting from a larger data type to smaller or when losing floating-point precision:
+            <pre><code class="codeblock">
+float f1 = 3.1; // will not compile!
+float f2 = (float)3.1;  // the explicit cast is required due to moving to a smaller type
+int myInt = 3.7; //  will not compile due to loss of floating-point precision
+            </code></pre>
+        </li>
+        <li>Explicit casting is not required when working with literal integer values that fit into the data type:</li>
+        <pre><code class="codeblock">
+
+final byte x1 = 10;         // compiles
+final short y1 = -30_101;   // compiles
+final short z1 = y1 + 2_000; // Does not compile because y1 is a variable, not a literal value,
+                             // so both values are promoted to int and an explicit cast is 
+                             // required to return a short.
+final byte x2 = 7 * 100;     // Does not compile because an int of value 700 is larger 
+                             // than max value of a byte (127)
+        </code></pre>
+    </ul>
+</body>
+
+</html>
