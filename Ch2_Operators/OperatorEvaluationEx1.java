@@ -3,7 +3,7 @@ public class OperatorEvaluationEx1 {
 	public static void main(String[] args)
     {
         int a = 5;
-        int i = ++a + ++a + a--; // (++a) + (++a) + (a--) = 6+7+7, 8=>a
+        int i = ++a + ++a + a--; // (++a) + (++a) + (a--) = 6+7+7, 6=>a
         System.out.println(a);  // outputs 6
         System.out.println(i);  // outputs 20
         

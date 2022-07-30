@@ -12,7 +12,8 @@
             <ul>
                 <li>Used to execute under specified circumstances if a boolean expression evaluates to true at runtime</li>
                 <li>The <code>if</code> statement will not compile if it doesn't evaluate to a boolean value</li>
-                <li>The braces for the <code>true</code>-branch are only optional if the branch only has a single statement</li>
+                <li>The braces for the <code>true</code>-branch are only optional if the branch consists of a single statement.
+                 Otherwise braces are required for multistatement branch/code blocks</li>
                 <pre><code  class="codeblock">
 if (boolExpr) { // braces are optional for a single statement
     // other statements if true
@@ -141,7 +142,7 @@ void printInteger(final Number number) {
                 </li>
                 <li>Valid <code>case</code> statement values must be <i>compile-time </i>constant values of the same data type as the <code>switch</code> variable.
                     This limits the valid <code>case</code> values to literals, enum constants, or <code>final</code> constant variables of the same data type. No case
-                    values can be used that requires executing a method at runtime either.
+                    values can be used that requires executing a method at runtime.
                 </li>
                 <pre><code class="codeblock">
 switch(variableToTest) { // braces are required
@@ -152,6 +153,7 @@ switch(variableToTest) { // braces are required
         //branch for case 2
         break;
     ...
+
     default:  // optional default, can appear
               // anywhere within the switch statement
     // branch for default
@@ -183,7 +185,7 @@ final int result =
     switch(testVar) { // optional assignment
         case constExpr1 -> 5; // semicolon required for case expression
         case constExpr2, constExpr2 -> { // braces required for case blocks
-            yield 10; // yield keyword is requires if switch assigns a value
+            yield 10; // yield keyword is required if switch assigns a value
             ...
         }   // no semicolon for case blocks
 
@@ -201,7 +203,7 @@ final int result =
             <li><code>while</code> loops can be used to repeat a certain task while a boolean expression evaluates 
                 to <code>true</code>
             </li>
-            <li>It is possible for the while loop to run even once, if the first check of its boolean expression evaluates to <code>false</code></li>
+            <li>It is possible for the <code>while</code> loop to not run even once, if the first check of its boolean expression evaluates to <code>false</code></li>
             <pre><code class="codeblock">
 while(booleanExpr) {
     // body 
@@ -224,7 +226,8 @@ do { braces required for a multistatement block
             <li><code>for</code> loops sections:
                 <ol>
                     <li>Initialization section: can initialize one 
-                        (or multiple variables with <a href="../Ch1_Introduction/Ch1_Study_Guide.html#multiple-variable-declaration">multiple variable declaration</a>).
+                        (or multiple variables with 
+                        <a href="../Ch1_Introduction/Ch1_Study_Guide.html#multiple-variable-declaration">multiple variable initialization</a>).
                         These variables are only in-scope within the for loop.
                     </li>
                     <li>Boolean expression: evaluated to determine if the for loop should be exited (when evaluated as <code>false</code>)</li>
@@ -239,7 +242,7 @@ for (initialization; booleanExpr; updateStatement) {
     // body
 } // braces required for multistatement block
             </code></pre>
-            <li><code>for</code>-<code>each</code> Loops are used to iterate over the elements in an array or collection</li>
+            <li><code>for</code>-<code>each</code> Loops (aka enhanced for-loop) are used to iterate over the elements in an array or collection</li>
             <li>The right side of the for-each loop must either be a buil-in Java array, or an object that implements <code>java.lang.Iterable</code></li>
             <pre><code class="codeblock">
 for (final var instance : collection_or_array) {

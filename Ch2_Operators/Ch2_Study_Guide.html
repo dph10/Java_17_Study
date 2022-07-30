@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <h1>Ch2: Operators</h1>
+    <h1>Ch2 Operators</h1>
     <h2 id="java-operators-section">Java Operators</h2>
     <ul>
         <li>Java has 3 types of operators: unary, binary, and ternary, for 1, 2, and 3 operands respectively</li>
@@ -18,11 +18,12 @@
                     by decreasing order of operator precedence (unless overridden with parentheses).
                 </li>
                 <li>Two operators with the same precedence are evaluated from left to right.</li>
-                <li>Operator precedence only applies when multiple operators act on a single operand and specifies where
-                    the
-                    parenthesis are <i>implied</i>. But this <i>DOES NOT</i> determine the order of evaluation.
+                <li>
+                    Operator precedence specifies where the parenthesis are <i>implied</i> when multiple operators act
+                        on a single operand, but <i>DOES NOT</i> determine the order of evaluation.
+                    </i>
                 </li>
-                <li>After operator precedence is applied by adding the missing parentheses, the order of evaluation
+                <li>After the missing parentheses are applied to an expression using <i>operator precedence</i>, the order of evaluation
                     is then determined by the associativity of expression operators.
                 </li>
                 <p class="tableheader">Java Order of Operator Precedence</p>
@@ -42,6 +43,11 @@
                             <td>Post-unary operators</td>
                             <td><code>a++, a--</code></td>
                             <td>left to right</td>
+                        </tr>
+                        <tr>
+                            <td>Pre-unary operators</td>
+                            <td><code>++b, --b</code></td>
+                            <td>right to left</td>
                         </tr>
                         <tr>
                             <td>Other unary operators</td>
@@ -106,7 +112,7 @@ public class OperatorEvaluationEx1 {
 	public static void main(String[] args)
     {
         int a = 5;
-        int i = ++a + ++a + a--; // (++a) + (++a) + (a--) = 6+7+7, 8=>a
+        int i = ++a + ++a + a--; // (++a) + (++a) + (a--) = 6+7+7, 6=>a
         System.out.println(a);  // outputs 6
         System.out.println(i);  // outputs 20
         
@@ -116,7 +122,7 @@ public class OperatorEvaluationEx1 {
         System.out.println(i);  // outputs 6
         
         a=5;
-        i = ++a + a-- + ++a;    // (++a)+(a--)+(++a) = (6)+(6, 5=>a)+(6)=18
+        i = ++a + a-- + ++a;    // (++a)+(a--)+(++a) = (6)+(6, 5=>a)+(6, 6=>a)=18
         System.out.println(a);  // outputs 6
         System.out.println(i);  // outputs 18
         
@@ -159,12 +165,12 @@ public class OperatorEvaluationEx1 {
                 </tr>
                 <tr>
                     <td>Post-increment</td>
-                    <td><code>++x</code></td>
+                    <td><code>x++</code></td>
                     <td>Return the original value, then increment variable by 1</td> <td>l to r</td>
                 </tr>
                 <tr>
                     <td>Post-decrement</td>
-                    <td><code>--y</code></td>
+                    <td><code>y--</code></td>
                     <td>Return original value, then increment variable by 1</td> <td>l to r</td>
                 </tr>
                 <tr>
@@ -313,7 +319,7 @@ System.out.println(10 % 3); // 2
             </code></pre>
         </li>
         <li id="assignment-op">
-            The result of an assingment operator is an expression itself.  
+            The result of an assignment operator is an expression itself.  
             The value on the right is assigned to the variable on the left, and then the value of that assignment is returned:
             <pre><code class="codeblock">
 // asignment ops are evaluated right to left   
@@ -378,7 +384,7 @@ var z = w * x / y; // w and x are promoted to doubles, z is double with value 6.
     </ul>
     <h2 id="casting-section">Casting Values</h2>
     <ul>
-        <li>Casting is a unary operation where on data type is explicitly interpreted as another specified data type</li>
+        <li>Casting is a unary operation where one data type is explicitly interpreted as another specified data type</li>
         <li>Casting is optional when converting to larger/widening data type:
             <pre><code  class="codeblock">
 double c = 3.7f;
@@ -386,7 +392,7 @@ double c = 3.7f;
         </li>
         <li>Casting is required when converting from a larger data type to smaller or when losing floating-point precision:
             <pre><code class="codeblock">
-float f1 = 3.1; // will not compile!
+float f1 = 3.1; // will not compile!  3.1 is a double
 float f2 = (float)3.1;  // the explicit cast is required due to moving to a smaller type
 int myInt = 3.7; //  will not compile due to loss of floating-point precision
             </code></pre>
