@@ -13,6 +13,16 @@ code, .codeblock {
 	padding-right:2px;
 }
 
+.navbar, .navbar>a {
+	font-size: 120%;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	color: rgb(100, 100, 230);
+	font-family: 'Times New Roman', Times, serif;
+}
+
 h1 {
 	text-indent: 100px;
 	font-family: cursive;
