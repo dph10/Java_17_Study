@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch3 Program Flow Control</h1>
+        <h2 id="if-else-section"><code>if</code>/<code>else</code> Statements</h2>
+        <ul>
+            <li><b>The <i>if</i> Statement</b>
+            <ul>
+                <li>Used to execute under specified circumstances if a boolean expression evaluates to true at runtime</li>
+                <li>The <code>if</code> statement will not compile if it doesn't evaluate to a boolean value</li>
+                <li>The braces for the <code>true</code>-branch are only optional if the branch only has a single statement</li>
+                <pre><code  class="codeblock">
+if (boolExpr) { // braces are optional for a single statement
+    // other statements if true
+}
+                </code></pre>
+            </ul>
+            </li>
+            <li><b>The <i>else</i> Statement</b>
+            <ul>
+                <li><code>else</code> is an optional statement for when the if statement evaluates to <code>false</code></li>
+                <pre><code class="codeblock">
+if (boolExpr) { // braces are optional for a single statement
+
+    // branch if true (true-branch)
+
+} else {  // optional else statement
+
+    // branch if false (false-branch)
+
+}
+                </code></pre>
+                <li>The <code>else</code> statement can be appended by an <code>if</code> to evaluate additional boolean expressions
+                <pre><code class="codeblock">
+// hourOfDay defined above
+if (hourOfDay &lt; 11) System.out.println("good morning");
+else if (hourOfDay &lt; 15) System.out.println("good afternoon");
+else System.out.println("good evening");
+                </code></pre>
+                </li>
+            </ul>
+            </li>
+            <li><b>Pattern Matching</b>
+            <ul>
+                <li>Introduced in Java 16 using the <code>if</code> statements with the <code>instanceof</code> operator</li>
+                <li>The type of pattern variable must be a subtype of the variable, 
+                    not the same type (this rule doesn't apply for the regular <code>instanceof</code> operator)</li>
+                <li>Before Java 16:
+                    <pre><code  class="codeblock">
+if (number instanceof Integer) {
+    final Integer data = (Integer)data;
+    System.out.println(data + "is an integer");
+    // other statements
+}
+                    </code></pre>
+                </li>
+                <li>With Java 16 (note that final modifier is optional):
+                    <pre><code class="codeblock">
+if (number instanceof final Integer data) {
+    System.out.println(data + "is an integer");
+    // other statements using the data variable
+}
+                    </code></pre>
+                </li>
+                <li>Additional boolean conditions used the pattern matched variable can be tested and used for filtering using
+                    the conditional AND operator:
+                    <pre><code class="codeblock">
+if (number instanceof final Integer data <b>&&</b> data.compareTo(5)>0)
+    System.out.println("Integer " + data + " is greater than 5");
+                    </code></pre>
+                </li>
+                <li>Flow scoping is used by the compiler for pattern matching.  The pattern-matched variable
+                    is only in scope when the compiler can definitely determine its type.  It is possible to use
+                    the pattern-matched variable outside of the if statement, but only when the compiler can determine
+                    its type.
+                    <pre><code class="codeblock">
+if (number instanceof final Integer data || data.compareTo(5)>0)
+    // the above doesn't compile because the data variable is undefined by it doesn't
+    // inherit Integer, so it is not guaranteed to be in-scope for the right operator of ||
+                    </code></pre>
+                </li>
+                <li>Flow scoping can also use inverted logic:
+                    <pre><code class="codeblock">
+void printInteger(final Number number) {
+    if (!(number instanceof final Integer data))
+        return;
+    System.out.println(data); // this compiles because data is determined to be in-scope 
+}                             // because if the return statement is not taken then number
+                              // must inherit Integer
+                    </code></pre>
+                    <pre><code class="codeblock">
+// the above code example can be inverted:
+void printInteger(final Number number) {
+    if (number instanceof final Integer data) System.out.println(data);
+    else return;
+}    
+                    </code></pre>
+                </li>
+            </ul>
+            </li>
+        </ul>
+        <h2 id="switch-statement-section"><code>switch</code> Statements</h2>
+            <ul>
+                <li>
+                    <i>Switch statements</i> are useful when there are a large number of brnaches for a single variable.
+                </li>
+                <li>All possible values for that variable must be contained by cases. An optional <code>default</code> case
+                    can be used to capture all remaining cases to previously captured.</li>
+                <li>An optional <code>break</code> statement is used to exit the switch statement block.  
+                    If this is not used, program execution will continue to flow down through the remaining cases</li>
+                </li>
+                <li>
+                    The following data types can be used with <code>switch</code> statements:
+                    <ul>
+                        <li>
+                            <code>int</code> and <code>Integer</code>
+                        </li>
+                        <li>
+                            <code>byte</code> and <code>Byte</code>
+                        </li>
+                        <li>
+                            <code>short</code> and <code>Short</code>
+                        </li>
+                        <li>
+                            <code>char</code> and <code>Character</code>
+                        </li>
+                        <li>
+                            <code>String</code>
+                        </li>
+                        <li>
+                            <code>enum</code> values
+                        </li>
+                        <li>
+                            <code>var</code>, if it evaluates to one of the above types.
+                        </li>
+                    </ul>
+                </li>
+                <li>Valid <code>case</code> statement values must be <i>compile-time </i>constant values of the same data type as the <code>switch</code> variable.
+                    This limits the valid <code>case</code> values to literals, enum constants, or <code>final</code> constant variables of the same data type. No case
+                    values can be used that requires executing a method at runtime either.
+                </li>
+                <pre><code class="codeblock">
+switch(variableToTest) { // braces are required
+    case constantExpr1:
+        // branch for case 1
+        break;
+    case constantExpr:
+        //branch for case 2
+        break;
+    ...
+    default:  // optional default, can appear
+              // anywhere within the switch statement
+    // branch for default
+}
+                </code></pre>
+                <li>Case values can be combined, with two possible syntaxes:
+                    <pre><code class="codeblock">
+switch(x1) {
+    case 1,2:  func1();  // comma-separated values introduced in Java 14
+    case 3:
+        func2();
+        break;
+    case 4:  case5: func3();  // older but still valid
+        break;
+    default:
+}                        
+                    </code></pre>
+                </li>
+            </ul>
+        <h2 id="switch-expression-section"><code>switch</code> Expressions</h2>
+        <ul>
+            <li><code>switch</code> expressions were added in Java 14 to reduce verbosity, and is a more compact
+            form of the <code>switch</code> statement.</li>
+            <li>Can be used for an optional variable assingment as well.</li>
+            <li>When a matched case can support 2 types of branches: an expression or block</li>
+            <li>Uses the arrow operator (<code>-></code>) for case branches</li>
+            <pre><code class="codeblock">
+final int result = 
+    switch(testVar) { // optional assignment
+        case constExpr1 -> 5; // semicolon required for case expression
+        case constExpr2, constExpr2 -> { // braces required for case blocks
+            yield 10; // yield keyword is requires if switch assigns a value
+            ...
+        }   // no semicolon for case blocks
+
+    ...
+
+        default -> 20;
+    };  // semicolon is required if switch assigns a value
+            </code></pre>
+            <li>Note that the return types must be consistent and compatible, and all possible
+                values for the <code>switch</code> variable must be covered.
+            </li>
+        </ul>
+        <h2 id="while-loop-section"><code>while</code> Loops</h2>
+        <ul>
+            <li><code>while</code> loops can be used to repeat a certain task while a boolean expression evaluates 
+                to <code>true</code>
+            </li>
+            <li>It is possible for the while loop to run even once, if the first check of its boolean expression evaluates to <code>false</code></li>
+            <pre><code class="codeblock">
+while(booleanExpr) {
+    // body 
+} /* braces are only optional for a single statement,
+        required for a multistatement block */
+            </code></pre>            
+            <li>A <code>do</code>/<code>while</code> loop guarantees that the body/block will execute at least once.</li>
+            <pre><code class="codeblock">
+do { braces required for a multistatement block
+    // Body
+} while(booleanExpr); // required semicolon
+            </code></pre>
+            <li>It is possible to write an infinite loop if its boolean expression never
+                evaluates to false: <code>while(true) performTask();</code>
+            </li>
+        </ul>
+        <h2 id="for-loop-section"><code>for</code> Loops</h2>
+        <ul>
+            <li><code>for</code> loops are used to perform a task a set number of times.</li>
+            <li><code>for</code> loops sections:
+                <ol>
+                    <li>Initialization section: can initialize one 
+                        (or multiple variables with <a href="../Ch1_Introduction/Ch1_Study_Guide.html#multiple-variable-declaration">multiple variable declaration</a>).
+                        These variables are only in-scope within the for loop.
+                    </li>
+                    <li>Boolean expression: evaluated to determine if the for loop should be exited (when evaluated as <code>false</code>)</li>
+                    <li>Update statement: commonly used to increment counter variables evaluated in the boolean expression.  
+                        Can also be decremented to run the <code>for</code> loop in reverse.
+                    </li>
+                    <li>Body/block: contains the statements comprising the repeated task to perform</li>
+                </ol>
+            </li>
+            <pre><code class="codeblock">
+for (initialization; booleanExpr; updateStatement) {
+    // body
+} // braces required for multistatement block
+            </code></pre>
+            <li><code>for</code>-<code>each</code> Loops are used to iterate over the elements in an array or collection</li>
+            <li>The right side of the for-each loop must either be a buil-in Java array, or an object that implements <code>java.lang.Iterable</code></li>
+            <pre><code class="codeblock">
+for (final var instance : collection_or_array) {
+    // body
+}
+            </code></pre>
+        </ul>
+        <h2 id="branching-section">Program Flow Branching</h2>
+        <ul>
+            <li>Branching statements can be used for fine control over program flow in loops, possibly including nested loops</li>
+            <li>
+                Labels:  optional labels can be added to <code>if</code> statements, <code>switch</code> statements, and loops.
+                This label is a pointer to the head of a flow-control structure that can allow program flow to jump to it (using a branching statement.)
+            </li>
+            <li>Branching statements:
+                <ul>
+                    <li>
+                        <code>break</code>: used to tranfer program flow out to the enclosing statement.  Typically
+                        used with <code>switch</code> and loops, but can be used with an <i>labelled</i> <code>if</code> statement.
+                        If used with a label, it can break out of the higher-level specified loop.
+                    </li>
+                    <pre><code class="codeblock">
+int count = 0;                        
+label1: while(booleanExpr) {
+    
+    for (int ii=0; ii &lt; count; ii++) {
+        System.out.println(ii);
+        if (ii &gt; 7) {
+            break label1; // exits outside of the 
+                          // while loop.
+        }
+    }
+    counter++;
+}
+                    </code></pre>
+                    <li>
+                        <code>continue</code>: used with loops to skip the remainder of the current loop iteration and start the next loop iteration
+                    </li>
+                    <li>
+                        <code>return</code>: used to immediately return (a type of value if specified by the method)
+                         from the currently executing function/method.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </body>
+</html>

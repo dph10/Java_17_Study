@@ -19,6 +19,17 @@ h1 {
 
 h2 {
 	text-indent: 15px;
+	margin-top: 40px;
+}
+
+li {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+ul, ol {
+	margin-top: 6px;
+	margin-bottom: 6px;
 }
 
 .codeblock {

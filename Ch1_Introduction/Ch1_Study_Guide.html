@@ -77,9 +77,10 @@ public class MainClass {
 				<li>Note that the <code>final</code> keyword is an optional-modifier that is not required, but is good practice.
 				</li>
 				<li>This program can be called with the following command-line input:
-					<code>javac MainClass.java
-java MainClass Arg1 Arg2 Arg3...
-					</code>
+					<pre><code class="codeblock">
+javac MainClass.java
+java MainClass Arg1 Arg2 Arg3 ...
+					</code></pre>
 				</li>
 			</ul>
 			</li>
@@ -98,7 +99,8 @@ java MainClass Arg1 Arg2 Arg3...
 					</li>
 				</ul>
 			</li>
-			<li>The <code>java.lang</code> is automatically imported</li>
+			<li>The <code>java.lang</code> package is automatically imported</li>
+			<li>Classes located in the same package do not need import statements to eachother</li>
 			<li><h3>Naming Conflicts</h3>
 				<ul>
 					<li>Packages allow you to use class names that do not need to be unique by using the <i>full qualified class name</i></li>
@@ -197,7 +199,7 @@ public class InitializationExampleClass {
 						</ul>
 					</li>
 					<li>Literal values may contains underscores to make them easier to read, as long as they don't start or stop with 
-					the underscore, and the underscore is located directly before or afer a decimal (.): <code>final double val = 1_000_000.032_981</code></li>
+					the underscore, and the underscore is not located directly before or afer a decimal (.): <code>final double val = 1_000_000.032_981</code></li>
 				</ul>
 				<p class="tableheader">Primitive Types</p>				
 				<div class="tablecontainer"><table id="primitive-types-table">
@@ -252,14 +254,15 @@ public class InitializationExampleClass {
 					<li><i>Reference types</i> refer to an object (instance of a class)</li>
 					<li>A <i>reference</i> points to an object's address in memory
 						<ul>
-							<li>Can be assigned to another object of the same compatible type</li>
+							<li>Can be assigned to another object of the same compatible type (if not <code>final</code>)</li>
 							<li>Can be assigned to a new object using the <code>new</code> keyword</li>
 						</ul>
 					</li>
-					<li>Refernce types can be used to call methods that act on the object (primitive types cannot)</li>
+					<li>Reference types can be used to call methods that act on the object (primitive types cannot)</li>
 					<li>
 						An object and a reference are two separate entities.  The reference is a variable that has a name and can be used to access an object's data.
-						The reference can also be assigned to reference another object(if not <code>final</code>), can reference another reference, passed to a method, or returned from a method.
+						The reference can also be assigned to reference another object (if not <code>final</code>), 
+						can reference another reference's object, passed to a method, or returned from a method.
 						The objects sits on the heap, does not have a name, and can only be accessed through a reference.
 					</li>
 					<li>All the primitive types have wrapper classes with useful functions, and can also be used to store a
@@ -268,14 +271,14 @@ public class InitializationExampleClass {
 						<ul>
 							<li>Allows for multiline strings</li>
 							<li>Starts and ends with three double quotes (""")</li>
-							<li>Incidental white space:  whitespace that may be used to make code easier to read but not actually included, to the left of the left-most
+							<li><i>Incidental</i> white space:  whitespace that may be used to make code easier to read but not actually included, to the left of the left-most
 							non-white-space character</li>
-							<li>Essential white space:  white space included as part of the <code>String</code></li>
+							<li><i>Essential</i> white space:  white space included as part of the <code>String</code></li>
 							<pre><code class="codeblock">
-final String pyramid = """ // non incidental white space is in this string
-  *      // 2 two essential white space characters
- * *     // 1 essentail white space characters							
-* * *    // no essential white space characters
+final String pyramid = """ // 1 character of incidental white space on each line
+   *      // 2 two essential white space characters
+  * *     // 1 essentail white space characters							
+ * * *    // no essential white space characters
 """      // as new line character is included at the end of this string 
          // since the closing triple quotations is on a new line							
 								</code></pre>
@@ -292,10 +295,10 @@ final String pyramid = """ // non incidental white space is in this string
 					<li>Identifiers must begin with a letter, a currency symbol ( <code>$</code> ), or an underscore ( <code>_</code> )</li>
 					<li>May include numbers but <i>cannot</i> start with them</li>
 					<li>A single underscore does not qualify as an identifier (but more than one does!)</li>
-					<li>Cannot used the same name as a Java <i>reserved word</i></li>
+					<li>Cannot constist of a Java <i>reserved word</i> (<code>class, for, void, static,</code> etc.)</li>
 				</ol>
 			</li>
-			<li><b>Declaring multiple variables:</b>
+			<li id="multiple-variable-declaration"><b>Multiple Variable Declaration:</b>
 				<ul>
 					<li>Many variables may be declares and initialized in the same statement</li>
 					<li>Any or all of those values can be initialized inline</li>
@@ -308,14 +311,22 @@ int i1; int i2;            // legal, but this is just two java statements, not a
 double d1, double d2;      // illegal, as there are 2 type declarations.
 int i3; i4;                // illegal because the variable names are not comma separated.
 						</code></pre>
+				    <li>Mutliple variables of the same type can also be initialized to 
+						the <a href="../Ch2_Operators/Ch2_Study_Guide.html#assignment-op">same value</a>.
+					<pre><code class="codeblock">
+long x, y, z;
+x = y = z = 50L; // all 3 variables equal to 50
+					</code></pre>
+					</li>
 				</ul>
 			</li>
 		</ul>
 		<h2>Initializing Variables</h2>
 		<ul>
 			<li>A <i>local variable</i> is defined withint a constructor, method, initializer block, or other types of code blocks</li>
-			<li>The <b><code>final</code></b> keyword is used to declare a local primitive variable as a constant.  This <i>modifier</i> can be used on
-			reference variables as well, but this only makes the object the reference is point to constant, not the underlying object data itself.</li>
+			<li>The <b><code>final</code></b> keyword is used to declare a local primitive variable as a constant.  
+				The optional <code>final</code> <i>modifier</i> can also be used on
+			reference variables, but this only makes which object the reference is pointing to constant, not the underlying object data itself.</li>
 			<li>Local varibles are not valid until initalized:
 				<pre><code class="codeblock">
 final int y = 10;
@@ -333,8 +344,11 @@ final int reply = x + y; // does not compile, as x has not been initialized
 			<li><b>Local variable type inference</b>
 				<ul>
 					<li>The <code>var</code> keyword can be used instead of an explicit type declaration for local variables only.</li>
-					<li>The local variable must be declared and immediately intialized inline in the same statement. (<code>final var value = 10L;</code>)</li>
+					<li>The local variable must be declared and immediately intialized inline in the same statement: 
+						<code>final var value = 10L;</code></li>
 					<li>The compiler only looks at the variable declaration statement to infer its type, so the variable cannot change type at a later point.</li>
+					<li><code>var</code> <i>cannot</i> be used with multiline inference because each variable declared with <code>var</code> must
+						be immediately initialized inline.</li>
 					<li>Note that <code>var</code> <i>is not</i> a reserved Java keyword:
 					<pre><code class="codeblock">
 package var;
@@ -355,12 +369,12 @@ public class Var {   // this is all legal code
 		</ul>
 		<h2>Managing Variable Scope</h2>
 		<ul>
-			<li>Local variables are declared within a code block:  <code>{ // this is a code block}</code></li>
+			<li>Local variables are declared within a code block:  <code>{ // this is a code block }</code></li>
 			<li>Local variabes never have a scope larger than the method or code block they are defined within. 
-			Local variables go out-of-scope with their containint block's closing bracket ( <code>}</code> )</li>
+			Local variables go out-of-scope with their containing block's closing bracket ( <code>}</code> )</li>
 			<li>Variables defined in outer-blocks can be reference by contained inner-blocks</li>
 			<li>Instance variables are available as soon as they are initialized and last for the full lifetime of its specific class instance.</li>
-			<li>Class variables are in-scope as soon as they are delcared and last the entire life of the Java program</li>
+			<li>Class variables are in-scope as soon as they are declared and last the entire life of the Java program</li>
 		</ul>
 		<h2>Object Destruction</h2>
 		<ul>
@@ -373,7 +387,8 @@ public class Var {   // this is all legal code
 					<li>The object's reference variable is allocated on the stack, and once it goes out-of-scope then the object is eligible for garbage collection.</li>
 					<li>Eligibility criteria:
 						<ol>
-							<li>The object no longer has any references pointing to it (unreachable object), or the references themselves are not-longer reachable.</li>
+							<li>The object no longer has any references pointing to it (unreachable object), 
+								or the references themselves are no-longer reachable.</li>
 							<li>All references to the object have gone out of scope.</li>
 						</ol>
 					</li>
