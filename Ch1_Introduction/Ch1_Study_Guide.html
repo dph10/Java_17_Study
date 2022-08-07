@@ -270,13 +270,17 @@ public class InitializationExampleClass {
 						The objects sits on the heap, does not have a name, and can only be accessed through a reference.
 					</li>
 					<li>All the primitive types have wrapper classes with useful functions, and can also be used to store a
-					<code>null</code>value (primitive types cannot), as depicted in the last column of <a href="#primitive-types-table">the table above.</a></li>
+					<code>null</code>value (primitive types cannot), as depicted in the last column of <a href="#primitive-types-table">the table above</a>. 
+						Wrapper types can be unboxed by the compiler and substituted for the primitive values.
+					</li>
 					<li>Text blocks
 						<ul>
 							<li>Allows for multiline strings</li>
 							<li>Starts and ends with three double quotes (""")</li>
-							<li><i>Incidental</i> white space:  whitespace that may be used to make code easier to read but not actually included, to the left of the left-most
+							<li id="incidental-white-space"><i>Incidental</i> white space:  whitespace that may be used to make code easier to read but not actually included, to the left of the left-most
 							non-white-space character</li>
+							<li>Including a single backslash character at the end of a line (<code>\</code>)
+							omits the newline character and concatenates that line and the following line</li>
 							<li><i>Essential</i> white space:  white space included as part of the <code>String</code></li>
 							<pre><code class="codeblock">
 final String pyramid = """ // 1 character of incidental white space on each line

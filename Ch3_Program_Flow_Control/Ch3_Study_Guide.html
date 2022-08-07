@@ -9,7 +9,7 @@
         <nav class="navbar">
             <a href="../Ch2_Operators/Ch2_Study_Guide.html">&leftarrow; Ch2 Java Operators</a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch4 Core Java APIs &rightarrow;</a>
+            <a href="../Ch4_Core_APIs/Ch4_Core_APIs.html">Ch4 Core Java APIs &rightarrow;</a>
         </nav>
         <h2 id="if-else-section"><code>if</code>/<code>else</code> Statements</h2>
         <ul>
@@ -112,7 +112,7 @@ void printInteger(final Number number) {
         <h2 id="switch-statement-section"><code>switch</code> Statements</h2>
             <ul>
                 <li>
-                    <i>Switch statements</i> are useful when there are a large number of brnaches for a single variable.
+                    <i>Switch statements</i> are useful when there are a large number of branches for a single variable.
                 </li>
                 <li>All possible values for that variable must be contained by cases. An optional <code>default</code> case
                     can be used to capture all remaining cases to previously captured.</li>
@@ -144,10 +144,11 @@ void printInteger(final Number number) {
                             <code>var</code>, if it evaluates to one of the above types.
                         </li>
                     </ul>
+                <li>Note that <code>long</code> <i>cannot</i> be used as the <code>switch</code> variable even thought it is an integer type.</li>
                 </li>
                 <li>Valid <code>case</code> statement values must be <i>compile-time </i>constant values of the same data type as the <code>switch</code> variable.
-                    This limits the valid <code>case</code> values to literals, enum constants, or <code>final</code> constant variables of the same data type. No case
-                    values can be used that requires executing a method at runtime.
+                    This limits the valid <code>case</code> values to: literals, enum constants, or <code>final</code> constant variables of the same data type.
+                    No case values can be used that requires executing a method at runtime.
                 </li>
                 <pre><code class="codeblock">
 switch(variableToTest) { // braces are required
@@ -164,6 +165,7 @@ switch(variableToTest) { // braces are required
     // branch for default
 }
                 </code></pre>
+                <li>Case values <i>cannot</i> be duplicated, or a compiler error will occur: <code>error: duplicate case label</code></li>
                 <li>Case values can be combined, with two possible syntaxes:
                     <pre><code class="codeblock">
 switch(x1) {

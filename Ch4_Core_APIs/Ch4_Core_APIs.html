@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch4: Core Java APIs</h1>
+        <nav class="navbar">
+            <a href="../Ch3_Program_Flow_Control/Ch3_Study_Guide.html">&leftarrow; Ch3 Program Flow Control</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch5 Methods &rightarrow;</a>
+        </nav>
+        <ul style="margin-top: 30px;">
+            <li>Java <code>inteface</code> definitions can be used to defined <i>application programming interface</i>(API)</li>
+            <li>The APIs for Strings, Arrays, Math, and Dates/times are covered here</li>
+        </ul>
+        <h2 id="string-section">
+            Java Strings
+        </h2>
+        <ul>
+            <li>The Java <code>String</code> class encapsulates a sequence of unicode (UTF-16) characters</li>
+            <li>Strings are <i><b>immutable</b></i>, meaning that once a string instance is created cannot be modified.  
+            The <code>String object itself is effectively constant</code></li>
+            <li>Strings can be created multiple ways: 
+                <pre><code class="codeblock">
+final String s1 = "Cooper"; // the new operator is not required for String
+final String s2 = new String("Annie");
+final String s3 = """
+                  Brandy"""; // textblock
+                </code></pre>
+            </li>
+            <li>String <i>concatenation</i> is performed using the binary <code>+</code> operator</li>
+            <li>String appending (which uses concatenation) can be performed using the <code>+=</code> operator</li>
+            <li><b>Concatenation rules:</b>
+                <ol>
+                    <li>For two numeric operands, <code>+</code> operator performs addition</li>
+                    <li>If either operands is a <code>String</code>, then <code>+</code> performs
+                        String concatenation</li>
+                    <li>The associativity for the binary <code>+</code> operator is always left-to-right</li>
+                </ol>
+                <pre><code class="codeblock">
+System.out.println("green" + "-fish"); // outputs green-fish
+System.out.println(1 + 2 + "ab"); // outputs 3ab
+
+final int three = 3;
+final String four = "4";
+System.out.println(1 + 2 + three + four); // outputs 64
+
+var s = "1";
+s += "2";
+s += 3;
+System.out.println(s); // outputs 123
+System.out.println(s + null); // outputs 123null
+                </code></pre>
+            </li>
+            <li><b>Summary of Important <code>String</code> Methods:</b>
+                <ul>
+                    <li><code>public int length()</code>&Tab; - returns the string's length</li>
+                    <li><code>public char chartAt(int index)</code> - returns the character at a specific index.  
+                    Note that this method throws an <code>IndexOutOfBoundsException</code> runtime exception if the index is negative or not less than the <code>String</code> length.
+                    </li>
+                    <li><code>public int indexOf(int ch)</code> - returns index of a unicode <code>char</code><br>
+                        <code>public int indexOf(int ch, int fromIndex)</code> - starts search from a specified index offset<br>
+                        <code>public int indexOf(String str)</code>
+                        <code>public int indexOf(String str, int FromIndex)</code> - returns index of the specified substring <code>str</code>
+                    </li>
+                    <li><code>public String substring(int beginIndex)</code> - returns a substring starting at the specified <code>beginIndex</code>to the end<br>
+                        <code>public String substring(int beginIndex, int endIndex)</code> - returns a substring starting from
+                        the specified <code>beingIndex</code> (inclusive) and ending before the <code>endIndex</code> (exclusive).
+                        Note this methods throws an <code>IndexOutOfBoundsException</code> runtime exception if <code>beginIndex</code> is negative,
+                        <code>endIndex</code> is larger than the <code>String</code> length, or <code>endIndex</code> is less than <code>beginIndex</code>.
+                        <pre><code class="codeblock">
+final var name = "animals";
+System.out.println(name.substring(3)); // mals
+System.out.println(name.substring(name.indexOf('m'))); // mals
+System.out.println(name.substring(3,7)); // mals
+System.out.println(name.substring(3,3)); // empty string
+System.out.println(nae.substring(3,8)); // throws IndexOutOfBoundsException
+                        </code></pre>
+                    </li> 
+                    <li><code>public String toLowerCase()</code> - returns an all lowercase string</li>
+                    <li><code>public String toUpperCase()</code> - returns an all caps string</li> 
+                    <li><code>public boolean equals(Object obj)</code> - returns true if two <code>String</code> objects posess
+                    the exact same character sequence</li>
+                    <li><code>public boolean equalsIgnoreCase(String str)</code> - returns true if two <code>String</code> objects
+                    have the same character sequence, ignore the case</li>
+                    <li><code>public boolean startsWith(String prefix)</code></li>
+                    <li><code>public boolean endsWith(String suffix</code></li>
+                    <li><code>public boolean contains(CharSequence charSeq)</code></li>
+                    <li><code>public String replace(char oldChar, char newChar)</code></li>
+                    <li><code>public String replace(CharSequence target, CharSequence replacement)</code></li>
+                    <li><code>public String trim()</code> - remove whitespace from start and end of <code>String</code></li>
+                    <li><code>public String strip()</code> -  remove whitespace from start and end, including unicode whitespace</li>
+                    <li><code>public String stripLeading()</code> -  remove whitespace from at start</li>
+                    <li><code>public String stripTrailing()</code> - remove whitespace from at end</li>
+                    <li><code>public String indent(int numSpaces)</code> - adds specified number of spaces to beginning of each line.
+                    A negative number is used to try to remove that amount of whitespace (if present) from each line.  <i><b>Also</b></i>
+                    normalizes each line to end with <code>\n</code> character, and will add a line-break if it is missing.</li>
+                    <li><code>public String stripIndex()</code> - removes <a href="../Ch1_Introduction/Ch1_Study_Guide.html#incidental-white-space"><i>incidental</i></a> whitespace.  Also normalizes existings
+                        line-breaks to <code>\n</code>.
+                    </li>
+                    <li><code>public String translateEscapes()</code> - converts turns literals into escaped characters: <code>\\t becomes \t</code></li>
+                    <li><code>public boolean isEmpty()</code> - returns true for empty <code>String ""</code></li>
+                    <li><code>public boolean isBlank()</code> - returns true for if <code>String</code> is empty or only contains whitespace</li>
+                    <li>
+                        <code>public static String format(String format, Object args...</code><br>
+                        <code>public static String format(Locale loc, String format, Object args...</code><br>
+                        <code>public static String formatted(Object args...)</code><br>
+                        <p class="tableheader">Common Format Symbols</p>
+                        <div class="tablecontainer">
+                            <table>
+                                <tr><th>Format Symbol</th> <th>Description</th> <th>Example</th></tr>
+                                <tr>
+                                    <td><code>%s</code></td> <td><code>String</code> values</td> <td><code>"Hello %s".formatted("Dan"); // Hello Dan</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>%d</code></td> <td>Integer values (<code>int, long,</code> etc.)</td> <td><code>"I ran %d miles.".formatted(4); // I ran 4 miles.</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>%f</code></td> <td>Floating-point values (<code>double, float</code>)</td>
+                                    <td><code>I spent $%.2f".formatted(5.2); // I spent $5.20 </code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>%e</code></td> <td>Floating-point scientific notation</td>
+                                    <td><code>"I spent $%.2e".formatted(5.2); // I spent $5.20e+00</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>%n</code></td> <td>Inserts system-dependent line break</td> <td><code>"I ran%nfar".formatted(); // ran<br>far</code></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <ul>
+                            <li>Mixing data types can throw an <code>IllegalFormatConversionException.</code></li>
+                            <li>Rounding a floating-point value to a specified number of decimal places can be used with the following: <code>%.2f</code></li>
+                            <li>Putting a number <i>before</i> the decimal place specifies the total length of the output</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Method chaining can be used to perform multiple operations on a <code>String</code>, but each operation also
+                creates a new <code>String</code> object
+                <pre><code class="codeblock">
+var start = "AniMaL   ";
+var result = start.trim().toLowerCase().replace('a', 'A');
+System.out.println(result); // AnimAl
+                </code></pre>
+            </li>
+            <li><b>The <code>StringBuilder</code> class</b>
+                <ul>
+                    <li>This class can be used to append, build, and format strings without creating a new <code>String</code> 
+                    object with every operation</li>
+                    <pre><code class="codeblock">
+final StringBuilder a = new StringBuilder("abc");
+final StringBuilder b = a.append("de");  // both a and b point to the same object
+b.append("f").append("g");  // StringBuilder objects are mutable
+System.out.println(a); // abcdefg
+System.out.println(b); // abcdefg
+                    </code></pre>
+                
+            
+            <li>Important <code>StringBuilder</code> methods:
+                <ul>
+                    <li>Also includes methods that perform the same operations as <code>String: substring, indexOf, length, charAt</code></li>
+                    <li><code>public StringBuilder append(String str)</code> - appends the specified string to the current string.  <i>Includes 10</i>
+                        method signatures for appending other data tyes such as <code>int, char,</code> etc.</li>
+                    <li><code>public StringBuilder insert(int offset, String str)</code> - inserts the specified string at the specified index.  
+                        The character at the specified index, along with all the subsequent characters, are all moved to the end of the inserted text.</li>
+                    <li><code>public StringBuilder deleteCharAt(int index)</code></li>
+                    <li><code>StringBuilder delete(int startIndex, int endIndex)</code> - deletes a character sequence of the current <code>String</code> starting 
+                        at the specified index(inclusive) and ending before the specified end index (exclusive)</li>
+                    <li><code>public StringBuilder replace(int startIndex, int endIndex, String newString)</code> - replaces
+                    the character sequence starting at the <code>startIndex</code> (inclusive), through to before the <code>endIndex</code> (exclusive)</li>
+                    <li><code>public StringBuilder reverse()</code> - reverses the character sequence</li>
+                    <li><code>public String toString()</code> -  returns the underlying character sequence as a <code>String</code> object</li>
+                    </ul>
+            </li>
+            </ul></li>
+        </ul>
+        <h2 id="equality-section">Equality of Variables</h2>
+        <ul>
+            <li>The binary <code>==</code> operator compares object references (when used with references) to check if they
+            are pointing at the same object</li>
+            <li>
+                The <code>equals(Object obj)</code> method should be overriden to compare the member fields of a <code>class</code>
+            </li>
+            <li>The String Pool
+                <ul>
+                    <li>Java stores strings in the <i>string pool</i> (also known as the <i>intern pool</i>) which is a location in the JVM stores all strings</li>
+                    <li>Repeated strings are reused to reduce memory usage</li>
+                    <li>The method <code>public String intern()</code> tells java to retrieve the <code>String</code>
+                    from the string pool, or add it if it's not present.</li>
+                    <li>The two <code>String</code> constructors indicate whether to use the string pool:
+                    <pre><code class="codeblock">
+var x = "Hello World";   // uses the string pool
+var y = new String("Hello World");  // DOES NOT use the string pool, no reuse
+var z = new String("Hello World").intern() // uses the string pool if string is available
+System.out.println(x == "Hello World"); // outputs true
+System.out.println(x == y); // outputs false
+System.out.println(x == z); // outputs true
+System.out.println(x == y.intern()); // outputs true
+                    </code></pre>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="array-section">Java Arrays</h2>
+        <ul>
+            <li>
+                Arrays are an ordered list object, which can be created from any Java type. The unary operator <code>[]</code> is the array
+                access operator, which returns the variable type at the specified index.  
+                An array initializer can be specified using braces <code>{}</code>.                
+            </li>
+            <pre><code class="codeblock">
+final int[] numbers = new int[3]; // the type of reference numbers is int[]
+final int[] moreNums = new int[] {10, -5, 2, 10_020};
+final int[] nums3 = {-2 100 2 5 -2 5};  // known as an Anonymous Array
+            </code></pre>
+            <li>If the array initializer is not specified, a newly constructed array has its elements initialized to its type's default value.</li>
+            <li>When specifying the array type, the square brackets can be written after the type or after the identifier, with or without a space(s).</li>
+            <pre><code class="codeblock">
+// these all compile
+int[] numAnimals;
+int [] numAnimals2;
+int []numAnimals3;
+int numAnimals4[];
+int numAnimals5 [];
+            </code></pre>
+            <li>Multiple variable declaration:
+                <ul>
+                    <li><code>int[] x, y;</code> declares two array references of type <code>int[]</code> as expected.</li>
+                    <li>*Note <code>int x[], y;</code> declares one array reference <code>int[] x</code> and <i>one <code>int</code> y.</i></li>
+                </ul>
+            </li>
+            <li>The <code>equals(Object obj)</code> method for arrays only looks for reference equality, it <i>does not</i> inspect array
+            elements if the references are not equal</li>
+            <li>Array Properties and Utilities
+                <ul>
+                    <li>The array member <code>arr.length</code> returns the length (number of elements)of the array.</li>
+                    <li>The unary array access operator <code>arr[<i>index</i>]</code> is used to access and return the element
+                    at the specified index of an array.  Trying to access an index equal or greater than the array length throws an
+                    <code>ArrayIndexOutOfBoundsException.</code></li>
+                    <li>Looping through an array:
+                        <pre><code class="codeblock">
+final var numbers = new int[10];
+for (int i=0; i&lt;numbers.length; i++) {
+    numbers[i] = i+3;
+}
+
+for (final var num : number) // for-each loop
+    System.out.println(num + " ");
+                        </code></pre>
+                    </li>
+                    <li>Sorting:  <code>Arrays.sort(numbers);</code> - requires an import: <code>import java.util.Arrays;</code></li>
+                    <li>
+                        Searching a <i>presorted</i> array: <code>Arrays.binarySearch(Arrays.sort(numbers));</code><br>
+                        Returns a positive index if found, returns a negative value show on smaller than the negative 
+                        of the index where amatch needs to be inserted to preserve sorted order.  If an <i>unsorted</i>
+                        array is searched, the output is <i>undefined/unpredictable</i>
+                        <pre><code class="codeblock">
+import java.util.Arrays;
+final int[] numbers = {8, 4, 2, 6};
+Arrays.sort(numbers); // [2, 4, 6, 8] => numbers
+System.out.println(Arrays.binarySearch(numbers, 2));  // 0
+System.out.println(Arrays.binarySearch(numbers, 6));  // 2
+System.out.println(Arrays.binarySearch(numbers, 1));  // -1
+System.out.println(Arrays.binarySearch(numbers, 3));  // -2
+System.out.println(Arrays.binarySearch(numbers, 7));  // -4
+System.out.println(Arrays.binarySearch(numbers, 10)); // -5 
+                        </code></pre>
+                    </li>
+                    <li><code>public static boolean Arrays::equals(T[] a, T[] b);</code> - returns <code>true</code> if all elements in the arrays are equal</li>
+                    <li><code>public static int Arrays::compare(T[] a, T[] b);</code>
+                        <ul>
+                            <li>Return value:
+                                <ul>
+                                    <li>Negative number: the 1st array contains a lesser value for the first element that differs, or is shorter than the 2nd</li>
+                                    <li>A zero mean the arrays length and elements are all equal</li>
+                                    <li>Positive number means 1st array contains a greater value for the first element that differs, or is longer</li>
+                                </ul>
+                            </li>
+                            <li>Other <code>compareTo()</code> rules:
+                                <ul>
+                                    <li><code>null is smaller than any other value</code></li>
+                                    <li>For strings: a prefix is smaller than the parent</li>
+                                    <li>For strings: a number is smaller than a letter</li>
+                                    <li>For strings: an uppercase letter <i>is smaller</i> than a lowercase letter</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><code>public static int Arrays::mismatch(T[] a, T[] b)</code> - returns the index of the first mismatched/differeing element
+                     of the 2 arrays.  Returns <code>-1</code> if the arrays are equal.</li>
+                     <li><code>public static String toString(T[] a)</code> - returns a <code>String</code> representation of the array, usually printing out the <code>String</code> representation of each element</li>
+                </ul>
+            </li>
+            <li>Using methods with Varargs:  public static void main (String... args)</code> - 
+            the method parameter is equivlane to <code>String[] args</code></li>
+            <li>
+                <b>Multidimensional Arrays:</b>
+                <ul>
+                    <li>Arrays are objects, and array components can also be objects, including more arrays which can 
+                        also differ in length
+                    </li>
+                    <pre><code class="codeblock">
+// Valid declarations:
+int[][] vars1;      // 2d array
+int vars2 [][];     // 2d array
+int[] vars3[];      // 2d array
+int[] vars4[], space[][]; // 2d and 3d array
+String [][] rect = new String[3][2]; // 2d array 3x2
+
+final int[][] arrDiffSizes = {{3,7}, {-1}, {-100, 1, 20}};
+// the above is a 2d array where each inner array is a different size
+
+int[][] args = new int[4][];
+args[0] = new int[4];
+args[1] = new int[2];
+// the above array outer dimension is 4,
+while it has 2 defined inner dims of 4 and 2,
+and 2 null inner array objects.
+
+// loop through an multidim array
+final var arr2D = new int[3][2];
+for (int ii=0; ii&lt;arr2D.length; ii++) {
+    for (int jj=0; jj&lt;arr2D[ii].length; jj++)
+        System.out.println(twoD[ii][jj] + " ");
+    System.out.println();
+}
+
+// using for-each loop:
+for(final int[] outer : arr2D) {
+    for(final int inner : outer) 
+        System.out.println(inner + " ");    
+    System.out.println();
+}
+                    </code></pre>
+                </ul>
+            </li>
+        </ul>
+    <h2 id="math-section">Math APIs</h2>
+    <ul>
+        <li><code>java.lang.Math</code> contains many static method for performing 
+        mathematical calculations, and does not require an import statement.</li>
+        <li><code>public static double Math::min(double a, double b);</code> - compute minimum
+        of 2 values, <code>override</code> methods also exist for <code>float, int,</code> and <code>long</code></li>
+        <li><code>public static double Math::max(double a, double b); </code> - compute maximum of
+        2 values, same overrides as <code>min</code></li>
+        <li>
+            <code>public static long Math::round(double num);</code> - rounds off a <code>double</code> value with <code>0.5</code> rounding up<br>
+            <code>public static int Math:round(flat num);</code> - rounds a <code>foat</code> value
+        </li>
+        <li>
+            <code>public static long Math::ceil(double num);</code> - rounds up to nearest integer, no override for other parameter datatypes.<br>
+            <code>public static long Math::floor(double num);</code> - rounds down to nearest integer, no overrides either
+        </li>
+        <li>
+            <code>public static double Math::pow(double number, double exponent)</code> - computes the power of the specified number, and <code>exponent</code>
+            can be a fraction.
+        </li>
+        <li>
+            <code>public static double Math::random()</code> - generates a random <code>double</code> value in interval: <code>[0, 1)</code>
+        </li>
+    </ul>
+    <h2 id="date-time-section">Dates and Times</h2>
+    <ul>
+        <li>
+            Java's modern date and time API is: <code>import java.time.*;</code>
+        </li>
+        <li>Date and time classes that store an <b>immutable</b> date, time, or date and time.  Note that
+            months and days start from <code>1</code>, while hours, minutes and seconds start at <code>0</code>, respectively.
+            <ul>
+                <li>
+                    <code>LocalDate</code> - stores a specific day int time, but not any time (less than 24hours) information
+                    <ul>
+                        <li><code>final var t1 = LocalDate.now();</code></li>
+                        <li><code>final var t2 = LocalDate.of(int year, int month, int dayOfMonth);</code></li>
+                        <li><code>final var t3 = LocalDate.of(int year, Month month, int dayOfMonth);</code></li>
+                    </ul>
+                </li>
+                <li>
+                    <code>LocalTime</code> - stores an time instant, but no day/date information
+                    <ul>
+                        <li><code>final var t1 = LocalTime.now();</code></li>
+                        <li><code>final var t2 = LocalTime.of(int hour, int minute);</code></li>
+                        <li><code>final var t3 = LocalTime.of(int hour, int minute, int second);</code></li>
+                        <li><code>final var t4 = LocalTime.of(int hour, int minute, int second, int nanos);</code></li>
+                    </ul>
+                </li>
+                <li>
+                    <code>LocalDateTime</code> - stores the local date and time
+                    <ul>
+                        <li><code>final var t0 = LocalDateTime.now();</code></li>
+                        <li><code>final var t1 = LocalDateTime.of(int year, int month, int monthDay, int hour, int minute)</code></li>
+                        <li><code>final var t2 = LocalDateTime.of(int year, int month, int monthDay, int hour, int minute, int second)</code></li>
+                        <li><code>final var t1 = LocalDateTime.of(int year, int month, int monthDay, int hour, int minute, int second, int nanos)</code></li>
+                        <li><code>final var t1 = LocalDateTime.of(LocalDate date, LocalTime time)</code></li>
+                    </ul>
+                </li>
+                <li>
+                    <code>ZonedDateTime</code> - stores date and time information with timezone info as well.  I personally recommened
+                    using this for storing absolute date/time information.
+                    <ul>
+                        <li><code>final var t0 = ZonedDateTime.now();</code></li>
+                        <li><code>final var t1 = ZonedDateTime.of(int year, int month, int monthDay, int hour, int minute, int second,
+                            int nanos, ZoneId zone);</code></li>
+                        <li><code>final var t2 = ZonedDateTime.of(LocalDate date, LocalTime time, ZonedId zone);</code></li>
+                        <li><code>final var t3 = ZonedDateTime.of(LocalDateTime dateTime, ZonedId zone);</code></li>
+                        <li>Get the <code>UTC</code> absolute timestamp:
+                            <pre><code class="codeblock">
+final var t0 = ZonedDateTime.now(ZoneId.of("UTC"));
+final long t0millis = to.toInstant().toEpochMilli();
+                            </code></pre>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>Dates/times can be manipulated using several methods:</li>
+        <ul>
+            <li><code>.plus/minusYears(int years)</code></li>
+            <li><code>.plus/minusMonths(int months)</code></li>
+            <li><code>.plus/minusWeeks(int weeks)</code></li>
+            <li><code>.plus/minusDays(int days)</code></li>
+            <li><code>.plus/minusHours(int hours)</code></li>
+            <li><code>.plus/minusMinutes(int minutes)</code></li>
+            <li><code>.plus/minusSeconds(int seconds)</code></li>
+            <li><code>.plus/minusNanos(int nanos)</code></li>
+            <li><code>.plus/minus(Period period)</code></li>
+            <li><code>.plus/minus(Duration duration);</code></li>
+            <pre><code class="codeblock">
+var date = LocalDate.of(2024, Month.JANUARY, 20);
+var time = LocalTime.of(5,15);
+var dateTime = LocalDateTime.of(date,time).minusDays(1).minusHours(10).minusSeconds(30);
+System.out.println(dateTime); // 2024-01-18T19:14:30
+            </code></pre>
+        </ul>
+        <li>The <code>Period class</code> can be used for adding or subtracting a date-based amount of time (a day or more of time).  Methods <i>cannot</i> be chained.  
+            <i>Cannot</i> be used with <code>LocalTime</code> as this class does not contain date info
+            <ul>
+                <li><code>Period.of(int years, int months, int seconds);</code></li>
+                <li><code>Period.of(int years);</code></li>
+                <li><code>Period.of(int months);</code></li>
+                <li><code>(int weeks);</code></li>
+                <li><code>Period.of(int days);</code></li>
+            </ul>
+        </li>
+        <li>The <code>Duration class</code> can be used for adding or subtraction a time-based durations of time from only classes that
+        contain time information (<code>LocalTime, LocalDateTime, ZonedDateTime</code>).  Cannot be used with <code>LocalDate</code>
+            <ul>
+                <li><code>Duration.ofDays(int days);</code> or <code>Duration.of(int val, ChronoUnit.DAYS);</code></li>
+                <li><code>Duration.ofHours(int hours);</code> or <code>Duration.of(int val, ChronoUnit.HOURS);</code></li>
+                <li><code>Duration.ofMinutes(int mins);</code> or <code>Duration.of(int val, ChronoUnit.SECONDS);</code></li>
+                <li><code>Duration.ofSeconds(int secs);</code> or <code>Duration.of(int val, ChronoUnit.MINUTES);</code></li>
+                <li><code>Duratio.ofMillis(int millis);</code> or <code>Duration.of(int val, ChronoUnit.MILLIS);</code></li>
+                <li><code>Duration.ofNanos(int nanos);</code> or <code>Duration.of(int val, ChronoUnit.NANOS);</code></li>
+            </ul>
+        </li>
+        <li>The <code>class ChronoUnit</code> also contains methods for determing amount of time between two times:
+            <pre><code class="codeblock">
+final var one = LocalTime.of(5,15);
+final var two = LocalTime.of(6,30);
+final var date = LocalDate.of(2016,1,20);
+System.out.println(
+    ChronoUnit.HOURS.between(one, two); // 1
+);
+System.out.println(
+    ChronoUnit.MINUTES.between(one,two); // 75
+)
+System.out.pintln(
+    ChronoUnit.Minutes.between(one,date); // throws DateTimeException
+);
+
+final LocalTime time = LocalTime.of(3,12,45);
+System.out.println(
+    one.truncateTo(ChronoUnit.MINUTES); // 03:12
+);
+            </code></pre>
+        </li>
+        <li>The <code>Instant class</code> stores a specific moment in time in the GMT time zone (equivalent to UTC)
+        <pre><code class="codeblock">
+final var now = Instant.now();
+// other code
+final var later = Instant.now();
+final var dur = Duration.between(now, later);
+System.out.println(
+    duration.toMillis()
+); // Returns number in milliseconds
+
+final var instant = ZonedDateTime.of(date, time, zone).toInstant();
+        </code></pre>
+        <ul>
+            <li><code>LocalDate</code>, <code>LocalTime</code>, and <code>LocalDateTime</code> <i>cannot</i> be converted
+            to an <code>Instant</code> because they do not contain time-zone information.</li>
+        </ul>
+        </li>
+    </ul>
+    </body>
+</html>

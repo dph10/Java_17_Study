@@ -65,7 +65,7 @@
                             <td>right to left</td>
                         <tr>
                             <td>Multiplication, division, modulus</td>
-                            <td><code>+, -, %</code></td>
+                            <td><code>*, /, %</code></td>
                             <td>left to right</td>
                         </tr>
                         </tr>
@@ -333,6 +333,19 @@ long b = a = 3; // b = (a = 3) = 3;  b => 3, a => 3;
 
             </code></pre>
         </li>
+        <li>Note that <i>compound assignment</i> operators (<code>*=, /=, %=, +=, -=</code>) automatically
+        perform casting operators after binary operator promotions:
+    <pre><code class="codeblock">
+int x =3;
+long y = 10;
+x *= y; // compiles, equivalent to  x = (int)(3L * 10L);
+System.out.println(x); // outputs 30
+
+long z = 2;
+z -= 1.1; // compiles, equivalent to z = (long)( ((double)2)-1.1 ));
+System.out.println(z); // outputs 0
+    </code></pre>
+    </li>
     </ul>
     <h2 id="ternary-op-section">Ternary Operator</h2>
     <ul>
@@ -402,7 +415,7 @@ float f2 = (float)3.1;  // the explicit cast is required due to moving to a smal
 int myInt = 3.7; //  will not compile due to loss of floating-point precision
             </code></pre>
         </li>
-        <li>Explicit casting is not required when working with literal integer values that fit into the data type:</li>
+        <li>Explicit casting is not required when working with literal integer values that fit into the data type (as long as it is not appended with <code>L</code>):</li>
         <pre><code class="codeblock">
 
 final byte x1 = 10;         // compiles
