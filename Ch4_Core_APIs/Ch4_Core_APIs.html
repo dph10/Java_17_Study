@@ -9,7 +9,7 @@
         <nav class="navbar">
             <a href="../Ch3_Program_Flow_Control/Ch3_Study_Guide.html">&leftarrow; Ch3 Program Flow Control</a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch5 Methods &rightarrow;</a>
+            <a href="../Ch5_Methods/Ch5_Methods.html">Ch5 Methods &rightarrow;</a>
         </nav>
         <ul style="margin-top: 30px;">
             <li>Java <code>inteface</code> definitions can be used to defined <i>application programming interface</i>(API)</li>
@@ -20,8 +20,8 @@
         </h2>
         <ul>
             <li>The Java <code>String</code> class encapsulates a sequence of unicode (UTF-16) characters</li>
-            <li>Strings are <i><b>immutable</b></i>, meaning that once a string instance is created cannot be modified.  
-            The <code>String object itself is effectively constant</code></li>
+            <li>Strings are <i><b>immutable</b></i>, meaning that once a string instance is created, that object cannot be modified.  
+            The <code>String</code> object itself is effectively constant</li>
             <li>Strings can be created multiple ways: 
                 <pre><code class="codeblock">
 final String s1 = "Cooper"; // the new operator is not required for String
@@ -81,6 +81,7 @@ System.out.println(nae.substring(3,8)); // throws IndexOutOfBoundsException
                     </li> 
                     <li><code>public String toLowerCase()</code> - returns an all lowercase string</li>
                     <li><code>public String toUpperCase()</code> - returns an all caps string</li> 
+                    <li><code>public String concat(String str)</code> - appends the specified string to the end of this string</li>
                     <li><code>public boolean equals(Object obj)</code> - returns true if two <code>String</code> objects posess
                     the exact same character sequence</li>
                     <li><code>public boolean equalsIgnoreCase(String str)</code> - returns true if two <code>String</code> objects
@@ -97,7 +98,7 @@ System.out.println(nae.substring(3,8)); // throws IndexOutOfBoundsException
                     <li><code>public String indent(int numSpaces)</code> - adds specified number of spaces to beginning of each line.
                     A negative number is used to try to remove that amount of whitespace (if present) from each line.  <i><b>Also</b></i>
                     normalizes each line to end with <code>\n</code> character, and will add a line-break if it is missing.</li>
-                    <li><code>public String stripIndex()</code> - removes <a href="../Ch1_Introduction/Ch1_Study_Guide.html#incidental-white-space"><i>incidental</i></a> whitespace.  Also normalizes existings
+                    <li><code>public String stripIndent()</code> - removes <a href="../Ch1_Introduction/Ch1_Study_Guide.html#incidental-white-space"><i>incidental</i></a> whitespace.  Also normalizes existings
                         line-breaks to <code>\n</code>.
                     </li>
                     <li><code>public String translateEscapes()</code> - converts turns literals into escaped characters: <code>\\t becomes \t</code></li>
@@ -156,8 +157,7 @@ final StringBuilder b = a.append("de");  // both a and b point to the same objec
 b.append("f").append("g");  // StringBuilder objects are mutable
 System.out.println(a); // abcdefg
 System.out.println(b); // abcdefg
-                    </code></pre>
-                
+                    </code></pre>               
             
             <li>Important <code>StringBuilder</code> methods:
                 <ul>
@@ -190,15 +190,20 @@ System.out.println(b); // abcdefg
                     <li>Repeated strings are reused to reduce memory usage</li>
                     <li>The method <code>public String intern()</code> tells java to retrieve the <code>String</code>
                     from the string pool, or add it if it's not present.</li>
+                    <li>Strings built using <code>String</code> operations/methods <i>do not</i> use the string pool</li>
                     <li>The two <code>String</code> constructors indicate whether to use the string pool:
                     <pre><code class="codeblock">
 var x = "Hello World";   // uses the string pool
 var y = new String("Hello World");  // DOES NOT use the string pool, no reuse
 var z = new String("Hello World").intern() // uses the string pool if string is available
+var b = "Hello ";
+b+="World";
 System.out.println(x == "Hello World"); // outputs true
 System.out.println(x == y); // outputs false
 System.out.println(x == z); // outputs true
 System.out.println(x == y.intern()); // outputs true
+System.out.println(b == x); // output false because string ops don't use the string pool
+System.out.println(b.equals(x)); // true
                     </code></pre>
                     </li>
                 </ul>
@@ -215,6 +220,7 @@ System.out.println(x == y.intern()); // outputs true
 final int[] numbers = new int[3]; // the type of reference numbers is int[]
 final int[] moreNums = new int[] {10, -5, 2, 10_020};
 final int[] nums3 = {-2 100 2 5 -2 5};  // known as an Anonymous Array
+final int[] nums4 = new int[] {0,1,2,3};
             </code></pre>
             <li>If the array initializer is not specified, a newly constructed array has its elements initialized to its type's default value.</li>
             <li>When specifying the array type, the square brackets can be written after the type or after the identifier, with or without a space(s).</li>
@@ -269,7 +275,14 @@ System.out.println(Arrays.binarySearch(numbers, 7));  // -4
 System.out.println(Arrays.binarySearch(numbers, 10)); // -5 
                         </code></pre>
                     </li>
-                    <li><code>public static boolean Arrays::equals(T[] a, T[] b);</code> - returns <code>true</code> if all elements in the arrays are equal</li>
+                    <li><code>public static boolean Arrays::equals(T[] a, T[] b);</code> - returns <code>true</code> if all elements in the arrays are equal
+                        <pre><code class="codeblock">
+final int[] a = {1,2,3};
+final int[] b = new int[] {1,2,3};
+System.out.println(a.equals(b)); // false, only true if two objects are the same object
+System.out.println(java.util.Arrays.equals(a,b));
+                        </code></pre>
+                    </li>
                     <li><code>public static int Arrays::compare(T[] a, T[] b);</code>
                         <ul>
                             <li>Return value:
@@ -301,6 +314,9 @@ System.out.println(Arrays.binarySearch(numbers, 10)); // -5
                 <ul>
                     <li>Arrays are objects, and array components can also be objects, including more arrays which can 
                         also differ in length
+                    </li>
+                    <li>The first array dimension must be initialized, but later dimensions can be left blank: 
+                        <code>int[][] myArray = new int[3][];</code>
                     </li>
                     <pre><code class="codeblock">
 // Valid declarations:
@@ -351,8 +367,8 @@ for(final int[] outer : arr2D) {
             <code>public static int Math:round(flat num);</code> - rounds a <code>foat</code> value
         </li>
         <li>
-            <code>public static long Math::ceil(double num);</code> - rounds up to nearest integer, no override for other parameter datatypes.<br>
-            <code>public static long Math::floor(double num);</code> - rounds down to nearest integer, no overrides either
+            <code>public static double Math::ceil(double num);</code> - rounds up to nearest integer, no override for other parameter datatypes.<br>
+            <code>public static double Math::floor(double num);</code> - rounds down to nearest integer, no overrides either
         </li>
         <li>
             <code>public static double Math::pow(double number, double exponent)</code> - computes the power of the specified number, and <code>exponent</code>
@@ -456,19 +472,23 @@ System.out.println(dateTime); // 2024-01-18T19:14:30
                 <li><code>Duration.ofNanos(int nanos);</code> or <code>Duration.of(int val, ChronoUnit.NANOS);</code></li>
             </ul>
         </li>
-        <li>The <code>class ChronoUnit</code> also contains methods for determing amount of time between two times:
+        <li>The <code>class ChronoUnit</code> also contains methods for determing amount of time between two times, 
+            outputting a positive value if the 2nd time is after the first</code>:
             <pre><code class="codeblock">
 final var one = LocalTime.of(5,15);
 final var two = LocalTime.of(6,30);
 final var date = LocalDate.of(2016,1,20);
 System.out.println(
-    ChronoUnit.HOURS.between(one, two); // 1
+    ChronoUnit.HOURS.between(one, two) // 1
 );
 System.out.println(
-    ChronoUnit.MINUTES.between(one,two); // 75
+    ChronoUnit.HOURS.between(two,one) // -1
+);
+System.out.println(
+    ChronoUnit.MINUTES.between(one,two) // 75
 )
 System.out.pintln(
-    ChronoUnit.Minutes.between(one,date); // throws DateTimeException
+    ChronoUnit.Minutes.between(one,date) // throws DateTimeException
 );
 
 final LocalTime time = LocalTime.of(3,12,45);
@@ -493,6 +513,16 @@ final var instant = ZonedDateTime.of(date, time, zone).toInstant();
             <li><code>LocalDate</code>, <code>LocalTime</code>, and <code>LocalDateTime</code> <i>cannot</i> be converted
             to an <code>Instant</code> because they do not contain time-zone information.</li>
         </ul>
+        </li>
+        <li><b>Daylight Savings Time</b>
+            <ul>
+                <li>
+                    March:  spring forward 1 hour where 1:59 AM then skips to 3:00 AM and the offset from GMT decreaes by 1 hour
+                </li>
+                <li>
+                    November: fall back 1 hour where after 1:59 AM it falls back to and repeats 1:00 AM and the offset from GMT increases by 1 hour
+                </li>
+            </ul>
         </li>
     </ul>
     </body>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../style/mystyle.css">
+</head>
+<body>
+    <h1>Ch5: Methods</h1>
+    <nav class="navbar">
+        <a href="../Ch3_Program_Flow_Control/Ch3_Study_Guide.html">&leftarrow; Ch4 Core APIs</a>
+        <a href="../MAIN_index.html">Home</a>
+        <a>Ch6 Class Design &rightarrow;</a>
+    </nav>
+    <h2 id="method-structure-section">Method Structure</h2>
+    <ul>
+        <li>Stucture of a method:<br>
+            &Tab;<code>access_modifier optional_specifiers return_type method_name(method_parameters) throws ExceptionType {// method body}</code><br>           
+        </li>
+        <li>Example <i>method declaration:</i><br>
+            &Tab;<code>public static final void myMethod(final int param1, double param2) throws InterruptedException {// method body}</code>
+            <p class="tableheader">Method Declaration Structure</p>
+            <div class="tablecontainer">
+                <table>
+                    <tr>
+                        <th>Element</th> <th>Example</th> <th>Required?</th>
+                    </tr>
+                    <tr>
+                        <td><a href="#access-modifiers-section">Access modifier</a></td> <td><code>public</code></td> 
+                        <td>no, but if not provided it defaults to package-access</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#optional-specifier-section">Optional specifier(s)</a></td> <td><code>static, final</code></td> <td>no</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#return-type-section">Return type</a></td> <td><code>void</code></td> <td>yes, but can be <code>void</code></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#method-name-section">Method name</a></td> <td><code>myMethod</code></td> <td>yes</td>
+                    </tr>
+                    <tr>
+                        <td><a href="parameter-list-section">Parameter list</a></td> <td><code>final int param1, double param2</code></td>
+                        <td>yes, but can be empty <code>()</code></td>
+                    </tr>
+                    <tr>
+                        <td><a href="method-signature-section">Method Signature</a></td> <td>myMethod(final int param1, double param2)</td>
+                        <td>yes</td>
+                    </tr>
+                    <tr>
+                        <td><a href="exception-list-section">Exception list</a></td> <td>throws InterruptedException</td> <td>no</td>
+                    </tr>
+                    <tr>
+                        <td><a href="method-body-section">Method body</a></td> <td>{// method body}</td> <td>yes, except for <code>abstract</code> methods</td>
+                    </tr>
+                </table>
+            </div>
+        </li>
+        <li id="access-modifiers-section"><b>Access Modifier:</b> determines which classes can access the method
+            <ul>
+                <li><code><i>private</i></code> method can only be called from within the same class (and not subclasses)</li>
+                <li><i>package-access</i>: method can be called only from a class in the same package, also
+                known as <i>package-private</i>, or <i>default-access</i> as this level of access is the default applied if not access modifier is provided</li>
+                <li><code><i>protected</i></code>: method can be accessed from a class in the same package or a subclass</li>
+                <li><code><i>public</i></code>: this method can be called from anywhere</li>
+            </ul>
+        </li>
+        <li id="optional-specifier-section"><b>Optional Specifiers:</b> multiple optional specifiers can be added to method declarations
+            <ul>
+                <li>
+                    <code>static</code>: shared member method of the class
+                </li>
+                <li>
+                    <code>abstract</code>: used in abstract classes or interface without a method body and must be overridden
+                    by concrete subclasses
+                </li>
+                <li>
+                    <code>final</code>: specifier that the method cannot be overridden by a subclass
+                </li>
+                <li>
+                    <code>default</code>: used in an <code>interface</code> to provide a default implementation for subclasses
+                    that implement the interface
+                </li>
+                <li>
+                    <code>synchronized</code>: used with multithreaded code to create a thread-safe method
+                </li>
+                <li>
+                    <code>native</code>: used when interacting with code written in another language, such as c++ or c, 
+                    not covered in this study guide
+                </li>
+                <li>
+                    <code>strictfp</code>: used for making floating-point calculations portable, not covered in this study guide
+                </li>
+            </ul>
+        </li>
+        <li>Note that while the access-modifier and optional-modifiers can appear in any order amongst themselves, they 
+            <i>must all</i> come before the return-type of the method.  Typically it is good practice to provide the access-modifier first,
+            followed by any optional-specifiers (required before the return type).
+        </li>
+        <li>The <i>method signature</i> is composed of the method name and its parameter list</li>
+        <pre><code class="codeblock">
+public class Example {
+    public void func1() {}
+    public final void func2() {}
+    public static final void func3() {}
+    final static public void func4() {}
+    public abstract final func5() {} // doesn't compile, abstract and final are not compatible
+    public void final func6() {} // doesn't compile, final required to come before void
+    public int funct7 {} // doesn't compile, no parameter list
+}
+        </code></pre>
+        <li id="return-type-section">Return type: must appear after any access-modifiers and optional modifiers, and before the 
+            method name. The <code>void</code> keyword is used if there is no return value from the method.  Methods with a return value 
+            are required to have a return statement (including for all <code>if</code> or <code>switch</code> cases) with variable/value to be returned: <code>return val;</code> 
+        </li>
+        <li id="method-name-section">
+            Method name: required, follows the <a href="../Ch1_Introduction/Ch1_Study_Guide.html#identifier-rules-section">identifier rules</a>
+            and must be ordered between the method name and the parameter list.
+        </li>
+        <li id="parameter-list-section">
+            Parameter list: required, but can be empty <code>()</code>.  
+            Paramters must be comma-separated, have a specified data type (<code>var</code> is not valid), and may use the optional
+            <code>final</code> modifier.
+        </li>
+        <li id="method-signature-section">
+            Method signature: consists of the method name and parameter list and is used by Java to uniquely determine which 
+            method is being called. Java uses the parameter <i>types</i> for the signature, not the parameter names.
+            <pre><code class="codeblock">
+public class ExampleMethods {
+    public void myFunc1(String name, int index) {}
+    public void myFunc1(String id, int val) {} // does not compile due to non-unique signature
+
+    // the below function also doesn't compile, because
+    // the return type is not used to uniquely determine
+    // the method signature
+    public int myFunc1(String id2, int val2) { return val2; }
+
+    public void myFunct1(int id, int val) {} // compiles    
+}
+            </code></pre>
+        </li>
+        <li id="expection-list-section">
+            Exception list: optional list of exceptions preceded by the <code>throws</code> keyword 
+            that could be thrown by the method, located between
+            the parameter list and method body.  Multiple exception types must be comma-separated.
+        </li>
+        <li id="method-body-section">Method body: the required final part of method declaration which consists of a code block, 
+            requires a <code>return</code> statement if the method has a return-type other than <code>void</code>.
+
+        </li>
+    </ul>
+    <h2 id="method-variables-section">Variables in Methods</h2>
+    <ul>
+        <li>A method may declare and use local variables, and also access instance and class(<code>static</code>) member variables/fields</li>
+        <li>While an object may be returned from a method and accessed by the method's caller, 
+            any local reference variables declared within the method are out-of-scope once the method body has executed.</li>
+        <li>The only local variable modifier is <code>final</code>, which creates a constant primitive varabile or prevents a reference variable
+        from pointing to a different object.</li>
+        <li>An <i>effectively final</i> variable is assigned a value only once and never changed, independent of whether it
+        uses the <code>final</code> modifier.</li>
+        <li id="instace-variable-modifiers">
+            <b>Instance Variable Modifiers:</b> 
+            <ul>
+                <li>I
+                    Instance variables use the same <a href="#access-modifiers-section">access-modifiers</a> as methods.
+                </li>
+                <li>
+                    Optional specifiers:
+                    <ul>
+                        <li><code>final</code>: specifies the instance variable must be initialized with each instance of
+                        the class exactly once.  This initialization can occur either inline with its declaration, an instance initializer block,
+                         or in the class constructor.</li>
+                        <li><code>volatile</code>: tells the JVM that this variable may be modified by other threads</li>
+                        <li><code>transient</code>: specifies that the instance variable should not be serialized with the class instance</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>
