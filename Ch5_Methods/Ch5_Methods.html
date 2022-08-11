@@ -56,11 +56,15 @@
         </li>
         <li id="access-modifiers-section"><b>Access Modifier:</b> determines which classes can access the method
             <ul>
-                <li><code><i>private</i></code> method can only be called from within the same class (and not subclasses)</li>
-                <li><i>package-access</i>: method can be called only from a class in the same package, also
-                known as <i>package-private</i>, or <i>default-access</i> as this level of access is the default applied if not access modifier is provided</li>
-                <li><code><i>protected</i></code>: method can be accessed from a class in the same package or a subclass</li>
-                <li><code><i>public</i></code>: this method can be called from anywhere</li>
+                <li><code><i>private</i></code>: access only from within the same class (and not subclasses).
+                Note that inner-nested classes can access private members of the enclosing class, but static-nested classes cannot.</li>
+                <li><i>package-access</i>: access from classes in the same package, also
+                known as <i>package-private</i>, or <i>default-access</i> as this level of access is the default applied if another access modifier is provided</li>
+                <li><code><i>protected</i></code>: accessible from a classes in the same package or a subclass.  
+                Note that if the subclass is in a different package, it can only access its own <code>protected</code> members and those of other
+                subclass in its same package, but not the <code>protected</code> members of the superclass or other subclasses in different packages.</li>
+                <li><code><i>public</i></code>: can be accessed from anywhere.  Note that if this package is in a module and is not exported,
+                other modules will not be able to access it.</li>
             </ul>
         </li>
         <li id="optional-specifier-section"><b>Optional Specifiers:</b> multiple optional specifiers can be added to method declarations
@@ -174,6 +178,47 @@ public class ExampleMethods {
                 </li>
             </ul>
         </li>
+    </ul>
+    <h2 id="varargs section">Working with Varargs</h2>
+    <ul>
+        <li>
+            A method may use a Varargs parameter and treat it as an array in a the method body
+        </li>
+        <li>
+            Rules:
+            <ol>
+                <li>A method can have <i>at most one</i> Varargs parameter</li>
+                <li>If a method does inclue a Varargs parameter, it must be last in the parameter list</li>
+            </ol>
+        </li>
+        <pre><code class="codeblock">
+public class VarargsExample {
+    public static void func1(int start, int... vals) { 
+        System.out.println(java.util.Arrays.toString(vals));
+    }
+
+    public static void func2(int... start, int... vals) {} // does not compile
+}
+        </code></pre>
+        <li>When calling a method with varargs, you can pass in an array as the varargs parameter, or you
+            can provide a list of comma-separated values of the corresponding data type.  In the latter, Java
+            will automatically provide the method with an array built from your values.  </li>
+            <li>You can also pass in zero arguments for the Varargs parameter and an empty list will be 
+                provided to the method body.</li>
+            <pre><code>
+final int[] data = {1,2,3};
+func1(0, data); // [1, 2, 3]
+func1(0, 4, 5, 6, 10); // [4, 5, 6, 10]
+func1(0); // []
+            </code></pre>        
+        <li>Access a Varargs parameter from the method body is equivalent to accessing a 1d-array</li>
+    </ul>
+    <h2 id="access-modifier-section">Applying Access Modifiers</h2>
+    <ul>
+        <li><b><code>private</code> access</b></li>
+        <li><b>Package access</b></li>
+        <li><b><code>protected</code></b> access</li>
+        <li><b><code>public</code> access</b></li>
     </ul>
 </body>
 </html>
