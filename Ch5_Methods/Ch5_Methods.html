@@ -214,11 +214,24 @@ func1(0); // []
         <li>Access a Varargs parameter from the method body is equivalent to accessing a 1d-array</li>
     </ul>
     <h2 id="access-modifier-section">Applying Access Modifiers</h2>
+    <p class="tableheader">A method in _______ can access a _______ member</p>
+    <div class="tablecontainer">
+        <table>
+            <tr><th></th><th><code>private</code></th> <th>package</th> <th><code>protected</code></th> <th><code>public</code></th></tr>
+            <tr><td>the same class</td> <td>Yes</td> <td>Yes</td> <td>Yes</td> <td>Yes</td></tr>
+            <tr><td>another class in the same package</td> <td>No</td> <td>Yes</td> <td>Yes</td> <td>Yes</td></tr>
+            <tr><td>a sublcass in a different package</td> <td>No</td> <td>No</td> <td>Yes</td> <td>Yes</td></tr>
+            <tr><td>unrelated class in a different package</td> <td>No</td> <td>No</td> <td>No</td> <td>No</td></tr>
+        </table>
+    </div>
+    <h2 id="static-section">Accessing <i><code>static</code></i> Data</h2>
     <ul>
-        <li><b><code>private</code> access</b></li>
-        <li><b>Package access</b></li>
-        <li><b><code>protected</code></b> access</li>
-        <li><b><code>public</code> access</b></li>
+        <li>The <code>static</code> keyword designates a member as belonging to the class rather than a single instance of the class</li>
+        <li>Can also be used with an <code>import</code> statement to import a <code>static</code> method from a class in a different package</li>
+        <li>Static variables and methods are accessed by putting the name before the method or variable: <code>Math.round(doubleVal);</code></li>
+        <li>An instance object of the class can also be used to access/call a <code>static</code>method, including a <code>null</code>
+        reference variable! </li>
+        <li>Note that a <code>static member</code> cannot call an instance member with a reference variable to an instance of the class</li>
     </ul>
 </body>
 </html>
