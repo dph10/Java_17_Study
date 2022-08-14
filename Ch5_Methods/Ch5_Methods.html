@@ -290,6 +290,29 @@ counter = intCount; // Unboxing
     char val = endChar; // runtime exception: NullPointerException
 </code></pre>
         </li>
+        <li>Java <i>cannot</i> autobox arrays, ex: <code>int[] ints</code> cannot be autoboxed to <code>Integer[] intWraps</code></li>
+    </ul>
+    <h2 id="overloading-section">Overloading Methods</h2>
+    <ul>
+        <li><i>Method overriding</i> is used to write multiple methods with the same name, all with 
+            different/unique parameter types, yielding unique method signatures.
+        </li>
+        <li>The return type is not part of the method signature, so only changing the return types cannot
+            is not valid method overloading
+        </li>
+        <li>Java automatically looks for the matching types in the method signature and calls
+            the most specific version (chooses subclasses over superclasses if available)
+        </li>
+        <p class="tableheader">Java overloading selection order</p>
+        <div class="tablecontainer">
+            <table>
+                <tr><th>Rule</th> <th>Example</th></tr>
+                <tr><td>Exact match by type</td> <td><code>String sumVals(int i, int j);</code></td></tr>
+                <tr><td>Larger primitive type</td> <td><code>String sumVals(long i, long j);</code></td></tr>
+                <tr><td>Autoboxed type</td> <td>String sumVals(Integer i, Integer j);</td></tr>
+                <tr><td>Varargs</td><td>String sumVals(int... nums);</td></tr>
+            </table>
+        </div>
     </ul>
 </body>
 </html>
