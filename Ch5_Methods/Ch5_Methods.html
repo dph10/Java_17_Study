@@ -232,6 +232,64 @@ func1(0); // []
         <li>An instance object of the class can also be used to access/call a <code>static</code>method, including a <code>null</code>
         reference variable! </li>
         <li>Note that a <code>static member</code> cannot call an instance member with a reference variable to an instance of the class</li>
+        <li><code>static</code> variables can be declared with the same modifiers as <a href="#instace-variable-modifiers">instance variables</a>
+            <ul>
+                <li>
+                <code>static final</code> variables are usually considered constants and use a naming convention of call capital letters with underscores
+                between the words: <code>public static final int NUM_BINS = 10;</code>
+                </li>
+                <li><code>static final</code> variables use <a href="#static-init-section"><i><code>static</code> initializers</i></a> in the class definition</li>
+            </ul>
+        </li>
+        <li id="static-init-section"><b><code>static</code> initializers</b>
+            <ul>
+                <li>Consists of a <code>static</code> code block and are run when the <code>class is first used</code> and before any <code>class</code> instance constructors: <code>static {// init a static final variables}</code></li> 
+                <pre><code class="codeblock">
+public static final int INCHES_TO_CENTIMETER;
+
+static {
+    INCHES_TO_CENTIMETER = 2.54;
+}
+                </code></pre>
+                <li>It is generally good practice to only use a <code>static</code> initializer if it takes more than 1 line of code
+                to initialize a <code>static final</code> class variable.</li>
+            </ul>
+        </li>
+        <li><code>static</code> Imports: used to import <code>static</code> member of classes, and can be used with wildcards
+            <pre><code class="codeblock">
+import static java.util.Arrays.*;
+
+public class MainClass {
+    public static void main(final String... args) {
+        final int[] arr1 = {1, 2, 3};
+        final int[] arr2 = {-10, 3, 5};
+
+        final boolean compareArrays = compare(arr1, arr2) &lt; 0; // false
+    }
+}
+            </code></pre>
+        </li>
+    </ul>
+    <h2 id="method-data-section">Passing Data to and from Methods</h2>
+    <ul>
+        <li>Note that method parameters are <b><i>passed by value</i></b> in Java.  This applies to both primitive values and reference variables.</li>
+        <li>Assigning a new primitive/reference value to a method parameter within the method body doesn't change the caller variable</li>
+        <li>Calling a method on a mutable object within the method body can make changes that affect the caller.</li>
+        <li>Java can automatically convert a primitive to its wrapper object type for method parameters and and returning from objects: called <i>Autoboxing</i></li>
+        <li>Java can also automatically convert a wrapper object type to its corresponding primitive data type for methods: called <i>Unboxing</i>
+            <pre><code class="codeblock">
+int counts = 5;
+Integer intCount = counter; // Autoboxing
+counter = intCount; // Unboxing
+            </code></pre>
+        </li>
+        <li>Note that Java <i>cannot</i> cast to a larger datatype and Autobox at the same time!
+<pre><code class="codeblock">
+    Long badVal = 8; // does not compile
+    Character endChar = null;
+    char val = endChar; // runtime exception: NullPointerException
+</code></pre>
+        </li>
     </ul>
 </body>
 </html>
