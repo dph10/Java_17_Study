@@ -9,7 +9,7 @@
     <nav class="navbar">
         <a href="../Ch3_Program_Flow_Control/Ch3_Study_Guide.html">&leftarrow; Ch4 Core APIs</a>
         <a href="../MAIN_index.html">Home</a>
-        <a>Ch6 Class Design &rightarrow;</a>
+        <a href="../Ch6_Class_Design/Ch6_Class_Design.html">Ch6 Class Design &rightarrow;</a>
     </nav>
     <h2 id="method-structure-section">Method Structure</h2>
     <ul>
@@ -38,18 +38,18 @@
                         <td><a href="#method-name-section">Method name</a></td> <td><code>myMethod</code></td> <td>yes</td>
                     </tr>
                     <tr>
-                        <td><a href="parameter-list-section">Parameter list</a></td> <td><code>final int param1, double param2</code></td>
+                        <td><a href="#parameter-list-section">Parameter list</a></td> <td><code>(final int param1, double param2)</code></td>
                         <td>yes, but can be empty <code>()</code></td>
                     </tr>
                     <tr>
-                        <td><a href="method-signature-section">Method Signature</a></td> <td>myMethod(final int param1, double param2)</td>
+                        <td><a href="#method-signature-section">Method Signature</a></td> <td>myMethod(final int param1, double param2)</td>
                         <td>yes</td>
                     </tr>
                     <tr>
-                        <td><a href="exception-list-section">Exception list</a></td> <td>throws InterruptedException</td> <td>no</td>
+                        <td><a href="#exception-list-section">Exception list</a></td> <td>throws InterruptedException</td> <td>no</td>
                     </tr>
                     <tr>
-                        <td><a href="method-body-section">Method body</a></td> <td>{// method body}</td> <td>yes, except for <code>abstract</code> methods</td>
+                        <td><a href="#method-body-section">Method body</a></td> <td>{// method body}</td> <td>yes, except for <code>abstract</code> methods</td>
                     </tr>
                 </table>
             </div>
@@ -59,10 +59,11 @@
                 <li><code><i>private</i></code>: access only from within the same class (and not subclasses).
                 Note that inner-nested classes can access private members of the enclosing class, but static-nested classes cannot.</li>
                 <li><i>package-access</i>: access from classes in the same package, also
-                known as <i>package-private</i>, or <i>default-access</i> as this level of access is the default applied if another access modifier is provided</li>
+                known as <i>package-private</i>, or <i>default-access</i> as this level of access is the default applied if 
+                another access modifier is provided.  No access from subclasses in another package.</li>
                 <li><code><i>protected</i></code>: accessible from a classes in the same package or a subclass.  
                 Note that if the subclass is in a different package, it can only access its own <code>protected</code> members and those of other
-                subclass in its same package, but not the <code>protected</code> members of the superclass or other subclasses in different packages.</li>
+                subclass in its same package, but not the <code>protected</code> members of superclass/subclass <i>instances</i> from a different packages.</li>
                 <li><code><i>public</i></code>: can be accessed from anywhere.  Note that if this package is in a module and is not exported,
                 other modules will not be able to access it.</li>
             </ul>
@@ -157,13 +158,13 @@ public class ExampleMethods {
         <li>While an object may be returned from a method and accessed by the method's caller, 
             any local reference variables declared within the method are out-of-scope once the method body has executed.</li>
         <li>The only local variable modifier is <code>final</code>, which creates a constant primitive varabile or prevents a reference variable
-        from pointing to a different object.</li>
+        from pointing to a different object.  They are not required to be initialized unless they are actually used.</li>
         <li>An <i>effectively final</i> variable is assigned a value only once and never changed, independent of whether it
-        uses the <code>final</code> modifier.</li>
+        uses the <code>final</code> modifier.  This includes declaring the variable in on statement, and initializing it (once) in another statement.</li>
         <li id="instace-variable-modifiers">
             <b>Instance Variable Modifiers:</b> 
             <ul>
-                <li>I
+                <li>
                     Instance variables use the same <a href="#access-modifiers-section">access-modifiers</a> as methods.
                 </li>
                 <li>
@@ -182,7 +183,7 @@ public class ExampleMethods {
     <h2 id="varargs section">Working with Varargs</h2>
     <ul>
         <li>
-            A method may use a Varargs parameter and treat it as an array in a the method body
+            A method may use a Varargs parameter and treat it as an array in the method body
         </li>
         <li>
             Rules:
@@ -205,13 +206,13 @@ public class VarargsExample {
             will automatically provide the method with an array built from your values.  </li>
             <li>You can also pass in zero arguments for the Varargs parameter and an empty list will be 
                 provided to the method body.</li>
-            <pre><code>
+            <pre><code class="codeblock">
 final int[] data = {1,2,3};
 func1(0, data); // [1, 2, 3]
 func1(0, 4, 5, 6, 10); // [4, 5, 6, 10]
 func1(0); // []
             </code></pre>        
-        <li>Access a Varargs parameter from the method body is equivalent to accessing a 1d-array</li>
+        <li>Accessing a Varargs parameter from the method body is equivalent to accessing a 1d-array</li>
     </ul>
     <h2 id="access-modifier-section">Applying Access Modifiers</h2>
     <p class="tableheader">A method in _______ can access a _______ member</p>
@@ -231,7 +232,7 @@ func1(0); // []
         <li>Static variables and methods are accessed by putting the name before the method or variable: <code>Math.round(doubleVal);</code></li>
         <li>An instance object of the class can also be used to access/call a <code>static</code>method, including a <code>null</code>
         reference variable! </li>
-        <li>Note that a <code>static member</code> cannot call an instance member with a reference variable to an instance of the class</li>
+        <li>Note that a <code>static member</code> cannot call an instance member without a reference variable to an instance of the class</li>
         <li><code>static</code> variables can be declared with the same modifiers as <a href="#instace-variable-modifiers">instance variables</a>
             <ul>
                 <li>
@@ -243,7 +244,7 @@ func1(0); // []
         </li>
         <li id="static-init-section"><b><code>static</code> initializers</b>
             <ul>
-                <li>Consists of a <code>static</code> code block and are run when the <code>class is first used</code> and before any <code>class</code> instance constructors: <code>static {// init a static final variables}</code></li> 
+                <li>Consists of a <code>static</code> code block and are run when the <code>class</code> is first used and before any <code>class</code> instance constructors: <code>static {// init a static final variables}</code></li> 
                 <pre><code class="codeblock">
 public static final int INCHES_TO_CENTIMETER;
 
@@ -313,6 +314,31 @@ counter = intCount; // Unboxing
                 <tr><td>Varargs</td><td>String sumVals(int... nums);</td></tr>
             </table>
         </div>
+        <pre><code class="codeblock">
+public class Test {
+    public void print(byte x) {
+        System.out.print("byte ");
+    }
+    public void print(int x) {
+        System.out.print("int ");
+    }
+    public void print(float x) {
+        System.out.println("float ");
+    }
+    public void print(Object x) {
+        System.out.println("object ");
+    }
+
+    public static void main(String[] args) {
+        Test t = new Test();
+        short s = 321;
+
+        t.print(s); // int (larger primitive type)
+        t.print(true); // object (autoboxing to Boolean)
+        t.print(3.14); // object (autoboxing to Double)
+    }
+}
+        </code></pre>
     </ul>
 </body>
 </html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch6: Class Design</h1>
+        <nav class="navbar">
+            <a href="../Ch5_Methods/Ch5_Methods.html">&leftarrow; Ch5 Methods</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch7 Advanced Class Design &rightarrow;</a>
+        </nav>
+        <h2 id="inheritance-section">Inheritance</h2>
+        <ul>
+            <li><i>Inheritance</i> gives members defined in a superclass/parent class to a <i>subclass</i></li>
+            <li>A <i>subclass</i> is any class that inherits from some other ancestor class(called a <i>superclass</i> or <i>parent class</i>), 
+                and is considered a descendant of that ancestor</li>
+            <li>Subclasses have access to all its inherited <code>public</code> and <code>protected</code> members from the superclass</li>
+            <li>If the subclass and superclass are in the same package, then all package-access members are also available to the subclass</li>    
+            <li>Subclasses do not have access to inherited <code>private</code> members</li>
+            <li><b>Class Modifiers:</b>
+                <ul>
+                    <li><code>final</code>: the class may not be extended</li>
+                    <li><code>abstract</code>: the class may contain <code>abstract</code> methods and requires 
+                    a non-<code>abstract</code>/concrete subclass to instantiate</li>
+                    <li><code>sealed</code>: the class may only be extended by a specific list of classes</li>
+                    <li><code>non-sealed</code>: a subclass of a sealed class permits potentially unnamed subclasses</li>
+                    <li><code>static</code>: can be used for <code>static</code> nested classes defined within another class</li>
+                
+                </ul>
+            </li>
+            <li>Java only supports <i>single-inheritance</i>, meaning that a subclass can only extend/inherit from 1 direct parent class</li>
+            <li><code>java.lang.Object</code> is the base class that all Java objects automatically inherit from.  This gives them several
+            inherited methods, including <code>toString()</code>, <code>equals()</code>, and <code>hashcode()</code></li>
+            <li>Primitive values do not inherit from <code>Object</code> since they are not objects, but when autoboxed their 
+            wrapper classes to inherit from <code>Object</code></li>
+        </ul>
+        <h2 id="creating-classes-section">Creating Classes</h2>
+        <ul>
+            <li>In a .java file, there can be one top-level <code>public class</code> and many other package-access top-level classes.  
+            But top-level classes <i>cannot</i> be declared as <code>protected</code> or <code>private</code></li>
+            <li>The optional <code>this</code> reference can be used to refer to instance members, and can also help
+            fix naming conflicts
+            <pre><code class="codeblock">
+                public void setColor(final String color) {
+                    this.color = color; // without this keyword, the color parameter would be hidden
+                }                       // by the color member                
+            </code></pre>
+            </li>
+            <li>Parent classes and subclasses can have two different version of member variables and methods, so the <code>super</code>
+            keyword can be used access the inherited version.  Declaring a variable with the same name as an inherited
+            member variable is called <i>hiding</i></li>
+        </ul>
+        <h2 id="constructor-section">Constructors</h2>
+        <ul>
+            <li>
+                Constructors are a special type of method whose method-name matches the class name and it has not return type.  
+                They are used to create a new instance of a class
+            </li>
+            <li>A class can have multiple constructors (known as <i>constructor overloading</i>), 
+                as long as each version has a unique construct signature (parameter types)</li>
+            <li>The  <i>default constructor</i> is automatically provided by Java only if the class definition does not contain one.
+                It consists of an empty parameter list and empby body
+            <pre><code class="codeblock">
+public class DefaultConstructor {
+    public static void main(final String... args) {
+        final var newInstance = new DefaultConstructor();
+    }
+}
+            </code></pre>
+            <li>Constuctors can have <code>private</code> access, which prevents other classes from instantiating it.  This 
+            can be useful if the developer wants full control over calls to create a new instance, usually with <code>static</code>
+            factory methods.</li>
+            </li>
+            <li>Overloaded constructors can be called with <code>this()</code> with the matching parameter list of the other constructor version.
+            Note that a call to <code>this()</code> <i>must be the first statement</i> in the constructor, and can
+            only be called once.  Also a constructor cannot call itself with <code>this()</code> because this would cause a <i>cycle</i>, which is
+            detected and reported as a compiler error.  Cyclic constructor calls between two overloaded constructor versions is also not allowed.</li>
+            <li><b>Constructor Rules Summary:</b>
+                <ol>
+                    <li>A class can contain many overloaded constructors, each with a unique signature</li>
+                    <li>The compiler inserts a default no-args constructor if no constructors are declared</li>
+                    <li>If a constructor calls <code>this()</code>, it must be the first line in the constructor</li>
+                    <li>Cyclic constructor calls (using <code>this()</code>) are not allowed</li>
+                </ol>
+            </li>
+            <li><b>Parent class constructors</b>
+                <ul>
+                    <li>The first statement of <i>every</i> constuctor is a call to a parent constructor using <code>super()</code>
+                        or a call with <code>this()</code>.  For direct descendants of <code>java.lang.Object</code>, 
+                    Java autoatically inserts <code>super()</code> as the first statement.</li>
+                    <li><code>super()</code> can only be called once as the first statement of a sublcass constructor.  Any valid
+                    parent constructor can be called.</li>
+                    <li>If a parent class contains a no-args constructor, then the explicit call to <code>super()</code>
+                    in the child class is optional (as the compiler can automatically insert it).</li>
+                    <li>If a parent class does not contain a no-args constructor and does declare a constructor with a non-empty parameter list,
+                        then the child class <i>is required </i> call <code>super()</code> with a valid parent constructor signature.
+                    </li>
+                    <li>Note that <code>super()</code> <i>always</i> refers to the most direct parent/ancestor</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="initializing-objects-section">Initializing Objects</h2>
+        <ul>
+            <li id="class-init-section"><b>Class Initialization</b>
+                <ul>
+                    <li>All <code>static</code> members of a class are invoked first, starting with the highest superclass and
+                        then working down through the inheritance hierarchy. This process is called <i>loading</i> the class,
+                        and
+                        happens <i>at most once</i> for each class, and possibly not at all if it'si not used in the program
+                    </li>
+                    <li>Class Initialization order:
+                        <ol>
+                            <li>Initialize a superclass first</li>
+                            <li>Process all <code>static</code> variable declarations in the order in which they appear</li>
+                            <li>Process all <code>static</code> initializer blocks in the order in which they appear</li>
+                        </ol>
+                    </li>
+                </ul>
+            </li>
+            <li><b><code>final</code> Field Initialization</b>
+                <ul>
+                    <li>Note that only non-final variables are initialized to default values, while <code>final</code>
+                        instance and static variables are required to be initialized or a compiler error will result</li>
+                    <li>Instance <code>final</code> fields can be initialized inline, in an instance-initializer,
+                        or in the constructor. Note that all <code>final</code> instance fields must be initialized by the end of
+                        the constructor exactly once, or a compiler error on the line that declares the constructor occurs.</li>
+                    <li>class/<code>static final</code> fields must be initialized inline or in an a <code>static</code> initializer
+                        block or </li>
+                </ul>
+            </li>
+            <li><b>Instance Initialization Order</b>
+                <ol>
+                    <li>Initialize/load the <a href="#class-init-section">class</a> if it has not been previously initialized</li>
+                    <li>Initialize superclasses first</li>
+                    <li>Process all instance variable declarations in the order in which they appear</li>
+                    <li>Process all instance initializers in the order in which they appear</li>
+                    <li>Initialize the constructor, including any overloaded constructors reference by <code>this()</code></li>
+                </ol>
+            </li>
+            <li><b>Initialization Rules Summary:</b>
+                <ol>
+                    <li>A class is loaded/initialized at most once by the JVM before it is referenced or used.</li>
+                    <li>All <code>static final</code> class fields must be assigned a value exactly once, either
+                        inline when they are declared or in a static initializer.</li>
+                    <li>
+                        All <code>final</code> instance fields must be assigned a value exactly once, either inline
+                        when they are declared, in a instance initializer, or in a constructor.
+                    </li>
+                    <li>Non-<code>final static</code> and instance variables defined without a value are assigned
+                        a default value based on their type</li>
+                    <li>Order of initialization: superclass, variable declarations, then initializers, and finally constructors</li>
+                </ol>
+            </li>
+        </ul>
+        <h2 id="inheriting-members-section">Inheriting Members</h2>
+        <ul>
+            <li>A Java object can take on many different forms/reference types through inheritance, which is
+                known as <i>polymorphism</i>
+            </li>
+            <li><b>Method Overriding</b>
+                <ul>
+                    <li>
+                        <i>Overriding</i> a method allows a subclass to implement its own version of an inherited superclass
+                        method (as long as it wasn't marked <code>final</code> in the superclass). This requires the
+                        subclass method implementation to have a matching method-signature and compatible return type.
+                    </li>
+                    <li>The superclass version of the method can still be reference using <codee>super.methodName()</codee></li>
+                    <li id="overriding-rules-section">Overriding rules summary:
+                        <ol>
+                            <li>The subclass method must have the same signature as the superclass method.</li>
+                            <li>The sublcass method must be at least as accessible as the superclass method (cannot have more restrictive access)</li>
+                            <li>The subclass method may not declare a new or broader checked exception than that of the superclass</li>
+                            <li>The subclass return type must be the same or a subtype of the superclass return type (called <i>covariant return types</i>)</li>
+                        </ol>
+                    </li>
+                    <li>Covariant return types: the return type of a subclass method overriding a superclass method must 
+                        be a subtype of the superclass return type.
+                        <pre><code class="codeblock">
+public class Parent {
+    protected CharSequence getName() {
+        return "parent";
+    }
+    protected String getColor() {
+        return "blue";
+    }
+}
+
+public class ChildClass extends Parent {
+    public String getName() { // subtype of CharSequence
+        return "child";
+    }
+
+    // does not compile because return type is a
+    // supertype, not a subtype
+    public CharSequence getColor() {
+        return "green";
+    }
+}
+                        </code></pre>
+                        <li><code>@Override</code> annotation tells the compiler that subclass is attempting
+                            to override a superclass method.  A compiler error will occur if a mistake 
+                            is made in the sublcass implementation
+                        </li>
+                    </li>
+                </ul>
+            </li>
+            <li><code>private</code> can be <i>redeclared</i> when a new sublcass method
+                with the same or modified signature which- this is a separate and independent method from the superclass version and is not overriding</li>
+            <li>
+                <code>static/class</code> methods can be <i>hidden</i>, not overridden beacuse <code>static</code> members are not
+                overridden.
+                This occurs when a sublcass defined a <code>static</code> method with the same name and signature as a superclass
+                <code>static</code> method.
+                </li>
+                <li>Instance variables can be <i>hidden</i> (but not overridden). This occurs when a subclass defined a variable
+                    with the same name as an inherited variable defined in a super class. The creates two distinct versions
+                    of the variable. The hidden variable is only used with a reference of the subclass type, where a reference
+                    of the superclass type uses the superclass version
+                    <pre><code class="codeblock">
+class Parent {
+    protected boolean valid = false;
+}
+
+public class Child extends Parent {
+    protected boolean valid = true;
+
+    public static void main(final String... args) {
+        Child m = new Child();
+        System.out.println(m.valid); // true
+        System.out.println(((Parent)m).valid); // false
+    }
+}
+                    </code></pre>
+                </li>
+            </li>
+            <li><code>final</code> methods <i>cannot</i> be overriden (or hidden if it is a <code>static</code> method)</li>
+        </ul>
+        <h2 id="abstract-class-section">Abstract Classes</h2>
+        <ul>
+            <li>Abstract classes are declared with the <code>abstract</code> modifier that cannot
+            be directly instantiated and can contain <code>abstract</code> methods that are required to
+            be overriden by concrete subclasses.  An abstract class actually isn't required to contain
+            any abstract methods.</li>
+            <li>Even though abstract classes cannot be directly instantiated, they can provide constructors
+                to ininitialize its instance member fields.
+            </li>
+            <li>
+                Rules summary:
+                <ol>
+                    <li>Only instance methods can be marked <code>abstract</code> within an 
+                    <code>abstract</code> class, not variables, constructors, or <code>static</code> methods</li>
+                    <li>An abstract method can only be declared in an abstract class</li>
+                    <li>A non-abstract (aka concrete implementation) class that extends an abstract class
+                        must implement all inherited abstract methods.
+                    </li>
+                    <li>
+                        Overring an abstract method follows the previously specified rles for <a href="#overriding-rules-section">overriding methods</a>.
+                    </li>
+                </ol>
+            </li>
+            <li>Abstract methods are declared with the <code>abstract</code> modifier without a method body, followed by a semicolon(<code>;</code>)</li>
+            <li>A concrete subclass extends an abstract class and is required to implement all abstract methods.</li>
+            <li>Note that a compiler error will occur if you try to mark a class or method as <code>abstract</code> and <code>final</code>, 
+                as those modifiers are not compatible.</li>
+            <li>Note that a method cannot be marked as both <code>abstract</code> and <code>private</code> as subclasses
+                will not be able to provide an overridden implementation as required.  A method can be declared both <code>private</code> and 
+                <code>final</code>, although this is redundant as subclasses will not have access to override the method.</li>
+            <li>Not that <code>static</code> methods cannot be marked as <code>abstract</code>, as they can only be hidden, not overridden
+            by subclasses.</li>
+        </ul>
+        <h2 id="immutable-object-section">Creating Immutable Objects</h2>
+        <ul>
+            <li>The <i>immutable objects pattern</i> can be used to create a class and instantiate objects that cannot change state</li>
+            <li><b>Immutsble objects pattern:</b>
+                <ol>
+                    <li>Mark the class as <code>final</code> or make all of the constructors <code>private</code></li>
+                    <li>Mark all instance variables as <code>private</code> and <code>final</code></li>
+                    <li>Do not provide any setter methods for instance variables</li>
+                    <li>Done allow referenced mutable objects to be modifier (don't expose direct access or getter methods)</li>
+                    <li>Use a constructor to set all instance fields of the object during instance initialization exactly once, 
+                        making a defensive copy if needed.
+                    </li>
+                </ol>
+            </li>
+        </ul>
+    </body>
+</html>
