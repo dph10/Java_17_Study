@@ -157,7 +157,7 @@ public class ExampleMethods {
         <li>A method may declare and use local variables, and also access instance and class(<code>static</code>) member variables/fields</li>
         <li>While an object may be returned from a method and accessed by the method's caller, 
             any local reference variables declared within the method are out-of-scope once the method body has executed.</li>
-        <li>The only local variable modifier is <code>final</code>, which creates a constant primitive varabile or prevents a reference variable
+        <li>The only local variable modifier is <code>final</code>, which creates a constant primitive variable or prevents a reference variable
         from pointing to a different object.  They are not required to be initialized unless they are actually used.</li>
         <li>An <i>effectively final</i> variable is assigned a value only once and never changed, independent of whether it
         uses the <code>final</code> modifier.  This includes declaring the variable in on statement, and initializing it (once) in another statement.</li>
@@ -232,7 +232,7 @@ func1(0); // []
         <li>Static variables and methods are accessed by putting the name before the method or variable: <code>Math.round(doubleVal);</code></li>
         <li>An instance object of the class can also be used to access/call a <code>static</code>method, including a <code>null</code>
         reference variable! </li>
-        <li>Note that a <code>static member</code> cannot call an instance member without a reference variable to an instance of the class</li>
+        <li>Note that a <code>static</code> member cannot call an instance member without a reference variable to an instance of the class</li>
         <li><code>static</code> variables can be declared with the same modifiers as <a href="#instace-variable-modifiers">instance variables</a>
             <ul>
                 <li>
@@ -244,7 +244,7 @@ func1(0); // []
         </li>
         <li id="static-init-section"><b><code>static</code> initializers</b>
             <ul>
-                <li>Consists of a <code>static</code> code block and are run when the <code>class</code> is first used and before any <code>class</code> instance constructors: <code>static {// init a static final variables}</code></li> 
+                <li>Consists of a <code>static</code> code block and are run when the <code>class</code> is first used and before any <code>class</code> instance constructors: <br><code>static { // init static final variables}</code></li> 
                 <pre><code class="codeblock">
 public static final int INCHES_TO_CENTIMETER;
 
@@ -276,7 +276,7 @@ public class MainClass {
         <li>Note that method parameters are <b><i>passed by value</i></b> in Java.  This applies to both primitive values and reference variables.</li>
         <li>Assigning a new primitive/reference value to a method parameter within the method body doesn't change the caller variable</li>
         <li>Calling a method on a mutable object within the method body can make changes that affect the caller.</li>
-        <li>Java can automatically convert a primitive to its wrapper object type for method parameters and and returning from objects: called <i>Autoboxing</i></li>
+        <li>Java can automatically convert a primitive to its wrapper object type for method parameters and returning from objects: called <i>Autoboxing</i></li>
         <li>Java can also automatically convert a wrapper object type to its corresponding primitive data type for methods: called <i>Unboxing</i>
             <pre><code class="codeblock">
 int counts = 5;
@@ -295,11 +295,10 @@ counter = intCount; // Unboxing
     </ul>
     <h2 id="overloading-section">Overloading Methods</h2>
     <ul>
-        <li><i>Method overriding</i> is used to write multiple methods with the same name, all with 
+        <li><i>Method overloading</i> is used to write multiple methods with the same name, all with 
             different/unique parameter types, yielding unique method signatures.
         </li>
-        <li>The return type is not part of the method signature, so only changing the return types cannot
-            is not valid method overloading
+        <li>The return type is not part of the method signature, so only changing the return types is not valid method overloading
         </li>
         <li>Java automatically looks for the matching types in the method signature and calls
             the most specific version (chooses subclasses over superclasses if available)

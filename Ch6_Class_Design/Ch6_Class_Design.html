@@ -9,7 +9,7 @@
         <nav class="navbar">
             <a href="../Ch5_Methods/Ch5_Methods.html">&leftarrow; Ch5 Methods</a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch7 Advanced Class Design &rightarrow;</a>
+            <a href="../Ch7_Advanced_Class_Topics/Ch7_Advanced_Class_Topics.html">Ch7 Advanced Class Topics &rightarrow;</a>
         </nav>
         <h2 id="inheritance-section">Inheritance</h2>
         <ul>
@@ -38,18 +38,18 @@
         </ul>
         <h2 id="creating-classes-section">Creating Classes</h2>
         <ul>
-            <li>In a .java file, there can be one top-level <code>public class</code> and many other package-access top-level classes.  
+            <li>In a .java file, there can only be one top-level <code>public class</code>, any many other package-access top-level classes.  
             But top-level classes <i>cannot</i> be declared as <code>protected</code> or <code>private</code></li>
             <li>The optional <code>this</code> reference can be used to refer to instance members, and can also help
             fix naming conflicts
             <pre><code class="codeblock">
-                public void setColor(final String color) {
-                    this.color = color; // without this keyword, the color parameter would be hidden
-                }                       // by the color member                
+public void setColor(final String color) {
+    this.color = color; // without this keyword, the color parameter would be hidden
+}                       // by the color member                
             </code></pre>
             </li>
             <li>Parent classes and subclasses can have two different version of member variables and methods, so the <code>super</code>
-            keyword can be used access the inherited version.  Declaring a variable with the same name as an inherited
+            keyword can be used to access the inherited version.  Declaring a variable with the same name as an inherited
             member variable is called <i>hiding</i></li>
         </ul>
         <h2 id="constructor-section">Constructors</h2>
@@ -59,9 +59,9 @@
                 They are used to create a new instance of a class
             </li>
             <li>A class can have multiple constructors (known as <i>constructor overloading</i>), 
-                as long as each version has a unique construct signature (parameter types)</li>
+                as long as each version has a unique constructor signature (parameter types)</li>
             <li>The  <i>default constructor</i> is automatically provided by Java only if the class definition does not contain one.
-                It consists of an empty parameter list and empby body
+                It consists of an empty parameter list and empty body
             <pre><code class="codeblock">
 public class DefaultConstructor {
     public static void main(final String... args) {
@@ -76,7 +76,7 @@ public class DefaultConstructor {
             <li>Overloaded constructors can be called with <code>this()</code> with the matching parameter list of the other constructor version.
             Note that a call to <code>this()</code> <i>must be the first statement</i> in the constructor, and can
             only be called once.  Also a constructor cannot call itself with <code>this()</code> because this would cause a <i>cycle</i>, which is
-            detected and reported as a compiler error.  Cyclic constructor calls between two overloaded constructor versions is also not allowed.</li>
+            detected and reported as a compiler error.  Cyclic constructor calls between multiple overloaded constructor versions is also not allowed.</li>
             <li><b>Constructor Rules Summary:</b>
                 <ol>
                     <li>A class can contain many overloaded constructors, each with a unique signature</li>
@@ -95,7 +95,7 @@ public class DefaultConstructor {
                     <li>If a parent class contains a no-args constructor, then the explicit call to <code>super()</code>
                     in the child class is optional (as the compiler can automatically insert it).</li>
                     <li>If a parent class does not contain a no-args constructor and does declare a constructor with a non-empty parameter list,
-                        then the child class <i>is required </i> call <code>super()</code> with a valid parent constructor signature.
+                        then the child class <i>is required </i>to call <code>super()</code> with a valid parent constructor signature.
                     </li>
                     <li>Note that <code>super()</code> <i>always</i> refers to the most direct parent/ancestor</li>
                 </ul>
@@ -108,7 +108,7 @@ public class DefaultConstructor {
                     <li>All <code>static</code> members of a class are invoked first, starting with the highest superclass and
                         then working down through the inheritance hierarchy. This process is called <i>loading</i> the class,
                         and
-                        happens <i>at most once</i> for each class, and possibly not at all if it'si not used in the program
+                        happens <i>at most once</i> for each class, and possibly not at all if it's not used in the program
                     </li>
                     <li>Class Initialization order:
                         <ol>
@@ -127,7 +127,7 @@ public class DefaultConstructor {
                         or in the constructor. Note that all <code>final</code> instance fields must be initialized by the end of
                         the constructor exactly once, or a compiler error on the line that declares the constructor occurs.</li>
                     <li>class/<code>static final</code> fields must be initialized inline or in an a <code>static</code> initializer
-                        block or </li>
+                        block</li>
                 </ul>
             </li>
             <li><b>Instance Initialization Order</b>
@@ -206,14 +206,15 @@ public class ChildClass extends Parent {
                     </li>
                 </ul>
             </li>
-            <li><code>private</code> can be <i>redeclared</i> when a new sublcass method
-                with the same or modified signature which- this is a separate and independent method from the superclass version and is not overriding</li>
+            <li><code>private</code> methods can be <i>redeclared</i> when a new sublcass method
+                with the same or modified signature- this is a separate and independent method from the superclass version and is not overriding.
+                <code>private final</code> superclass methods can still be redeclared by sublcasses!</li>
             <li>
-                <code>static/class</code> methods can be <i>hidden</i>, not overridden beacuse <code>static</code> members are not
-                overridden.
-                This occurs when a sublcass defined a <code>static</code> method with the same name and signature as a superclass
+                <code>static/class</code> methods can be <i>hidden</i>, not overridden. This occurs when a sublcass defined a <code>static</code> method with the same name and signature as a superclass
                 <code>static</code> method.
                 </li>
+                <li>Note that a compilation error will occur if you try to override a <code>static method</code> with an
+                    instance method</li>
                 <li>Instance variables can be <i>hidden</i> (but not overridden). This occurs when a subclass defined a variable
                     with the same name as an inherited variable defined in a super class. The creates two distinct versions
                     of the variable. The hidden variable is only used with a reference of the subclass type, where a reference
@@ -273,12 +274,12 @@ public class Child extends Parent {
         <h2 id="immutable-object-section">Creating Immutable Objects</h2>
         <ul>
             <li>The <i>immutable objects pattern</i> can be used to create a class and instantiate objects that cannot change state</li>
-            <li><b>Immutsble objects pattern:</b>
+            <li><b>Immutable objects pattern:</b>
                 <ol>
                     <li>Mark the class as <code>final</code> or make all of the constructors <code>private</code></li>
                     <li>Mark all instance variables as <code>private</code> and <code>final</code></li>
                     <li>Do not provide any setter methods for instance variables</li>
-                    <li>Done allow referenced mutable objects to be modifier (don't expose direct access or getter methods)</li>
+                    <li>Do not allow referenced mutable objects to be modified (don't expose direct access or getter methods)</li>
                     <li>Use a constructor to set all instance fields of the object during instance initialization exactly once, 
                         making a defensive copy if needed.
                     </li>

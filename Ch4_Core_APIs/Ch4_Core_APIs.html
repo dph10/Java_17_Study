@@ -62,7 +62,7 @@ System.out.println(s + null); // outputs 123null
                     </li>
                     <li><code>public int indexOf(int ch)</code> - returns index of a unicode <code>char</code><br>
                         <code>public int indexOf(int ch, int fromIndex)</code> - starts search from a specified index offset<br>
-                        <code>public int indexOf(String str)</code>
+                        <code>public int indexOf(String str)</code><br>
                         <code>public int indexOf(String str, int FromIndex)</code> - returns index of the specified substring <code>str</code>
                     </li>
                     <li><code>public String substring(int beginIndex)</code> - returns a substring starting at the specified <code>beginIndex</code>to the end<br>
@@ -87,14 +87,14 @@ System.out.println(nae.substring(3,8)); // throws IndexOutOfBoundsException
                     <li><code>public boolean equalsIgnoreCase(String str)</code> - returns true if two <code>String</code> objects
                     have the same character sequence, ignore the case</li>
                     <li><code>public boolean startsWith(String prefix)</code></li>
-                    <li><code>public boolean endsWith(String suffix</code></li>
+                    <li><code>public boolean endsWith(String suffix)</code></li>
                     <li><code>public boolean contains(CharSequence charSeq)</code></li>
                     <li><code>public String replace(char oldChar, char newChar)</code></li>
                     <li><code>public String replace(CharSequence target, CharSequence replacement)</code></li>
                     <li><code>public String trim()</code> - remove whitespace from start and end of <code>String</code></li>
                     <li><code>public String strip()</code> -  remove whitespace from start and end, including unicode whitespace</li>
-                    <li><code>public String stripLeading()</code> -  remove whitespace from at start</li>
-                    <li><code>public String stripTrailing()</code> - remove whitespace from at end</li>
+                    <li><code>public String stripLeading()</code> -  remove whitespace from the string start</li>
+                    <li><code>public String stripTrailing()</code> - remove whitespace from the string end</li>
                     <li><code>public String indent(int numSpaces)</code> - adds specified number of spaces to beginning of each line.
                     A negative number is used to try to remove that amount of whitespace (if present) from each line.  <i><b>Also</b></i>
                     normalizes each line to end with <code>\n</code> character, and will add a line-break if it is missing.</li>
@@ -186,7 +186,8 @@ System.out.println(b); // abcdefg
             </li>
             <li>The String Pool
                 <ul>
-                    <li>Java stores strings in the <i>string pool</i> (also known as the <i>intern pool</i>) which is a location in the JVM stores all strings</li>
+                    <li>Java stores strings in the <i>string pool</i> (also known as the <i>intern pool</i>) 
+                        which is a location in the JVM where all strings are stored</li>
                     <li>Repeated strings are reused to reduce memory usage</li>
                     <li>The method <code>public String intern()</code> tells java to retrieve the <code>String</code>
                     from the string pool, or add it if it's not present.</li>
@@ -253,15 +254,15 @@ for (int i=0; i&lt;numbers.length; i++) {
     numbers[i] = i+3;
 }
 
-for (final var num : number) // for-each loop
+for (final var num : numbers) // for-each loop
     System.out.println(num + " ");
                         </code></pre>
                     </li>
                     <li>Sorting:  <code>Arrays.sort(numbers);</code> - requires an import: <code>import java.util.Arrays;</code></li>
                     <li>
                         Searching a <i>presorted</i> array: <code>Arrays.binarySearch(Arrays.sort(numbers));</code><br>
-                        Returns a positive index if found, returns a negative value show on smaller than the negative 
-                        of the index where amatch needs to be inserted to preserve sorted order.  If an <i>unsorted</i>
+                        Returns a positive index if found, returns a negative value one smaller than the negative 
+                        of the index where a match needs to be inserted to preserve sorted order.  If an <i>unsorted</i>
                         array is searched, the output is <i>undefined/unpredictable</i>
                         <pre><code class="codeblock">
 import java.util.Arrays;
@@ -304,7 +305,7 @@ System.out.println(java.util.Arrays.equals(a,b));
                     </li>
                     <li><code>public static int Arrays::mismatch(T[] a, T[] b)</code> - returns the index of the first mismatched/differeing element
                      of the 2 arrays.  Returns <code>-1</code> if the arrays are equal.</li>
-                     <li><code>public static String toString(T[] a)</code> - returns a <code>String</code> representation of the array, usually printing out the <code>String</code> representation of each element</li>
+                     <li><code>public static String Arrays::toString(T[] a)</code> - returns a <code>String</code> representation of the array, usually printing out the <code>String</code> representation of each element</li>
                 </ul>
             </li>
             <li>Using methods with Varargs:  public static void main (String... args)</code> - 
@@ -364,7 +365,7 @@ for(final int[] outer : arr2D) {
         2 values, same overrides as <code>min</code></li>
         <li>
             <code>public static long Math::round(double num);</code> - rounds off a <code>double</code> value with <code>0.5</code> rounding up<br>
-            <code>public static int Math:round(flat num);</code> - rounds a <code>foat</code> value
+            <code>public static int Math:round(flat num);</code> - rounds a <code>float</code> value
         </li>
         <li>
             <code>public static double Math::ceil(double num);</code> - rounds up to nearest integer, no override for other parameter datatypes.<br>
@@ -383,11 +384,11 @@ for(final int[] outer : arr2D) {
         <li>
             Java's modern date and time API is: <code>import java.time.*;</code>
         </li>
-        <li>Date and time classes that store an <b>immutable</b> date, time, or date and time.  Note that
+        <li>Date and time classes that store an <b><i>immutable</i></b> date, time, or date and time.  Note that
             months and days start from <code>1</code>, while hours, minutes and seconds start at <code>0</code>, respectively.
             <ul>
                 <li>
-                    <code>LocalDate</code> - stores a specific day int time, but not any time (less than 24hours) information
+                    <code>LocalDate</code> - stores a specific day in time, but not any time (less than 24hours) information
                     <ul>
                         <li><code>final var t1 = LocalDate.now();</code></li>
                         <li><code>final var t2 = LocalDate.of(int year, int month, int dayOfMonth);</code></li>
@@ -395,7 +396,7 @@ for(final int[] outer : arr2D) {
                     </ul>
                 </li>
                 <li>
-                    <code>LocalTime</code> - stores an time instant, but no day/date information
+                    <code>LocalTime</code> - stores a time instant, but no day/date information
                     <ul>
                         <li><code>final var t1 = LocalTime.now();</code></li>
                         <li><code>final var t2 = LocalTime.of(int hour, int minute);</code></li>
@@ -425,7 +426,7 @@ for(final int[] outer : arr2D) {
                         <li>Get the <code>UTC</code> absolute timestamp:
                             <pre><code class="codeblock">
 final var t0 = ZonedDateTime.now(ZoneId.of("UTC"));
-final long t0millis = to.toInstant().toEpochMilli();
+final long t0millis = t0.toInstant().toEpochMilli();
                             </code></pre>
                         </li>
                     </ul>

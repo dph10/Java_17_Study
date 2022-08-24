@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch7: Advanced Class Topics</h1>
+        <nav class="navbar">
+            <a href="../Ch6_Class_Design/Ch6_Class_Design.html">&leftarrow; Ch6 Class Design</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch8 Lambdas and Functional Interfaces &rightarrow;</a>
+        </nav>
+        <h2 id="interface-section">Implementing Interfaces</h2>
+        <ul>
+            <li>Class can <code>implmenent</code> any number of <code>interface</code>s</li>
+            <li>An <code>interface</code> is an <code>abstract</code> data type that declares a list of 
+                <code>public abstract</code> methods.  No instance variables can be declared and they do not
+                contain constructors, but <code>public final static</code> variables are allowed.</li>
+            <pre><code class="codeblock">
+public interface ExampleInterface { // implicitly abstract
+    // abstract interface method, implicitly public abstract
+    Float convertUnits(int val); 
+
+    // constant variable, implicitly public static final
+    int MIN_LIMIT = 2; // constant variable
+}
+
+class FeetToMeters implements ExampleInterface {
+    @Override
+    public Float convertUnits(int feetVal) {
+        return feetVal*0.3048f;
+    }
+}
+            </code></pre>
+            <li>Classes can implement multiple interfaces by separating each by a comma, and is required to override
+                all methods specified in the interfaces
+            </li>
+            <li>
+                Interfaces can be extended by other interfaces by using the <code>extends</code> keyword
+            </li>
+            <li>Note that classes can implement interfaces but not extend them, while interfaces can
+                extends interfaces but not implement them
+            </li>
+            <li>
+                Duplicate inherited abstract methods with compatabile (duplicate signatures and covariant return types) method declarations are valid.
+                <pre><code class="codeblock">
+public interface Herbivore { void eatPlants(); }
+
+public interface Omnivore { void eatPlants(); }
+
+public class Bear implements Herbivore, Omnivore {
+    public void eatPlants() {
+        System.out.println("eating plants");
+    }
+}
+                </code></pre>
+            </li>
+            <li>Interfaces automatically insert implicit modifiers, and conflicts with these will cause a compiler error.
+                <ul>
+                    <li>Interfaces are implicitly <code>abstract</code></li>
+                    <li>Interface variables are implicitly <code>public static final</code>
+                    <li>Inteface methods (without a body) are implicitly <code>abstract</code></li>
+                    <li>Interface methods without the <code>private</code> modifier are 
+                        implicitly <code>public</code></li>
+                    <pre><code class="codeblock">
+public interface Inter1 {
+    private int count = 4; // does not compile
+    protected void step(); // does not compile
+}
+                    </code></pre>
+                </ul>
+            </li>
+            <p class="tableheader">Six Types of Inteface Members</p>
+            <div class="tablecontainer">
+                <table>
+                    <tr><th></th><th>Membership type</th> <th>Required modifiers</th> <th>Implicit modifiers</th> <th>Has value/body?</th></tr>
+                    <tr><td>Constant variable</td> <td>Class</td> <td>n/a</td> <td><code>public static final</code></td> <td>yes</td></tr>
+                    <tr><td><code>abstract</code> method</td> <td>Instance</td> <td>n/a</td> <td><code>public abstract</code></td> <td>no</td></tr>
+                    <tr><td><code>default</code> method</td> <td>Instance</td> <td><code>default</code></td> <td>public</td> <td>yes</td></tr>
+                    <tr><td><code>static</code> method</td> <td>Class</td> <td><code>static</code></td> <td>public</td> <td>yes</td></tr>
+                    <tr><td><code>private</code> method</td> <td>Instance</td> <td><code>private</code></td> <td>n/a</td> <td>yes</td></tr>
+                    <tr><td><code>private static</code> method</td> <td>Class</td> <td>private static</td> <td>n/a</td> <td>yes</td></tr>
+                </table>
+            </div>
+            <li><code>default</code> Interface Methods
+                <ul>
+                    <li>
+                        Provides a default concrete implementation of an interface instance method that can still
+                        be overridden by an implementing class.
+                    </li>
+                    <li>
+                        Useful for adding new functionality with backwords compatibility
+                    </li>
+                    <li><code>default</code> method rules summary:
+                        <ol>
+                            <li>may only be declared within in interface</li>
+                            <li>must be marked with the <code>default</code> keyword and include a method body</li>
+                            <li>is implicitly <code>public</code></li>
+                            <li><i>cannot</i> be marked <code>abstract, final, or static</code></li>
+                            <li>may be overrideen by a class implementing the interface</li>
+                            <li>If a class inherits two or more <code>default</code> methods with the same
+                                method signature, then the class <i>must</i> override the method</li>
+                        </ol>
+                    </li>
+                    <li>When a class override a pair of conflicting <code>default</code> methods, it 
+                    can still refer to an interface version of that method using a special syntax:
+                    <code>InterfaceName.super.methodName(...);</code></li>
+                </ul>
+            </li>
+            <li><code>static</code> Interface Methods
+                <ol>
+                    <li>Must be marked with the <code>static</code> keyword and include a method body.</li>
+                    <li>Implicitly <code>public</code> if not access-modifier is specified</li>
+                    <li>Cannot be marked <code>abstract</code> or <code>final</code></li>
+                    <li>The <code>static</code> method is not inherited and cannot be accessed in a
+                    concrete implementation of the interface without a reference to the interface name</li>
+                </ol>
+            </li>
+            <li><code>private</code> Interface Methods
+                <ul>
+                    <li>Both <code>private</code> instance and <code>private static</code> methods can be declared in 
+                    interfaces, and they can can only be used in that interface declaration.  Note that <code>private</code> 
+                    instance methods <i>cannot</i> be called by any of the <code>static</code> methods as an instance reference is not available</li>
+                </ul>
+                <ul><code>private</code> interface method rules:
+                    <ol>
+                        <li>Must be marked with the <code>private</code> access-modifier and include a method body</li>
+                        <li><code>private static</code> methods can be called by any method within the interface definition</li>
+                        <li><code>private</code> interface instance method can only be called by <code>default</code> and other
+                            <code>private</code> non-<code>static</code> methods within the interface</li>
+                    </ol>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="enum-section">Enum Section</h2>
+        <ul>
+            <li>An <i>enumberation</i>, or <code>enum</code> is a type with a finite set of fixed values known at compile-time</li>
+            <li>Provides typesafe compile-time checking, rather than runtime errors</li>
+            <pre><code class="codeblock">
+public enum Season {
+    WINTER, SPRING, SUMMER, FALL; // semicolon optional for simple enums
+}
+...
+final var s = Season.SUMMER;
+System.out.println(Season.SUMMER); // SUMMER
+System.out.println(s == Season.SUMMER); // true 
+for (final var season : Season.values()) {
+    System.out.println(season.name() + " " + season.ordinal());
+}
+final Season t = Season.valueOf("SUMMER"); // SUMMER
+final Season z = Season.valueOf("summer"); // IllegalArgumentException
+            </code></pre>
+            <li>It is convention (not required) to write enums in all-caps snake-case</li>
+            <li>Can be compared using <code>==</code> (equality operator) as they are essentially <code>static final</code> constants</li>
+            <li>Enums <i>cannot</i> be extended or have values added to them at runtime</li>
+            <li>Useful <code>enum</code> methods:
+                <ul>
+                    <li><code>EnumName.values()</code> method is used to get an array of all the defined values</li>
+                    <li><code>enumVal.name()</code> returns the enum constant name</li>
+                    <li><code>enumVal.ordinal()</code> returns the enum constant int value</li>
+                    <li><code>EnumName.valueOf("enumValName")</code> returns the enum values for <code>String</code>. Will
+                        throw an <code>IllegalArgumentException</code> if the name parameter does not match exactly</li>
+                </ul>
+            </li>
+            <li>Enums can be used in <code>switch</code> statements and expressions. All possible values of the enum must
+                be covered by the cases, or a <code>default</code> case provided.  Also note that <i>only</i> the <code>enum</code> name is
+                used in cases.
+                <pre><code class="codeblock">
+final var s = Seaon.SUMMER;
+switch(summer) {
+    case WINTER: System.out.println("too cold"); break;
+    case SUMMER: System.out.priintln("too warm"); break;
+    default: System.out.println("just right!");
+}
+                </code></pre>
+            </li>
+            <li><i>Complex</i> enums can be built by providing additional types in each enum constant declaration, and 
+                by adding additional methods to the class file.
+                <ul>
+                    <li>The enum values always comes first in the enum definition, ending with a semi-colon</li>
+                    <li>A constructor that takes the additional types as the parameter list must be provided, and it
+                        is implicitly <code>private</code>.
+                    </li>
+                    <li>The first time an <code>enum</code> value is used, Java constructors all of the enum values from that <code>enum</code> definition.</li>
+                    <li>If an <code>abstract</code> method is declared, then all enum values must override it.</li>
+                    <li>Enums can implement interfaces</li>
+                </ul>
+                <pre><code class="codeblock">
+public enum TestEnum {
+	
+	WINTER("cold"){
+		public int getAvgTemp() {
+			return 30;
+		}
+		public String getHours() {
+			return "10am-3pm";
+		}
+	}, 
+	SPRING("nice"){
+		public int getAvgTemp() {
+			return 60;
+		}
+	}, 
+	SUMMER("hot"){
+		public int getAvgTemp() {
+			return 70;
+		}
+		public String getHours() {
+			return "8am-6pm";
+		}
+	}, 
+	FALL("nice"){
+		public int getAvgTemp() {
+			return 58;
+		}
+	};
+	
+	private final String relTemp;
+	
+	TestEnum(final String t) {
+		this.relTemp = t;
+	}
+	
+	public String getRelTemp() {
+		return this.relTemp;
+	}
+	
+	public abstract int getAvgTemp();
+	
+	public String getHours() {
+		return "9am-5pm";
+	}
+	
+	public static void main(final String... args) {
+		for (final var s : TestEnum.values()) {
+			System.out.println(s.name() + " " + s.ordinal() + 
+				", temp= " + s.getAvgTemp() + "(" + s.getRelTemp() +
+				"), hours=" + s.getHours()
+			);
+		}
+	}
+}
+                </code></pre>
+            </li>
+        </ul>
+        <h2 id="sealed-classes-section">Sealed Classes</h2>
+        <ul>
+            <li>A <i>sealed class</i> restricts which other classes may directly extend it (new in Java 17)</li>
+            <li>declares a list (comma-separated) of which classes can extend it using the <code>permits</code> keyword</li>
+            <li>Direct subclasses are required to use one of the following subclass modifiers:
+                <ul>
+                    <li><code>final</code>: may not be extended by any other class</li>
+                    <li><code>sealed</code>: indicates that a class or interface may only be extended/implemented
+                        by named (<code>permits</code>) classes/interfaces</li>
+                    <li><code>non-sealed</code>: used by a class or interface that extends a sealed calls, indicating
+                        it can be extneded by any unspecified classes</li>
+                </ul>
+            </li>
+            <li>A sealed class needs to be declared (and compiled) in the same package as its permitted direct subclasses.</li>
+            <li>The <code>permits</code> keyword is only optional for 2 specific case:  a java file with two top-level classes, or a sealed
+                class with nested subclasses:
+                <pre><code class="codeblock">
+// file Snake.java
+public sealed class Snake {} // permits Cobra omitted
+final class Cobra extends Snake {}
+...
+
+// file Snake.java
+public sealed class Snake { // permits Snake.Cobra omitted
+    final class Cobra extends Snake {}
+} 
+                </code></pre>
+            </li>
+            <li>Interfaces can also be sealed, with the <code>permits</code> list including both classes and interfaces
+            that may extends/implement it.
+        <pre><code class="codeblock">
+public sealed interface Swims permits Duck, Swan, Floats {}
+
+public final class Duck implements Swims {}
+public final class Swan implements Swims {}
+public non-sealed interface Floats extends Swims {}
+        </code></pre>
+            <li>Note that interfaces that extends sealed interfaces can only be marked <code>sealed</code> or <code>non-sealed</code></li>
+            </li>
+        </ul>
+        <h2 id="records-section">Records</h2>
+        <ul>
+            <li><i>Records</i> are implicitly final classes with immutable (implicitly final) member fields</li>
+            <li>Reduces a significant amount of written code by automatically providing constructors and getter methods</li>
+            <pre><code class="codeblock">
+public record Car(int cost, String name) {}
+
+var myCar = new Car(10_000, "corolla");
+System.out.println(myCar.name() + " $" + myCar.cost());
+            </code></pre>
+        <li><b>Members automatically added to Records:</b>
+            <ul>
+                <li>Constructor: a constructor with the parameters in the same order as the record declaration</li>
+                <li>Accessors/Getters: one accessor/getter for each field</li>
+                <li><code>equals()</code>: method to compare 2 elements that returns true if each field is equals in terms of <code>equals()</code></li>
+                <li><code>hashCode()</code>: hashcode generator consistent with <code>equals()</code> that uses all fields</li>
+                <li><code>toString()</code>: implementation that prints each field of the record</li>
+            </ul>
+        </li>
+        <li>Note that it is actually legal to have a <code>record</code> with no fields</li>
+        <li>Note that records do not support instance initializers</li>
+        <li>Declaring Consctuctors:
+            <ul>
+                <li>The Long Constructor: we can declare/customize the constructor normall provided by the compiler.  It requires
+                    the same parameters list from the <code>record</code> declaration, and every field must be set within the constructor.
+                    In this case the compiler will no longer insert a constructor.
+                    <pre><code class="codeblock">
+public record Car(int cost, String name) {
+    
+    public Car(final int cost, final String name) {
+        this.name = name;
+        this.cost = cost &lt; 0 ? 0 : cost;
+    }
+}
+                    </code></pre>
+                </li>
+                <li>Compact Constructors: used to transform and validate the constructor parameters.  It takes not parameters
+                    and implicitly sets all fields.
+                    <pre><code class="codeblock">
+public record Car(int cost, String name) {
+    public Car {
+        if (cost &lt; 0) {
+            cost = 0;
+        }
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name must be provided");
+        }
+        name = name.toUpperCase();
+    }
+}
+                    </code></pre>
+                </li>
+                <li>Overloaded constructors: overloaded constructors that take completely different parameters lists, and their first
+                    line must be a call to another constructor with <code>this()</code>.  If there are no other constructors, than the 
+                    call to <code>this()</code> must be the long constructor.
+public record Car(int cost, String name) {
+    public Car(final Car copy) {
+        this(copy.cost(), copy.name());
+    }
+}
+...
+final var myCar = new Car(10_000, "corolla");
+final var copyCar = new Car(myCar);
+System.out.println(myCar.equals(copyCar)); //  true
+                </li>
+            </ul>
+        </li>
+        <li>Customizing Records:
+            <ul>
+                <li>Overloaded and compact constructors</li>
+                <li>Instance methods including overriding any provided methods (accessors, <code>equals()</code>, 
+                    <code>hashCode()</code>, and <code>toString()</code>)</li>
+                <li>Nested classes, interfaces, annotations, enum, and records</li>
+                <li><code>static</code> fields</li>
+            </ul>
+        </li>
+        </ul>
+        <h2 id="nested-classes-section">Nested Classes</h2>
+        <ul>
+            <li>A <i>nested class</i> is a class that is defined within another class</li>
+            <li>4 different types:
+                <ol>
+                    <li>Inner class: a non-static type defined at the member level of a class</li>
+                    <li>Static nested class: a <code>static</code> type defined at the member level of a class</li>
+                    <li>Local class: a class defined within a method body</li>
+                    <li>Anonymous class: special case of a local class that does not have a name</li>
+                </ol>
+            </li>
+            <li><b>Inner class</b>
+                <ul>
+                    <li>Properties:
+                        <ul>
+                            <li>Can use any of the 4 access levels (<code>public</code>, package, <code>protected</code>, or <code>public</code>)</li>
+                            <li>Can extends a call and implement interfaces</li>
+                            <li>Can be marked <code>abstract</code> or <code>final</code></li>
+                            <li>Can access members of the outer class, including <code>private</code> members</li>
+                            <li>Can have <code>static</code> variables and classes</li>
+                        </ul>
+                    </li>
+                    <li>Must be called using an instance of the outer class.  This means you must create an instance of
+                        the outer class and then create the inner class instance.
+                    </li>
+                    <li>Inner class constructor:  <code>OuterClass.InnerClass inner = outClassRef.new InnerClass();</code></li>
+                    <li>Referce out class members from inner class: <code>OuterClass.this.member()</code></li>
+                </ul>
+                <pre><code class="codeblock">
+public class A {
+    private int x = 10;
+    class B {
+        private int x = 20;
+        class C {
+            private int x = 30;
+            public void allTheX() {
+                System.out.println(x);        // 30
+                System.out.println(this.x);   // 30
+                System.out.println(B.this.x); // 20
+                System.out.println(A.this.x); // 10
+            }
+        }
+    }
+    public static void main(String[] args) {
+        A a = new A();
+        A.B b = a.new B();
+        A.B.C c = new b.new C();
+        c.allTheX();
+    }
+}
+                </code></pre>
+            </li>
+            <li><b><code>static</code> Nested Class</b>
+                <ul>
+                    <li>A <code>static</code> type defined at the member level.</li>
+                    <li>Can be instantiated without an instance of the enclosing class, but cannot access instance variables or methods
+                        of the outer class with an instance reference.  With a reference, the nested class has access to all outer class members,
+                        including <code>private</code> members.
+                    </li>
+                    <li>Can be marked as <code>private</code>, package, <code>protected</code>, or <code>public</code> access.</li>
+                    <li>The nesting creates a namespace as the enclosing class name must be used to refer to it.</li>
+                    <li>The cnlosing class can refer to the fields and methods of the <code>static</code> nested class.</li>
+                    <pre><code class="codeblock">
+public class Car {
+    public static class Transmission {
+        private int cost = 2_000;
+    }
+
+    public static void main(final String[] args) {
+        final var transmission = new Transmission();
+        System.out.println(transmission.price);
+    }
+
+    ... // outside of Car.java
+    final var t0 = new Car.Transmission();
+}
+                    </code></pre>
+                </ul>
+            </li>
+            <li><b>Local classes</b>
+                <ul>
+                    <li>A <i>local class</i> is a nested class defined within a method.  The nested class definition
+                    does not exist until the enclosing method is invoked, and goes out of scope when the method returns.</li>
+                    <li>Instances can only be created from within the method, but those instances can be returned from the method 
+                        with a return type of <code>Object</code> or some other valid supertype declared outside of the method.</li>
+                    <li>Local classes can also be declared inside constructors and initializers.</li>
+                    <li>They do not have an access modifier</li>
+                    <li>They can be declared as <code>final</code> or <code>abstract</code></li>
+                    <li>They have access to all fields and methods of the enclosing class (when defined in
+                        an instance method);
+                    </li>
+                    <li>Local classes can only access local variables that are <code>final</code> or effectively <code>final</code>. 
+                        This is because the compiler automatically inserts a constructor that takes the value or reference of local variables as parameters,
+                        which will not work properly if the value or reference changes.</li>
+                
+                </ul>
+            </li>
+            <li><b>Anonymous classes</b>
+                <ul>
+                    <li>An <i>anonymous class</i> is a specialized form of a local class that does not have a name.</li>
+                    <li>It is declared and instantiated all in one statement using the <code>new</code> keyword, a type
+                    name with parentheses, and a set of braces <code>{}</code></li>
+                    <li>They must either extend an existing class or implement an existing interface (can't do both simultaneously)</li>
+                    <li>An anonymous class can also be used to declare a variable outside of a method body</li>
+                    <li>Anonymous classes can also be declared within a parameter list of a method, commonly used for 
+                        callbacks and event handlers.
+                        <pre><code class="codeblock">
+// JavaFX code
+final var button = new Button();
+button.setOnAction(new EventHandler&lt;ActionEvent&gt;() {
+    public void handle(final ActionEvent e) {
+        System.out.println("button pressed!");
+    }    
+});
+                        </code></pre>
+                    </li>
+                    <li>Same as local classes, can only access local variables that are <code>final</code> or effectively <code>final</code></li>
+                </ul>
+                <pre><code class="codeblock">
+public class GiftShop {
+    abstract class ItemSale {
+        abstract int dollarsOff();    
+    }
+
+    public int admission(int basePrice) {
+        final ItemSale sale = new ItemSale() {
+            int dollarsOff() { return 10; }
+        }; // remember the semicolon as this is a local variable assigment
+        return basePrice - sale.dollarsOff();
+    }
+}
+                </code></pre>
+            </li>
+        </ul>
+        <h2 id="polymorphism-section">Polymorphism</h2>
+        <ul>
+            <li>A java object can be accessed using: 1) A reference of the same type as the object, 2) a reference that is a superclass
+                of the object, or 3) a reference to an interface the object implements or inherits
+            </li>
+            <li>
+                A cast <i>is not</i> required if the object is being reassigned to a supertype or interface reference. But note that only
+                the methods/variables of the superclass/interface type are then callable on the object without an explicit cast.
+            </li>
+            <li>The type of the object determines which properties exist within the object inmemory, while the type of the reference
+                to an object dtermines which methods/variables are accessible to the caller.
+            </li>
+            <li>An explicit cast to a supertype is not required, but an explicit cast to a subtype/subclass is required.</li>
+            <li>At runtime, an invalid cast of a reference to an incompatible type results in a runtime exception <code>ClassCastException</code> being thrown</li>
+            <li>The compiler will not allow casts between unrelated (no relation through any class hierarchy: one cannot be the subtype of the other) types</li>
+            <li>Casting interfaces: the compiler cannot really enforce casts from classes to interfaces due to multiple-inheritance where a subclass could possibly implement the interface. But
+                note the compiler <i>will not</i> allow casts from interfaces to class references if the object type cannot possible implement the interface (such as with a <code>final</code> class).
+            </li>
+            <li>The <code>instanceof</code> operator check if an object belongs to a particular class or interface, which
+                can be used to prevent runtime <code>ClassCastException</code> from occurring.  
+                A <a href="../Ch3_Program_Flow_Control/Ch3_Study_Guide.html#pattern-matching-section">Pattern matching</a> cast is only performed
+                if the <code>instanceof</code> result is <code>true</code>.  Note that a compiler error will occur with <code>instanceof</code> if
+                the object types are unrelated.</li>
+        </ul>
+    </body>
+</html>
