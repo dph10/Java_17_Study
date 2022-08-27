@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch8: Lambdas and Functional Interfaces</h1>
+        <nav class="navbar">
+            <a href="../Ch7_Advanced_Class_Topics/Ch7_Advanced_Class_Topics.html">&leftarrow; Ch7 Advanced Class Topics/a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch9 Generics and Collections &rightarrow;</a>
+        </nav>
+        <h2>Intro to Lambdas</h2>
+        <ul>
+            <li>A <i>lambda expression</i> is a functional block of code that can be passed as an object.</li>
+            <li>Implements a <a href="#func-interfaces-section"><i>functional interface</i></a>, which is an <a href="../Ch7_Advanced_Class_Topics/Ch7_Advanced_Class_Topics.html#interface-section"><code>interface</code> that 
+            contains a single <code>abstract</code> method.</a></li>
+            <li>Lambdas have several different parts (many are optional):
+                <ul>
+                    <li>Simple lambda has a single parameter, the arrow operator (<code>-></code>) to separate the
+                    parameter and body, and a body that call may return a result depending on the <code>interface</code> implemented.</li>
+                    <li>The verbose lambda form has a parameter list with types, the arrow operator to separate the
+                        parameter list and body, a body inside of braces that may return a result (depending on the <code>interface implemented</code>).
+                    </li>
+                </ul>
+            </li>
+            <li>Local variables captured by the lambda must be <code>final</code> or effectively final</li>
+            <li>Lambdas usually cannot be assigned to <code>var</code> using 
+                <a href="../Ch1_Introduction/Ch1_Study_Guide.html#local-type-inference-section">local type inference</a> due to a lack of context.</li>
+            <li>There are 3 formats for providing the parameters to a lambda: 1) without types, 2) with types, and 3) with <code>var</code>.  The compiler
+            requires all parameters for the lambda to use the same format.</li>
+            <pre><code class="codeblock">
+// Lambdas that return boolean:
+final Supplier&lt;Boolean&gt; ex1 = () -> true;
+final Predicate&lt;String&gt; ex2 = x -> x.startsWith("test");
+final Predicate&lt;String&gt; ex3 = (final String x) -> {return x.startsWith("test"); }; // remember the semicolons!
+final BiPredicate&lt;String,Integer&gt; ex4 = (x, y) -> x.startsWith("test" + x);
+final BiPredicate&lt;String, Integer&gt; ex5 (final var x, final var y) -> x.startsWith("test" + x);
+final BiPredicate&lt;String,Integer&gt; ex6 = (final String x, final Integer y) -> { return x.startsWith("test" + x); };
+            </code></pre>
+        </ul>
+        <h2 id="func-interfaces-section">Intro to Functional Interfaces</h2>
+        <ul>
+            <li>A <i>functional interface</i> is an <code>interface</code> with a single abstract method, also known
+                as a <i>single abstract method</i> (SAM) rule</li>
+            <li>The <code>@FunctionalInterface</code> annotation (not required) tells the compilter that you intend for the code to be a funcitonal interface, 
+                and a compiler error will occur if there is a problem</li>
+            <li>Note that an <code>interface</code> with a single <code>default</code> method <i>does not</i> qualify as a functional interface</li>
+            <li>Interfaces with other <code>default methods</code>, <code>static</code> or <code>private</code> methods
+                can still qualify as a functional interface as long as they have a single abstract method to override</li> 
+            <li>One exception to the 1 abstract method rule:  any public method inherited/overriden from <code>java.lang.Object</code>:
+                these methods do not count toward the single abstract method test.
+                <ul>
+                    <li><code>public String toString()</code></li>
+                    <li><code>public boolean equals(Object o)</code></li>
+                    <li><code>public int hashCode()</code></li>
+                </ul>
+            </li>
+        </ul>
+        <pre><code class="codeblock">
+@FunctionalInterface // not required
+public interface DataProcessor {
+    boolean processData(int[] dataArray);
+    private void test() {}
+}
+
+public class AnalogSignalProcessor implements DataProcessor {
+    @Override // not required
+    public boolean processData(int[] dataArray) {
+        if (dataArray.length>10) return true;
+        else return false;
+    }    
+}
+        </code></pre>
+    <h2 id="method-ref-section">Method References</h2>
+        <ul>
+            <li><i>Method references</i> can be used to make code easier to read</li>
+            <li>The <code>::</code> operator is th method reference operator that tells Java to use <i>deferred execution</i> 
+                with a functional interface at a later time.</li>
+            <li>There are 4 types of method references:
+                <ol>
+                    <li>Calling <code>static</code> Methods:
+                        <ul>
+                            <li>Uses the class name and the <code>static method name</code>:</li>
+                        </ul>
+                        <pre><code class="codeblock">
+interface Converter {
+    long convertDoubleToLong(double num);
+}
+.// ...
+final Converter methodRef = Math::round;
+System.out.println(methodRef.convertDoubleToLong(3.14)); // 3
+                        </code></pre>
+                    </li>
+                    <li>Calling Instance Methods on a Specific Object
+                        <ul>
+                            <li>Uses the reference variable name and the object's method:</li>
+                        </ul>
+                        <pre><code class="codeblock">
+interface StringStart {
+    boolean beginningCheck(String prefix);
+}
+// ...
+final var str = "Zoo";
+final StringStart methodRef = str::startsWith;
+System.out.println(methodRef.beginningCheck("A zoo.")); // false
+                        </code></pre>
+                    </li>
+                    <li>Calling Instance Methods on a parameter
+                        <ul>
+                            <li>Call an instance method without known the instance/object reference in advance:
+                                use the class name and the instance method name
+                            </li>
+                        </ul>
+                        <pre><code class="codeblock">
+interface StringParameterChecker {
+    boolean check(String text);
+}
+// ...
+final StringParameterChecker methodRef = String::isBlank;
+System.out.println(methodRef.check("Zoo")); // false
+System.out.println(methodRef.check(" \t\n")); // true
+                        </code></pre>
+                    </li>
+                    <li>Calling Constructors
+                        <ul>
+                            <li>A <i>constructor reference</i> is a special type of method reference that uses <code>new</code>
+                                instead of a method, and it instantiates an object.</li>
+                        </ul>
+                        <pre><code class="codeblock">
+interface EmptyStringCreator {
+    String create();
+}   
+// ...
+final EmptyStringCreator methodRef = String::new;
+System.out.println(methodRef.create().equals("snake")); // false     
+
+                        </code></pre>
+                    </li>
+                </ol>
+            </li>
+        </ul>
+        <h2 id="build-in-funcs-section">Built-in Functional Interfaces</h2>
+        <ul>
+            <li>Java provides many useful built-in functional interfaces in package<code>java.util.function</code></li>
+            <li>If there are method parameters the first type is <code>T</code> and the second type is <code>U</code></li>
+            <li>If there is a return type other than void, it's type is <code>R</code></li>
+            <li>By definiton each functional interface has a single abstract method, but the built-in interfaces often include
+                <code>default</code> convenience methods that involve combining or modifying functional interfaces of the same type
+            </li>
+            <li>Built-in functional interfaces are also provided for primitives <code>boolean, double, int, </code> and <code>long</code></li>
+        </ul>
+        <p class="tableheader">Built-in functional interfaces</p>
+        <div class="tablecontainer">
+            <table>
+                
+                    <tr><th>Functional interface</th> <th>Return type</th> <th>Method</th> <th># of params</th></tr>
+                    <tr><td><code>Supplier&lt;T&gt;</code></td> <td><code>T</code></td> <td><code>T get()</code></td> <td>0</td></tr>
+                    <tr><td><code>Consumer&lt;T&gt;</code></td> <td><code>void</code></td> <td><code> void accept(T t)</code></td> <td>1 <code>(T t)</code></td></tr>
+                    <tr><td><code>Predicate&lt;T&gt;</code></td> <td><code>boolean</code></td> <td><code>boolean test(T t)</code></td> <td>1 <code>(T t)</code></td></tr>
+                    <tr><td><code>BiPredicate&lt;T, U&gt;</T></code></td> <td><code>boolean</code></td> <td><code>boolean test(T t, U u)</code></td> <td>2 <code>(T t, U u)</code></td></tr>
+                    <tr><td><code>Function&lt;T, R&gt;</code></td> <td><code>R</code></td> <td><code>R apply(T t)</code></td> <td>1<code>(T t)</code></td></tr>
+                    <tr><td><code>BiFunction&lt;T, U, R&gt;</code></td> <td><code>R</code></td> <td><code>R apply(T t, U U)</code></td> <td>2 <code>(T t,U u)</code></td></tr>
+                    <tr><td><code>UnaryOperator&lt;T&gt;</code></td> <td><code>T</code></td> <td><code>T apply(T t)</code></td> <td>1 <code>(T t)</code></td></tr>
+                    <tr><td><code>BinaryOperator&lt;T&gt;</code></td> <td><code>T</code></td> <td><code>T apply(T t1, T t2)</code></td> <td>2 <code>(T t1, T t2)</code></td></tr>
+            </table>
+        </div>
+        <p class="tableheader">Provided Convenience Methods</p>
+        <div class="tablecontainer">
+            <table>
+                <tr><th>Interface type</th> <th>Method</th></tr>
+                <tr><td><code>Consumer</code></td> <td><code>Consumer andThen(Consumer c)</code></td></tr>
+                <tr><td><code>Function</code></td> <td><code>Function andThen(Function after)</code></td></tr>
+                <tr><td><code>Function</code></td> <td><code>Function compose(Function before)</code></td></tr>
+                <tr><td><code>Predicate</code></td> <td><code>Predicate and(Predicate p)</code></td></tr>
+                <tr><td><code>Predicate</code></td> <td><code>Predicate negate()</code></td></tr>
+                <tr><td><code>Predicate</code></td> <td><code>Predicate or(Predicate p)</code></td></tr>
+            </table>
+            <p>Note that <code>UnaryOperator</code> contains the convenience methods of <code>andThen</code> and <code>compose</code> from <code>Function.</code>
+                <br>Also note that <code>BiFunction</code>, <code>BiPredicate</code>, and <code>BiConsumer</code> also have similar convenience methods.</p>
+        </div>
+        <p class="tableheader">Functional Interfaces for Primitives</p>
+        <div class="tablecontainer">
+            <table>
+                <tr><th>Functional Interface</th> <th>Return type</th> <th>Method</th></tr>
+                <tr><td><code>BooleanSupplier</code></td> <td><code>boolean</code></td> <td><code>boolean getAsBoolean()</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoubleSupplier</code></td> <td><code>double</code></td> <td><code>double getAsDouble()</code></td></tr>
+                <tr><td><code>IntSupplier</code></td> <td><code>int</code></td> <td><code>int getAsInt()</code></td></tr>
+                <tr><td><code>LongSupplier</code></td> <td><code>long</code></td> <td><code>long getAsLong()</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoubleConsumer</code></td> <td><code>void</code></td> <td><code>void accept(double d)</code></td></tr>
+                <tr><td><code>IntConsumer</code></td> <td><code>void</code></td> <td><code>void accept(int i)</code></td></tr>
+                <tr><td><code>LongConsumer</code></td> <td><code>void</code></td> <td><code>void accept(long l)</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoublePredicate</code></td> <td><code>boolean</code></td> <td><code>boolean test(double d)</code></td></tr>
+                <tr><td><code>IntPredicate</code></td> <td><code>boolean</code></td> <td><code>boolean test(int i)</code></td></tr>
+                <tr><td><code>LongPredicate</code></td> <td><code>boolean</code></td> <td><code>boolean test(long l)</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoubleFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td>R apply(double d)</td></tr>
+                <tr><td><code>IntFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td>R apply(int i)</td></tr>
+                <tr><td><code>LongFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td>R apply(long l)</td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoubleUnaryOperator</code></td> <td><code>double</code></td> <td>double applyAsDouble(double d)</td> </tr>
+                <tr><td><code>IntUnaryOperator</code></td> <td><code>int</code></td> <td><code>int applyAsInt(int i)</code></td></tr>
+                <tr><td><code>LongUnaryOperator</code> <td><code>long</code> <td><code>long applyAsLong(long l)</code></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoubleBinaryOperator</code></td> <td><code>double</code></td> <td><code>double applyAsDouble(double d1, double d2)</code></td> </tr>
+                <tr><td><code>IntBinaryOperator</code></td> <td><code>int</code></td> <td><code>int applyAsInt(int i1, int i2)</code></td></tr>
+                <tr><td><code>LongBinaryOperator</code></td> <td><code>long</code></td> <td><code>double applyAsLong(long l1, long l2)</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>ToDoubleFunction&lt;T&gt;</code></td></tr> <td><code>double</code></td> <td><code>double applyAsDouble(T t)</code></td>
+                <tr><td><code>ToIntFunction&lt;T&gt;</code></td> <td><code>int</code></td> <td><code>int applyAsInt(T t)</code></td></tr>
+                <tr><td><code>ToLongFunction&lt;T&gt;</code></td> <td><code>long</code></td> <td><code>long applyAsLong(T t)</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>ToDoubleBiFunction&lt;T, U&gt;</code></td> <td><code>double</code></td> <td><code>double applyAsDouble(T t, U u)</code></td></tr>
+                <tr><td><code>ToIntBiFunction&lt;T, U&gt;</code></td> <td><code>int</code></td> <td><code>int applyAsInt(T t, U u)</code></td></tr>
+                <tr><td><code>ToLongBiFunction&lt;T, U&gt;</code></td> <td><code>long</code></td> <td><code>long applyAsLong(T t, U u)</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>DoubleToIntFunction</code></td> <td><code>int</code></td> <td><code>int applyAsInt(double d)</code></td></tr>
+                <tr><td><code>DoubleToLongFunction</code></td> <td><code>long</code></td> <td><code>long applyAsLong(double d)</code></td></tr>
+                <tr><td><code>IntToDoubleFunction</code></td> <td><code>double</code></td> <td><code>double applyAsDouble(int i)</code></td></tr>
+                <tr><td><code>IntToLongFunction</code></td> <td><code>long</code></td> <td><code>long applyAsLong(int i)</code></td></tr>
+                <tr><td><code>LongToDoubleFunction</code></td> <td><code>double</code></td> <td><code>double applyAsDouble(long l)</code></td></tr>
+                <tr><td><code>LongToIntFunction</code></td> <td><code>int</code></td> <td><code>int applyAsInt(long l)</code></td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr><td><code>ObjDoubleConsumer&lt;T&gt;</code></td> <td><code>void</code></td> <td><code>void accept(T t, double d)</code></td></tr>
+                <tr><td><code>ObjIntConsumer&lt;T&gt;</code></td> <td><code>void</code></td> <td><code>void accept(T t, int i)</code></td></tr>
+                <tr><td><code>ObjLongConsumer&lt;T&gt;</code></td> <td><code>void</code></td> <td><code>void accept(T t, long l)</code></td></tr>
+            </table>
+        </div>
+    </body>
+</html>

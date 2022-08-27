@@ -9,7 +9,7 @@
         <nav class="navbar">
             <a href="../Ch6_Class_Design/Ch6_Class_Design.html">&leftarrow; Ch6 Class Design</a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch8 Lambdas and Functional Interfaces &rightarrow;</a>
+            <a href="../Ch8_Lambdas_And_Functional_Interfaces/Ch8_Lambdas_And_Functional_Interfaces.html">Ch8 Lambdas and Functional Interfaces &rightarrow;</a>
         </nav>
         <h2 id="interface-section">Implementing Interfaces</h2>
         <ul>
@@ -133,9 +133,9 @@ public interface Inter1 {
                 </ul>
             </li>
         </ul>
-        <h2 id="enum-section">Enum Section</h2>
+        <h2 id="enum-section">Enums</h2>
         <ul>
-            <li>An <i>enumberation</i>, or <code>enum</code> is a type with a finite set of fixed values known at compile-time</li>
+            <li>An <i>enumeration</i>, or <code>enum</code> is a type with a finite set of fixed values known at compile-time</li>
             <li>Provides typesafe compile-time checking, rather than runtime errors</li>
             <pre><code class="codeblock">
 public enum Season {
@@ -243,23 +243,23 @@ public enum TestEnum {
 }
                 </code></pre>
             </li>
-        </ul>
-        <h2 id="sealed-classes-section">Sealed Classes</h2>
-        <ul>
-            <li>A <i>sealed class</i> restricts which other classes may directly extend it (new in Java 17)</li>
-            <li>declares a list (comma-separated) of which classes can extend it using the <code>permits</code> keyword</li>
-            <li>Direct subclasses are required to use one of the following subclass modifiers:
-                <ul>
-                    <li><code>final</code>: may not be extended by any other class</li>
-                    <li><code>sealed</code>: indicates that a class or interface may only be extended/implemented
-                        by named (<code>permits</code>) classes/interfaces</li>
-                    <li><code>non-sealed</code>: used by a class or interface that extends a sealed calls, indicating
-                        it can be extneded by any unspecified classes</li>
-                </ul>
-            </li>
-            <li>A sealed class needs to be declared (and compiled) in the same package as its permitted direct subclasses.</li>
-            <li>The <code>permits</code> keyword is only optional for 2 specific case:  a java file with two top-level classes, or a sealed
-                class with nested subclasses:
+            </ul>
+            <h2 id="sealed-classes-section">Sealed Classes</h2>
+            <ul>
+                <li>A <i>sealed class</i> restricts which other classes may directly extend it (new in Java 17)</li>
+                <li>declares a list (comma-separated) of which classes can extend it using the <code>permits</code> keyword</li>
+                <li>Direct subclasses are required to use one of the following subclass modifiers:
+                    <ul>
+                        <li><code>final</code>: may not be extended by any other class</li>
+                        <li><code>sealed</code>: indicates that a class or interface may only be extended/implemented
+                            by named (<code>permits</code>) classes/interfaces</li>
+                        <li><code>non-sealed</code>: used by a class or interface that extends a sealed calls, indicating
+                            it can be extneded by any unspecified classes</li>
+                    </ul>
+                </li>
+                <li>A sealed class needs to be declared (and compiled) in the same package as its permitted direct subclasses.</li>
+                <li>The <code>permits</code> keyword is only optional for 2 specific case: a java file with two (or more) top-level classes,
+                    or a sealed class with nested subclasses:
                 <pre><code class="codeblock">
 // file Snake.java
 public sealed class Snake {} // permits Cobra omitted
@@ -320,7 +320,7 @@ public record Car(int cost, String name) {
 }
                     </code></pre>
                 </li>
-                <li>Compact Constructors: used to transform and validate the constructor parameters.  It takes not parameters
+                <li>Compact Constructors: used to transform and validate the constructor parameters.  It has no parameter list
                     and implicitly sets all fields.
                     <pre><code class="codeblock">
 public record Car(int cost, String name) {
@@ -387,7 +387,7 @@ System.out.println(myCar.equals(copyCar)); //  true
                         the outer class and then create the inner class instance.
                     </li>
                     <li>Inner class constructor:  <code>OuterClass.InnerClass inner = outClassRef.new InnerClass();</code></li>
-                    <li>Referce out class members from inner class: <code>OuterClass.this.member()</code></li>
+                    <li>Referce outer class members from inner class: <code>OuterClass.this.member()</code></li>
                 </ul>
                 <pre><code class="codeblock">
 public class A {
@@ -407,8 +407,9 @@ public class A {
     public static void main(String[] args) {
         A a = new A();
         A.B b = a.new B();
-        A.B.C c = new b.new C();
+        A.B.C c = b.new C();
         c.allTheX();
+        new A().new B().new C().allTheX();
     }
 }
                 </code></pre>
