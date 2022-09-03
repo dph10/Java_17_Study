@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch9: Collections and Generics</h1>
+        <nav class="navbar">
+            <a href="../Ch8_Lambdas_And_Functional_Interfaces/Ch8_Lambdas_And_Functional_Interfaces.html">&leftarrow; Ch8 Lambdas and Functional Interfaces</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch10 Streams &rightarrow;</a>
+        </nav>
+        <h2 id="common-collections-section">Common Collection APIs</h2>
+        <ul>
+            <li>The <i>Java Collections Framework</i> is a set of classes in <code>java.util</code> for storing collections of objects</li>
+            <li>4 main interfaces:
+                <ol>
+                    <li><code><b>List</b></code>: an ordered collection of elements that allows duplicate entries and can
+                        can be accessed by an <code>int</code> values index.  Implementations: <code>ArrayList</code> 
+                        and <code>LinkedList</code></li>
+                    <li><code><b>Set</b></code>: a collection that does not allow duplicate entries.  Implementations: 
+                        <code>HashSet</code>, <code>LinkedHashSet</code>, and <code>TreeSet</code></li>
+                    <li><code><b>Queue</b></code>: orders it elements in a specific order for processing.  The related
+                        <code>Deque</code> is a subinterface of <code>Queue</code> that allows access at both ends.  
+                        Implementations: <code>LinkedList</code> andd <code>ArrayDeque</code></li>
+                    <li><code><b>Map</b></code>: a collections that maps keys to values (key/value pairs), with no duplicate 
+                        keys allowed.  Implementations: <code>HashMap</code>, <code>LinkedHashMap</code>, and <code>TreeMap</code></li>
+                </ol>
+            </li>
+            <li>The diamond operator (<code>&lt;&gt;</code>) is used to specify the type of the collection.  The type only on the right-hand side
+                of the statement can be omitted with the diamond operator to remove redundant type information.  If the left hand side
+                of the equations uses <code>var</code> for the type, then the collection type is still required to be specified in the diamond operator
+                on the right hand side, or it creates a collection of type <code>Object</code>
+                <pre><code class="codeblock">
+import java.util.*;
+
+// 3 equivalent map declarations
+final Map&lt;String,List&lt;Integer&gt;&gt; mapLists1 = new HashMap&lt;String,List&lt;Integer&gt;&gt;();
+final Map&lt;String,List&lt;Integer&gt;&gt; mapLists2 = new HashMap&lt;&gt;();
+final var mapLists3 = new HashMap&lt;String,List&lt;Integer&gt;&gt;();
+
+// create a list of Object
+final var listobj = new ArrayList&lt;&gt;();
+                </code></pre>
+            </li>            
+        </ul>
+        <h2 id="collection-interface-section">The <code>Collection</code> Interface</h2>
+        <p class="tableheader"><code>Collection</code> Interface Methods</p>        
+        <div class="tablecontainer">
+            <table style="max-width: 90%;">
+                <tr><th>Method signature</th> <th>Description</th> <th>Returns</th></tr>
+                <tr>
+                    <td><code>public boolean add(E element)</code></td> <td>Adds an object element to the <code>Collection</code></td>
+                    <td>returns a boolean indicating if the operation was successfull</td>
+                </tr>
+                <tr>
+                    <td><code>public boolean remove(Object obj)</code></td> <td>remove a single matching value from the <code>Collections</code></td>
+                    <td>returns <code>true</code> if the specified object was removed</td>
+                </tr>
+                <tr>
+                    <td><code>public boolean isEmpty()</code></td> <td>returns <code>true if the <code>Collection</code> has no elements</td>
+                    <td>returns <code>true</code>if it is empty.</td>
+                </tr>
+                <tr>
+                    <td><code>public int size()</code></td> <td>returns the number of elements in the <code>Collections</code></td>
+                    <td>returns an <code>int</code> size/number of elements.</td>
+                </tr>
+                <tr>
+                    <td><code>public void clear()</code></td> <td>clears all elements from the <code>Collection</code> so that it is empty</td>
+                    <td><code>void</code></td>
+                </tr>
+                <tr>
+                    <td><code>public boolean contains(Object obj)</code></td> <td><code>checks if the specified object is present in the <code>Collection</code></td>
+                    <td>returns <code>true</code> if the specified element is present.</td>
+                </tr>
+                <tr>
+                    <td><code>public boolean removeIf(Predicate&lt;? super E&gt; filter</code></td>
+                    <td>remove all elements that match the specified filter condition</td>
+                    <td>returns <code>true</code> if any elements were removed</td>
+                </tr>
+                <tr>
+                    <td><code>public void forEach(Consumer&lt;? super T&gt; action)</code></td>
+                    <td>performs a specified action on each element</td> <td><code>void</code></td>
+                </tr>
+                <tr>
+                    <td><code>public Iterator&lt;E&gt; iterator()</code></td>
+                    <td>returns an iterator for the given <code>Collection</code></td>
+                    <td>returns an implementation of the <code>Iterator interface</code></td>
+                </tr>
+                <tr>
+                    <td><code>Stream&lt;E&gt; stream()</code></td> <td>returns a <code>Stream</code> of this <code>Collection</code></td>
+                    <td>returns a sequential <code>Stream</code> from the elements in this <code>Collection</code>, see <a>Ch10 Streams</a></td>
+                </tr>
+                <tr>
+                    <td><code>public boolean equals(Object obj)</code></td> <td><code>override of java.lang.Object::equals</code>
+                    that compares that type and the contents of this collection with another</td>
+                </tr>
+            </table>
+        </div>
+            <ul>
+                <li>Iterating:  iterating can also be performed using an 
+                    <a href="../Ch3_Program_Flow_Control/Ch3_Study_Guide.html#for-each-section">enhanced for-loop</a>, 
+                    or using an <i>iterator</i></li>
+                <li>The <code>Iterator</code> interface is the only form of iterator that supports removing elements
+                    from the <code>Collection</code> during iteration</li>
+                <pre><code class="codeblock">
+// ...
+for (final String s : stringColl)
+    System.out.println(s);
+// ...
+final Iterator&lt;String&gt; itr = stringColl.iterator();
+while (itr.hasNext()) {
+    final String s = itr.next();
+    if (s.isBlank()) {
+        itr.remove(); // can only do this with an iterator!
+    } else {
+        System.out.println(s);
+    }
+}
+                </code></pre>
+                <pre><code class="codeblock">
+import java.util.List;
+import java.util.Set;
+
+final var list1 = List.of(1, 2);
+final var list2 = List.of(2, 1);
+final var set1 = Set.of(1, 2);
+final var set2 = Set.of(2,1);
+
+System.out.println(list1.equals(list2)); // false
+System.out.println(set1.equals(set2)); // true
+System.out.println(list1.equals(set1)); // false
+                </code></pre>
+                <li>A <code>NullPointerException</code> can occur if a <code>null</code> is added to a 
+                 list and then retrieved and unboxed from a wrapper type to a primitive type:</li>
+                 <pre><code class="codeblock">
+import java.util.ArrayList;
+
+final var heights = new ArrayList&lt;Integer&gt;();
+heights.add(null);
+final int h = heights.get(0); // NullPointerException!
+                 </code></pre>
+            </ul>
+        <h2 id="list-interface-section">The <code>List</code> Interface</h2>
+        <ul>
+            <li>Properties:
+                <ul>
+                    <li>maintains a collection of ordered items</li>
+                    <li>items are retrieved and inserted at a specific <code>int</code> <i>index</i> (position) in the list</li>
+                    <li>can contain duplicate entries</li>
+                    <li>unlike a Java array, it can change size after being declared.</li>
+                    <li>Allows <code>null</code> values</li>
+                </ul>
+            </li>
+            <li>Implementations:
+                <ul>
+                    <li><b><code>ArrayList</code></b>
+                        <ul>
+                            <li>a dynamically resizeable array with more functionality</li>
+                            <li>Constant time lookups for any element</li>
+                            <li>Adding could trigger a resize, which requires extra time</li>
+                            <li>Removing an element requires recopying the array</li>
+                            <li>Best performance when reading more than writing</li>
+                        </ul>
+                    </li>
+                    <li><b><code>LinkedList</code></b>
+                        <ul>
+                            <li>Implements both <code>List</code> and <code>Deque</code> interfaces.</li>
+                            <li>Constant time adding or removing from the beginning or end of the list</li>
+                            <li>Reading/inserting at an arbitrary index takes linear time</li>
+                            <li>Good choice when using a <code>Deque</code></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Factory Methods for creating Lists
+                <div class="tablecontainer">
+                    <table style="max-width: 90%;">
+                        <tr> <th>Method</th> <th>Description</th> <th>Can add elements?</th>
+                            <th>Can replace elements</th> <th>Can delete elements</th>
+                        </tr>
+                        <tr>
+                            <td><code>Arrays.asList(varargs)</code></td> <td>returns fixed size list backed by an array</td>
+                            <td>no</td> <td>Yes</td> <td>no</td>
+                        </tr>
+                        <tr>
+                            <td><code>List.of(varargs)</code></td> <td>returns an immutable list</td> 
+                            <td>no</td> <td>no</td> <td>no</td>
+                        </tr>
+                        <tr>
+                            <td><code>List.copyOf(collection)</code></td> <td>returns immutable list with copy of original collection's values</td>
+                            <td>no</td> <td>no</td> <td>no</td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+            <li>Both <code>List</code> implementations have 2 commonly used constructor.  The no-args constructor creates
+                a new empty list, the 2nd constructor takes a <code>Collection</code> object as its parameter and copies it.
+            </li>
+            <li>Many common list methods will throws an <code>IndexOutOfBoundsException</code> if the caller attemps to use an
+                invalid index</li>
+            <p class="tableheader">Common <code>List</code> Methods</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr>
+                        <th>Method</th> <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>public boolean add (Element e)</code></td> <td>adds the element to the end of the list</td>
+                    </tr>
+                    <tr>
+                        <td><code>public void add(int index, E element)</code></td> 
+                        <td>inserts an element at the specified index and movies the other elements over 1 position</td>
+                    </tr>
+                    <tr>
+                        <td><code>public E get(int index)</code></td> <td>returns element at the specified index</td>
+                    </tr>
+                    <tr>
+                        <td><code>public E remove(int index)</code></td> <td>remove element at index and moves the rest forward 1 position</td>
+                    </tr>
+                    <tr>
+                        <td><code>public default void replaceAll(UnaryOperator&lt;E&gt; op)</code></td> <td>replaces each element in list with
+                            the result of the operator
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>public E set(int index, E e)</code></td> 
+                        <td>replaces element at index and returns original, throws <code>IndexOutOfBoundsException</code> if index is invalid</td>
+                    </tr>
+                    <tr>
+                        <td><code>public default void sort(Comparator&lt;? super E&gt; c</code></td>
+                        <td>Sorts the list</td>
+                    </tr>
+                    <tr>
+                        <td><code>Object[] toArray()</code></td> <td>creates a Java array containing the elements in-order from this list</td>
+                    </tr>
+                    <tr>
+                        <td><code>public &lt;T&gt; T[] toArray(T[] a)</code></td>
+                        <td>puts the elements in order from this list into the specified list, if there is enough room.  Otherwise allocates and returns a new 
+                            array with this list's elements.
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <pre><code class="codeblock">
+final var list = new LinkedList&lt;Integer&gt;();
+list.add(3);
+list.add(2);
+list.add(1);  list => [3, 2, 1]
+
+list.remove(2);  // remove element 1 at index 2
+list.remove(Integer.valueOf(2));  // removes element equal to integer 2
+System.out.println(list); // [3]
+
+System.out.println(list);
+            </code></pre>
+            <pre><code class="codeblock">
+final List&lt;String&gt; list = new ArrayList&lt;&gt;();
+list.add("hawk");
+list.add("robin");
+Object[] objArray = list.toArray();
+String[] stringArray = list.toArray(new String[0]);
+list.clear();
+System.out.println(objArray.length); // 2
+System.out.println(stringArray.length); // 2
+System.out.println(Arrays.equals(objArray, stringArray)); // true
+            </code></pre>
+        </ul>
+        <h2 id="set-section">The <code>Set</code> Interface</h2>
+        <ul>
+            <li>Properties:
+                <ul>
+                    <li>Does <i>NOT</i> allow duplicate entries</li>
+                    <li>Insertion order is generally not maintained</li>
+                </ul>
+            </li>
+            <li>Implementations:
+                <ul>
+                    <li><b><code>HashSet</code></b>
+                        <ul>
+                            <li>Stores its elements in a <i>hash table</i> using <code>Object::hashCode</code>
+                             and the <code>Object::equals</code> methods.</li>
+                             <li>Insertion and checking if an object is present is constant time</li>
+                             <li>Insertion order is not maintained</li>
+                             <li>Allows <code>null</code> values</li>
+                        </ul>
+                    </li>
+                    <li><b><code>TreeSet</code></b>
+                        <ul>
+                            <li>Stores elements in a sorted tree structure using the <code>Comparable</code> interface or
+                            a <code>Comparator</code> object passed to the constructor</li>
+                            <li>Has logarithmic insertion/checking times</li>
+                            <li><i>Does not</i> allow null values</li>
+                        </ul>
+                    </li>
+                    <li><b><code>LinkedHashList</code></b>: similar to <code>HashList</code>, but also maintains insertion order</li>
+                </ul>
+            </li>
+            <li><code>public boolean add(Element e)</code> returns <code>true</code> unless the object was already
+                present in the set</li>
+            <li><code>public static Set&lt;E&gt; of (E... elements)</code> returns an immutable set built from the specified elements</li>
+            <li><code>public static Set&lt;E&gt; copyOf(Collection&lt;E&gt; collection)</code> returns an immutable set
+                build from the elements of the specified collection</li>
+            <pre><code class="codeblock">
+Set&lt;Integer&gt; set = new TreeSet&lt;&gt;();
+final var b1 = set.add(66); // true
+final var b2 = set.add(10); // true
+final var b3 = set.add(66); // false, already present
+final var b4 = set.add(8);  // true
+set.forEach(System.out::println);  // print 8 10 66 each on a new line
+            </code></pre>
+        </ul>
+        <h2 id="queue-section">The <code>Queue</code> and <code>Deque</code> Interfaces</h2>
+        <ul>
+            <li>A <code>Queue</code> is used when element are added and removed in a specific order</li>
+            <li>FIFO: first in, first out</li>
+            <li>LIFO: last in, first out, which is implemented for a <code>Stack</code></li>
+            <li>Implementations:
+                <ul>
+                    <li><b><code>LinkedList</code></b>: also implements the <code>Deque</code> interface (add/remove elements to head or tail of queue)</li>
+                    <li><b><code>ArrayDeque</code></b>: resizable array implementation of a queue</li>
+                </ul>
+            </li>
+            <li>The <code>Queue</code> interface has two sets of operators, one returns null if there is a problem,
+                the 2nd throws an exception if there is a problem</li>
+            <li>The <code>Deque</code> interface has matching methods to the <code>Queue</code> interface with
+                <code>First</code> or <code>Last</code> appended to the method name, depending on whether the operation
+                is performed at queue front or end</li>
+        </ul>
+        <p class="tableheader">Common <code>Queue</code> Methods</p>
+        <div class="tablecontainer">
+            <table style="max-width: 90%;">
+                <tr> <th>Method</th> <th>Description</th></tr>
+                <tr> 
+                    <td><code>public boolean add(E e)</code></td>
+                    <td>Add to back of queue, throws an exception if operation fails</td>
+                </tr>
+                <tr>
+                    <td><code>public boolean offer(E e)</code></td>
+                    <td>Add to back of queue, return false if operator fails</td>
+                </tr>
+                <tr>
+                    <td><code>public E element()</code></td>
+                    <td>Returns element at queue front, throws an exception if queue is empty</td>
+                </tr>
+                <tr>
+                    <td><code>public E peek()</code></td>
+                    <td>Returns element at queue front, returns null if queue is empty</td>
+                </tr>
+                <tr>
+                    <td><code>public E remove()</code></td>
+                    <td>Removes and returns the element from the front of the queue, throws exception if empty</td>
+                </tr>
+                <tr>
+                    <td><code>public E poll()</code></td>
+                    <td>Removes and returns the elment from the front of the queue, returns null if empty</td>
+                </tr>
+            </table>
+        </div>
+        <p class="tableheader">Stack Methods (implemented by <code>Deque</code>)</p>
+        <div class="tablecontainer">
+            <table style="max-width: 90%">
+                <tr> <th>Method</th> <th>Description</th></tr>
+                <tr>
+                    <td><code>public void push(E e)</code></td>
+                    <td>Add element to the front/top, throws exception if operation fails</td>
+                </tr>
+                <tr>
+                    <td><code>public E pop()</code></td>
+                    <td>Remove and return element from the front/top, throws exception if queue is empty</td>
+                </tr>
+                <tr>
+                    <td><code>public E peek()</code></td>
+                    <td>Return the first element, throws exception if queue if empty</td>
+                </tr>
+            </table>
+        </div>
+        <h2 id="map-section">The <code>Map</code> Interface</h2>
+        <ul>        
+            <li>Uses keys to identify object values</li>
+            <li>Duplicate keys are not allowed</li>
+            <li>Factory methods:
+                <ol>
+                    <li><code>final var map = Map.of("entry1",val1, "entry2",val2);</code> - returns immutable map</li>
+                    <li><code>final var map = Map.ofEntries(Map.entry("key1", val1), Map.entry("key2", val2));</code>
+                         - returns immutable map of entries</li>
+                    <li><code>final var map = Map.of(otherMap);</code> - returns immutable map of the contents
+                        from the specified map</li>
+                </ol>
+            </li>     
+            <li>Implementations:
+                <ul>
+                    <li><code>HashMap</code>: stores the keys in a has table, doesn't maintain insertion order but can perform
+                        puts and gets in constant time.  Allows 1 <code>null</code> key and multiple <code>null</code> values</li>
+                    <li><code>LinkedHashMap</code>: similar to <code>HashMap</code> but has extra links to maintain insertion order</li>
+                    <li><code>TreeMap</code>: stores keys in a sorted tree structure (similar to <code>TreeSet</code>).  Logarithmic time
+                        puts and gets.  <i>Does not</i> allows <code>null</code> keys.</li>
+                </ul>
+            </li>   
+            <li>Multiple methods exist for iterating through the map:
+                <ul>
+                    <li>the <code>map.forEach()</code> method can be used to iterate through a map, and it accepts a <code>BiConsumer&lt;K,V&gt;</code> as its parameter</li>
+                    <li><code>map.values().forEach(Consumer&lt;V&gt; consumer)</code> can be used to iterate through the map's values</li>
+                    <li><code>map.keySet().forEach(Consumer&lt;K&gt; consumer)</code> can be used to iterate the the map's keys</li>
+                    <li><code>map.entrySet().forEach(Consumer&lt;Entry&lt;K,V&gt;&gt; consumer)</code> to iterate the map's entries </li>
+                </ul>
+            </li>
+            
+            <p class="tableheader">Common <code>Map</code> Methods</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr> <th>Method</th> <th>Description</th></tr>
+                    <tr>
+                        <td><code>public void clear()</code></td>
+                        <td>Removes all keys/values from the map</td>
+                    </tr>
+                    <tr>
+                        <td><code>public boolean containsKey(Object key)</code></td>
+                        <td>returns <code>true</code> if the key is present in the map</td>
+                    </tr>
+                    <tr>
+                        <td><code>public boolean containsValue(Object value)</code></td>
+                        <td>returns <code>true</code> if the object value is present in the map</td>
+                    </tr>
+                    <tr>
+                        <td><code>public Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet()</code></td>
+                        <td>returns a <code>Set</code> of the key/value map entries/pairs</td>
+                    </tr>
+                    <tr>
+                        <td><code>public void forEach(BiConsumer&lt;K,V&gt; action)</code></td>
+                        <td>iteratos through each key/value pair with the given consumer</td>
+                    </tr>
+                    <tr>
+                        <td><code>public V get(Object key)</code></td>
+                        <td>returns the value mapped to the specified key if present, otherwise returns <code>null</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>public V getOrDefault(Object key, V defaultVal)</code></td>
+                        <td>returns the value mapped to the specified key if present, or the specified value if not present</td>
+                    </tr>
+                    <tr>
+                        <td><code>public boolean isEmpty()</code></td>
+                        <td>returns <code>true</code> if this map is entry</td>
+                    </tr>
+                    <tr>
+                        <td><code>public Set&lt;K&gt; keySet()</code></td>
+                        <td>returns a <code>Set</code> view of all the map's keys, which supports removal of key/value pairs</td>
+                    </tr>
+                    <tr>
+                        <td><code>public V merge(K key, V value, BiFunction&lt;? super V,? super V,? extends V&gt; func)</code></td>
+                        <td>sets the key/value pair if the key is not present.  Otherwise runs the provided merge function to determine new value.
+                            Removes from the map if the merge function result is <code>null</code>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>public V put(K key, V value)</code></td>
+                        <td>Adds or replaces key/value pair, returns previous value or <code>null</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>public V putIfAbset(K key, V Value)</code></td>
+                        <td>adds value if key is not present and returns <code>null</code>, otherwise returns the existing value</td>
+                    </tr>
+                    <tr>
+                        <td><code>public V remove(Object key)</code></td>
+                        <td>Removes and returns value mapped to the key, returns <code>null</code> if it wasn't present.</td>
+                    </tr>
+                    <tr>
+                        <td><code>public V replace(K key, V value)</code></td>
+                        <td>Replaces value for given key only if already present, returns original value or <code>null</code>
+                        if none</td>
+                    </tr>
+                    <tr>
+                        <td><code>public void replaceAll(BiFunction&lt;K,V,V&gt;> func)</code></td>
+                        <td>replaces each value with results of the provided function</td>
+                    </tr>
+                    <tr>
+                        <td><code>public int size()</code></td>
+                        <td>returns the number of entries (key/value pairs) in the map</td>
+                    </tr>
+                    <tr>
+                        <td><code>public Collection&lt;V&gt; values()</code></td>
+                        <td>returns a collection of all the map's values</td>
+                    </tr>
+                </table>
+            </div>
+        </ul>
+        <h2 id="sorting-section">Sorting Data</h2>
+        <ul>
+            <li>Numbers are automically sorted by numerical order, and <code>String</code> objects are sorted
+                by there Unicode character mapping (numbers, then uppercase, then lowercase)</li>
+            <li>Custom sorting orders for user-defined classes can be defined by implementing the <code>Comparable</code> interface,
+                and a <code>Comparator</code> can also be provided to define a sort order than that defined within the class.</li>
+            <li><code>public static &lt;T extends Comparable&lt;? super T&gt;&gt; void sort(List&lt;T&gt; list)</code>
+             - sorts list of objects that implements <code>Comparable</code></li>
+             <li><code>public static &lt;T&gt; void sort(List &lt;T&gt; list, Comparator&lt;? super T&gt c)</code>
+             - sorts the list in the order defined by provided comparator</li>
+             <li>The <code>Collections.binarySearch()</code></li>
+            <li>The <code>Comparable</code> Interface:
+                <ul>
+                    <li>
+                        <code>public int compareTo(T o)</code> - returns a negative integer if this object is less than the argument, 
+                        a positive integer if this object is greater than the argument, and <code>0</code> if they are equal.
+                    </li>
+                    <li>The <code>compareTo()</code> and <code>equals()</code> methods should be consistent, meaning
+                        that when <code>x.equals(y)</code> is <code>true</code> when <code>x.compareTo(y)</code> equals
+                        <code>0</code>.</li>
+                </ul>
+                <pre><code class="codeblock">
+// java.lang.Comparable
+public interface Comparable&lt;T&gt; {
+    int compareTo(T o);
+}
+
+// ...
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Car implements Comparable&lt;Car&gt; {
+    private final String modelName;
+    private final int cost;
+    public Car(final String mName, final int cost) {
+        this.modelName = mName;
+        this.cost=cost;
+    }
+
+    public String getModelName() {
+        return this.modelName
+    }
+
+    public int getCost() {
+        return this.cost;
+    }
+
+    @Override
+    public int compareTo(final T other) {
+        return this.modelName.compareTo(other.modelName);
+    }
+
+    public static void main(final String... args) {
+        final var carList = new ArrayList&lt;Car&gt;();
+        carList.add("elantra", 19_000);
+        carList.add("tacoma", 27_000);
+        carList.add("corolla", 21_000);        
+        Collections.sort(carList);
+    }
+}
+                </code></pre>
+            </li>
+            <li>The <code>Comparator</code> Interface
+            <ul>
+                <li>Can be used for sorting an object if it does not implement <code>Comparable</code>, 
+                    or to provide a sorting order different than that defined in the class using <code>Comparable</code></li> 
+                <li><code>Comparator</code> is a functional interface</li>      
+                <li>contains convenience methods for chaining multiple compares or reversing the natural compare order</li>             
+                <p class="tableheader"><code>Comparator</code> Helper Methods</p>
+                <div class="tablecontainer">
+                    <table style="max-width: 90%;">
+                        <tr> <th>Methods</th> <th>Description</th></tr>
+                        <tr>
+                            <td><code>comparing(function)</code></td>
+                            <td>Compare by result of function that returns any <code>Object</code> (or primitive
+                                that is autoboxed)</td>
+                        </tr>
+                        <tr>
+                            <td><code>comparingDouble(function)</code></td>
+                            <td>Compare by result a function that returns <code>double</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>comparingInt(function)</code></td>
+                            <td>Compare by results of function that returns <code>int</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>comparingLong(function)</code></td>
+                            <td>Compare by results of fuction that returns <code>long</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>naturalOrder()</code></td>
+                            <td>Sort using order specified by the <code>Comparable</code> implementation on object itself</td>
+                        </tr>
+                        <tr>
+                            <td><code>reverseOrder()</code></td>
+                            <td>Sort using reverse order specified by <code>Comparable</code> implementation on object itself</td>
+                        </tr>
+                        <tr>
+                            <td><code>reversed()</code></td>
+                            <td>Reverse order of chained <code>Comparator</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>thenComparing(function)</code></td>
+                            <td>If previous <code>Comparator</code> returns <code>0</code>, use this comparator
+                                that returns <code>Object</code> or can be autoboxed into one</td>
+                        </tr>
+                        <tr>
+                            <td><code>thenComparingDouble(function)</code></td>
+                            <td>If revious <code>Comparator</code> returns <code>0</code>, use this comparator that returns double</td>
+                        </tr>
+                        <tr>
+                            <td><code>thenComparingInt(function)</code></td>
+                            <td>Similar to above, but returns <code>int</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>thenComparingLong(function)</code></td>
+                            <td>Similar to above, but returns <code>long</code></td>
+                        </tr>
+                    </table>
+                </div>
+                <pre><code class="codeblock">
+// java.util.Comparator
+@FunctionalInterface
+public interface Comparator&lt;T&gt; {
+    public int compare(T o1, T o2);
+}
+
+// ... 
+final Comparator&lt;Car&gt; c = Comparator.comparing(Car::getModelName).thenComparingInt(Car::getCost);
+                </code></pre>
+            </ul>
+            </li>
+            <p class="tableheader"><code>Comparable</code> vs <code>Comparator</code> Interfaces</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr> <th>Difference</th> <th><code>Comparable</code></th> <th><code>Comparator</code></th></tr>
+                    <tr>
+                        <td>Package name</td> <td><code>java.lang</code></td> <td><code>java.util</code></td>
+                    </tr>
+                    <tr>
+                        <td>Interface must be implemented for comparing?</td> <td>Yes</td> <td>no</td>
+                    </tr>
+                    <tr>
+                        <td>Method name in interface</td> <td><code>compareTo()</code></td> <td><code>compare()</code></td>
+                    </tr>
+                    <tr>
+                        <td>Number of params</td> <td>1</td> <td>2</td>
+                    </tr>
+                    <tr><td>Common to declare using a lambda</td> <td>no</td> <td>Yes</td></tr>
+                </table>
+            </div>
+        </ul>
+        <h2 id="generics-section">Generics</h2>
+        <ul>
+            <li>Generics allows for writing code that can be used with any arbitrary class, instead
+                of having to rewrite a new version for every class
+            </li>
+            <li>Allows for compile-time type-checking to prevent runtime exceptions</li>
+            <li><i>Formal type parameters</i> are specified as the type in the angle brackets (<code>&lt;&gt;</code>), 
+                also informally known as the diamon operator</li>
+            <pre><code class="codeblock">
+public class MyData&lt;T&gt; {
+    private final T contents;
+    public T getContents() {
+        return this.contents;
+    }
+
+    public MyData(final T c) {
+        this.contents = c;
+    }
+
+    public static final void (final String... args) {
+        final arg data = new MyData&lt;Double&gt;(3.14);
+        System.out.println(data.getContents());
+    }
+}
+            </code></pre>
+            <li>Typical conventions for type parameters:
+                <ul>
+                    <li>E for an element</li>
+                    <li>K for a map key</li>
+                    <li>V for a map value</li>
+                    <li>N for a number</li>
+                    <li>T for a generic data type</li>
+                    <li>S,U,V and so forth for multiple generic types</li>
+                </ul>
+            </li>
+            <li>At runtime the generics types are converted to just <code>Object</code> types, a process
+                called <code>type erasure</code>.  This can prevent some method overloads from being valid
+                as it can reudce both sets of parameters  to the same thing at runtime:</li>
+            <pre><code class="codeblock">
+public class ProcessData {
+    public void procData(List&lt;Object&gt; input) {}
+    public void procData(List&lt;Object*gt; input) {} // does not compile
+}
+            </code></pre>
+            <li>When returning generic types, they must be covariant.  
+                This means that the generics types <code>must match</code>
+                </li>
+            <li>Generics limitations (generics are a non-<i>reifiable</i> type because their type at runtime is unknown):
+                <ul>
+                    <li>Cannot call a constructor: <code>new T()</code> is not alllowed</li>
+                    <li>Cannot create an array of the generic type: <code>new T[n]()</code> not allowed</li>
+                    <li>Cannot call <code>instanceof</code></li>
+                    <li>Cannot use a primitive type as a generic type parameter, must use the wrapper classes</li>
+                    <li>Cannot create a static variable as a generic type parameter: <code>private static T t;</code> is not allowed</li>
+                </ul>
+            </li>
+            <li>Implementing Generic Interfaces
+                <ul>
+                    <li>Interfaces can declare formal type parameters, and there are 3 ways a call can implement
+                        the interface:
+                        <ol>
+                            <li>Specify the generic type</li>
+                            <li>Create another generic class</li>
+                            <li>Don't use generics at all (known as using a <code>raw</code> type)</li>
+                        </ol>
+                    </li>
+                </ul>
+                <pre><code class="codeblock">
+public interface MyInterface&lt;T&gt; {
+    public ship(T t);
+}
+
+// 1. Specify generic type
+public class MyInt implements MyInterface&lt;Integer&gt; {
+    public void ship(Integer t) { // do stuff}
+}
+
+// 2. Create generic class
+public class MyGeneric&lt;U&lt; implements MyInterface&lt;U&gt;{
+    public void ship(U u) { // do stuff}
+}
+
+// 3. Raw type
+public class Raw implements MyInterface {
+    public void ship(Object o) { // do stuff}
+}
+                </code></pre>
+            </li>
+            <li>Generic methods
+                <ul>
+                    <li>The generic type(s) must be declared before the method return type within the diamond operator</li>
+                    <li>When a method declares a generic parameter type, it is independent of the class declaration type parameters</li>
+                </ul>
+                <pre><code class="codeblock">
+// in class definition MyClass
+public static &lt;T&gt; void prepare(final T t) { // do stuff}
+
+// method calls later:
+MyClass.prepare("myString");
+MyClass.&lt;String&gt;("myString");
+MyClass.&lt;String[]&gt;(args);
+                </code></pre>
+            </li>
+            <li>Generic Records
+                <ul>
+                    <li>Generics can be used with records:</li>
+                </ul>
+                <pre><code class="codeblock">
+public record MyRecord&lt;T&gt;(T contents) {
+    @Override
+    public T contents() {
+        if (contents==null) {
+            throw new IllegalStateException("missing contents");
+        }
+        return contents;
+    }
+
+    public static void main(final String[] args) {
+        final String s = "hello";
+        MyRecord&lt;String&gt; record = new MyRecord&lt;&gt;(s);
+        System.out.println(record.contents());
+    }
+}
+                </code></pre>
+            </li>
+            <li>Generic Type Bounds
+                <ul>
+                    <li>A <i>bound parameter type</i> is a generic type that specifies a bound for the generic, 
+                        and can be used to restrict what types can be used</li>
+                    <li>The <i>wildcard</i> (<code>?</code>) can be used to specity that any compatible type can be used</li>
+                    <p class="tableheader">Types of Bounds</p>
+                    <div class="tablecontainer">
+                        <table style="max-width: 90%;">
+                            <tr><th>Type of bound</th> <th>Syntax</th> <th>Example</th> <th>Description</th></tr>
+                            <tr>
+                                <td>Unbounded wildcard</td> <td><code>?</code></td> 
+                                <td><code>List&lt;?&gt; a = new ArrayList&lt;String&gt;();</code></td>
+                                <td>Any class type can be used, does not accept arguments</td>
+                            </tr>
+                            <tr>
+                                <td>Wildcard with upper bound</td> <td><code>? extends Type</code></td>
+                                <td><code>List&lt;? extends Exception&gt; a = new ArrayList&lt;RuntimeException&gt;();</code></td>
+                                <td>Can be used to get from the object, but does not accept arguments</td>
+                            </tr>
+                            <tr>
+                                <td>Wildcard with lower bound</td> <td><code>? super Type</code></td>
+                                <td><code>List&lt;? super Exception&gt; a = new ArrayList&lt;RuntimeException&gt;();</code></td>
+                                <td>Can be used to accept new object, but not get them</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <pre><code class="codeblock">
+final List&lt;? super IOException&gt; exes = new ArrayList&lt;Exception&gt;();
+exes.add(new Exception()); // compiler error, objects must be a subtype of IOException
+exes.add(new IOException());
+exes.add(new FileNotFoundException());
+                    </code></pre>
+                </ul>
+            </li>
+        </ul>
+    </body>
+</html>

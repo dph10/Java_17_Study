@@ -9,13 +9,13 @@
         <nav class="navbar">
             <a href="../Ch7_Advanced_Class_Topics/Ch7_Advanced_Class_Topics.html">&leftarrow; Ch7 Advanced Class Topics/a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch9 Generics and Collections &rightarrow;</a>
+            <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html">Ch9 Generics and Collections &rightarrow;</a>
         </nav>
         <h2>Intro to Lambdas</h2>
         <ul>
             <li>A <i>lambda expression</i> is a functional block of code that can be passed as an object.</li>
-            <li>Implements a <a href="#func-interfaces-section"><i>functional interface</i></a>, which is an <a href="../Ch7_Advanced_Class_Topics/Ch7_Advanced_Class_Topics.html#interface-section"><code>interface</code> that 
-            contains a single <code>abstract</code> method.</a></li>
+            <li>Implements a <a href="#func-interfaces-section"><i>functional interface</i></a>, which is an <a href="../Ch7_Advanced_Class_Topics/Ch7_Advanced_Class_Topics.html#interface-section"><code>interface</code></a> that 
+            contains a single <code>abstract</code> method.</li>
             <li>Lambdas have several different parts (many are optional):
                 <ul>
                     <li>Simple lambda has a single parameter, the arrow operator (<code>-></code>) to separate the
@@ -23,6 +23,8 @@
                     <li>The verbose lambda form has a parameter list with types, the arrow operator to separate the
                         parameter list and body, a body inside of braces that may return a result (depending on the <code>interface implemented</code>).
                     </li>
+                    <li>Parenthesis for the parameter-list (and parameter type) are optional when there is only 1 parameter</li>
+                    <li>Braces and the <code>return</code> keywords are optional when the body is only a single statement.</li>
                 </ul>
             </li>
             <li>Local variables captured by the lambda must be <code>final</code> or effectively final</li>
@@ -30,6 +32,7 @@
                 <a href="../Ch1_Introduction/Ch1_Study_Guide.html#local-type-inference-section">local type inference</a> due to a lack of context.</li>
             <li>There are 3 formats for providing the parameters to a lambda: 1) without types, 2) with types, and 3) with <code>var</code>.  The compiler
             requires all parameters for the lambda to use the same format.</li>
+            <li>Note that lambdas <i>cannot</i> redeclare local variables (from outside the lambda)</li>
             <pre><code class="codeblock">
 // Lambdas that return boolean:
 final Supplier&lt;Boolean&gt; ex1 = () -> true;
@@ -44,7 +47,7 @@ final BiPredicate&lt;String,Integer&gt; ex6 = (final String x, final Integer y) 
         <ul>
             <li>A <i>functional interface</i> is an <code>interface</code> with a single abstract method, also known
                 as a <i>single abstract method</i> (SAM) rule</li>
-            <li>The <code>@FunctionalInterface</code> annotation (not required) tells the compilter that you intend for the code to be a funcitonal interface, 
+            <li>The <code>@FunctionalInterface</code> annotation (not required) tells the compiler that you intend for the code to be a functional interface, 
                 and a compiler error will occur if there is a problem</li>
             <li>Note that an <code>interface</code> with a single <code>default</code> method <i>does not</i> qualify as a functional interface</li>
             <li>Interfaces with other <code>default methods</code>, <code>static</code> or <code>private</code> methods
@@ -76,19 +79,19 @@ public class AnalogSignalProcessor implements DataProcessor {
     <h2 id="method-ref-section">Method References</h2>
         <ul>
             <li><i>Method references</i> can be used to make code easier to read</li>
-            <li>The <code>::</code> operator is th method reference operator that tells Java to use <i>deferred execution</i> 
-                with a functional interface at a later time.</li>
+            <li>The <code>::</code> operator is the method reference operator that tells Java to use <i>deferred execution</i> 
+                at a later time.</li>
             <li>There are 4 types of method references:
                 <ol>
                     <li>Calling <code>static</code> Methods:
                         <ul>
-                            <li>Uses the class name and the <code>static method name</code>:</li>
+                            <li>Uses the class name and the <code>static</code> method name:</li>
                         </ul>
                         <pre><code class="codeblock">
 interface Converter {
     long convertDoubleToLong(double num);
 }
-.// ...
+// ...
 final Converter methodRef = Math::round;
 System.out.println(methodRef.convertDoubleToLong(3.14)); // 3
                         </code></pre>
@@ -198,11 +201,11 @@ System.out.println(methodRef.create().equals("snake")); // false
                 <tr><td><code>IntPredicate</code></td> <td><code>boolean</code></td> <td><code>boolean test(int i)</code></td></tr>
                 <tr><td><code>LongPredicate</code></td> <td><code>boolean</code></td> <td><code>boolean test(long l)</code></td></tr>
                 <tr><td colspan="3"></td></tr>
-                <tr><td><code>DoubleFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td>R apply(double d)</td></tr>
-                <tr><td><code>IntFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td>R apply(int i)</td></tr>
-                <tr><td><code>LongFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td>R apply(long l)</td></tr>
+                <tr><td><code>DoubleFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td><code>R apply(double d)</code></td></tr>
+                <tr><td><code>IntFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td><code>R apply(int i)</code></td></tr>
+                <tr><td><code>LongFunction&lt;R&gt;</code></td> <td><code>R</code></td> <td><code>R apply(long l)</code></td></tr>
                 <tr><td colspan="3"></td></tr>
-                <tr><td><code>DoubleUnaryOperator</code></td> <td><code>double</code></td> <td>double applyAsDouble(double d)</td> </tr>
+                <tr><td><code>DoubleUnaryOperator</code></td> <td><code>double</code></td> <td><code>double applyAsDouble(double d)</code></td> </tr>
                 <tr><td><code>IntUnaryOperator</code></td> <td><code>int</code></td> <td><code>int applyAsInt(int i)</code></td></tr>
                 <tr><td><code>LongUnaryOperator</code> <td><code>long</code> <td><code>long applyAsLong(long l)</code></tr>
                 <tr><td colspan="3"></td></tr>
@@ -210,7 +213,7 @@ System.out.println(methodRef.create().equals("snake")); // false
                 <tr><td><code>IntBinaryOperator</code></td> <td><code>int</code></td> <td><code>int applyAsInt(int i1, int i2)</code></td></tr>
                 <tr><td><code>LongBinaryOperator</code></td> <td><code>long</code></td> <td><code>double applyAsLong(long l1, long l2)</code></td></tr>
                 <tr><td colspan="3"></td></tr>
-                <tr><td><code>ToDoubleFunction&lt;T&gt;</code></td></tr> <td><code>double</code></td> <td><code>double applyAsDouble(T t)</code></td>
+                <tr><td><code>ToDoubleFunction&lt;T&gt;</code></td> <td><code>double</code></td> <td><code>double applyAsDouble(T t)</code></td></tr>
                 <tr><td><code>ToIntFunction&lt;T&gt;</code></td> <td><code>int</code></td> <td><code>int applyAsInt(T t)</code></td></tr>
                 <tr><td><code>ToLongFunction&lt;T&gt;</code></td> <td><code>long</code></td> <td><code>long applyAsLong(T t)</code></td></tr>
                 <tr><td colspan="3"></td></tr>
