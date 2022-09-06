@@ -17,19 +17,19 @@
             <li>4 main interfaces:
                 <ol>
                     <li><code><b>List</b></code>: an ordered collection of elements that allows duplicate entries and can
-                        can be accessed by an <code>int</code> values index.  Implementations: <code>ArrayList</code> 
+                        can be accessed by an <code>int</code> valued index (random access).  Implementations: <code>ArrayList</code> 
                         and <code>LinkedList</code></li>
                     <li><code><b>Set</b></code>: a collection that does not allow duplicate entries.  Implementations: 
                         <code>HashSet</code>, <code>LinkedHashSet</code>, and <code>TreeSet</code></li>
                     <li><code><b>Queue</b></code>: orders it elements in a specific order for processing.  The related
                         <code>Deque</code> is a subinterface of <code>Queue</code> that allows access at both ends.  
                         Implementations: <code>LinkedList</code> andd <code>ArrayDeque</code></li>
-                    <li><code><b>Map</b></code>: a collections that maps keys to values (key/value pairs), with no duplicate 
+                    <li><code><b>Map</b></code>: maps keys to values (key/value pairs), with no duplicate 
                         keys allowed.  Implementations: <code>HashMap</code>, <code>LinkedHashMap</code>, and <code>TreeMap</code></li>
                 </ol>
             </li>
-            <li>The diamond operator (<code>&lt;&gt;</code>) is used to specify the type of the collection.  The type only on the right-hand side
-                of the statement can be omitted with the diamond operator to remove redundant type information.  If the left hand side
+            <li>The diamond operator (<code>&lt;&gt;</code>) is used to specify the type of the collection.
+                The type parameter can be omitted from the diamon operator on the right-hand side only to remove redundant information. If the left hand side
                 of the equations uses <code>var</code> for the type, then the collection type is still required to be specified in the diamond operator
                 on the right hand side, or it creates a collection of type <code>Object</code>
                 <pre><code class="codeblock">
@@ -75,7 +75,7 @@ final var listobj = new ArrayList&lt;&gt;();
                     <td>returns <code>true</code> if the specified element is present.</td>
                 </tr>
                 <tr>
-                    <td><code>public boolean removeIf(Predicate&lt;? super E&gt; filter</code></td>
+                    <td><code>public boolean removeIf(Predicate&lt;? super E&gt; filter)</code></td>
                     <td>remove all elements that match the specified filter condition</td>
                     <td>returns <code>true</code> if any elements were removed</td>
                 </tr>
@@ -95,6 +95,7 @@ final var listobj = new ArrayList&lt;&gt;();
                 <tr>
                     <td><code>public boolean equals(Object obj)</code></td> <td><code>override of java.lang.Object::equals</code>
                     that compares that type and the contents of this collection with another</td>
+                    <td>returns <code>true</code> if the objects are equal</td>
                 </tr>
             </table>
         </div>
@@ -104,6 +105,7 @@ final var listobj = new ArrayList&lt;&gt;();
                     or using an <i>iterator</i></li>
                 <li>The <code>Iterator</code> interface is the only form of iterator that supports removing elements
                     from the <code>Collection</code> during iteration</li>
+                <li>Note that <code>Map</code> <i>does not</i> extend this interface</li>
                 <pre><code class="codeblock">
 // ...
 for (final String s : stringColl)
@@ -195,7 +197,7 @@ final int h = heights.get(0); // NullPointerException!
                     </table>
                 </div>
             </li>
-            <li>Both <code>List</code> implementations have 2 commonly used constructor.  The no-args constructor creates
+            <li>Both <code>List</code> implementations have 2 commonly used constructors.  The no-args constructor creates
                 a new empty list, the 2nd constructor takes a <code>Collection</code> object as its parameter and copies it.
             </li>
             <li>Many common list methods will throws an <code>IndexOutOfBoundsException</code> if the caller attemps to use an
@@ -372,7 +374,7 @@ set.forEach(System.out::println);  // print 8 10 66 each on a new line
                 </tr>
                 <tr>
                     <td><code>public E peek()</code></td>
-                    <td>Return the first element, throws exception if queue if empty</td>
+                    <td>Return the first element, returns <code>null</code> if the queue/stack is empty</td>
                 </tr>
             </table>
         </div>
@@ -490,7 +492,7 @@ set.forEach(System.out::println);  // print 8 10 66 each on a new line
             <li>Numbers are automically sorted by numerical order, and <code>String</code> objects are sorted
                 by there Unicode character mapping (numbers, then uppercase, then lowercase)</li>
             <li>Custom sorting orders for user-defined classes can be defined by implementing the <code>Comparable</code> interface,
-                and a <code>Comparator</code> can also be provided to define a sort order than that defined within the class.</li>
+                and a <code>Comparator</code> can also be provided to define a sort order other than that defined within the class.</li>
             <li><code>public static &lt;T extends Comparable&lt;? super T&gt;&gt; void sort(List&lt;T&gt; list)</code>
              - sorts list of objects that implements <code>Comparable</code></li>
              <li><code>public static &lt;T&gt; void sort(List &lt;T&gt; list, Comparator&lt;? super T&gt c)</code>
@@ -644,7 +646,7 @@ final Comparator&lt;Car&gt; c = Comparator.comparing(Car::getModelName).thenComp
             </li>
             <li>Allows for compile-time type-checking to prevent runtime exceptions</li>
             <li><i>Formal type parameters</i> are specified as the type in the angle brackets (<code>&lt;&gt;</code>), 
-                also informally known as the diamon operator</li>
+                also informally known as the diamond operator</li>
             <pre><code class="codeblock">
 public class MyData&lt;T&gt; {
     private final T contents;
@@ -673,17 +675,20 @@ public class MyData&lt;T&gt; {
                 </ul>
             </li>
             <li>At runtime the generics types are converted to just <code>Object</code> types, a process
-                called <code>type erasure</code>.  This can prevent some method overloads from being valid
+                called <i>type erasure</i>.  This can prevent some method overloads from being valid
                 as it can reudce both sets of parameters  to the same thing at runtime:</li>
             <pre><code class="codeblock">
 public class ProcessData {
     public void procData(List&lt;Object&gt; input) {}
-    public void procData(List&lt;Object*gt; input) {} // does not compile
+    public void procData(List&lt;String&gt; input) {} // does not compile
 }
             </code></pre>
             <li>When returning generic types, they must be covariant.  
-                This means that the generics types <code>must match</code>
+                This means that the generics types <i>must match</i>
                 </li>
+            <pre><code class="codeblock">
+final ArrayList&lt;Object&gt; list = new ArrayList&lt;String&gt;(); // does not compile!
+            </code></pre>
             <li>Generics limitations (generics are a non-<i>reifiable</i> type because their type at runtime is unknown):
                 <ul>
                     <li>Cannot call a constructor: <code>new T()</code> is not alllowed</li>
@@ -700,7 +705,7 @@ public class ProcessData {
                         <ol>
                             <li>Specify the generic type</li>
                             <li>Create another generic class</li>
-                            <li>Don't use generics at all (known as using a <code>raw</code> type)</li>
+                            <li>Don't use generics at all (known as using a <i>raw</i> type)</li>
                         </ol>
                     </li>
                 </ul>
@@ -711,17 +716,17 @@ public interface MyInterface&lt;T&gt; {
 
 // 1. Specify generic type
 public class MyInt implements MyInterface&lt;Integer&gt; {
-    public void ship(Integer t) { // do stuff}
+    public void ship(Integer t) { // do stuff }
 }
 
 // 2. Create generic class
-public class MyGeneric&lt;U&lt; implements MyInterface&lt;U&gt;{
-    public void ship(U u) { // do stuff}
+public class MyGeneric&lt;U&gt; implements MyInterface&lt;U&gt;{
+    public void ship(U u) { // do stuff }
 }
 
 // 3. Raw type
 public class Raw implements MyInterface {
-    public void ship(Object o) { // do stuff}
+    public void ship(Object o) { // do stuff }
 }
                 </code></pre>
             </li>
@@ -731,7 +736,7 @@ public class Raw implements MyInterface {
                     <li>When a method declares a generic parameter type, it is independent of the class declaration type parameters</li>
                 </ul>
                 <pre><code class="codeblock">
-// in class definition MyClass
+// ... within class definition for MyClass
 public static &lt;T&gt; void prepare(final T t) { // do stuff}
 
 // method calls later:
