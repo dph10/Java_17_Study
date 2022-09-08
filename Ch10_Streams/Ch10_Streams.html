@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch10: Streams</h1>
+        <nav class="navbar">
+            <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html">&leftarrow; Ch9 Collections and Generics</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch11 Exceptions and Localization &rightarrow;</a>
+        </nav>
+        <p>The Stream API can be used for functional programming, using <a href="../Ch8_Lambdas_And_Functional_Interfaces/Ch8_Lambdas_And_Functional_Interfaces.html">lambdas, functional interfaces</a>, 
+            and <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html">collection interfaces</a></p>
+        
+        <h2 id="optional-section"><code>Optional</code></h2>
+        <ul>
+            <li>The <code>Optional</code> type is a container class which may contain either a <code>null</code> value or a 
+                non-<code>null</code> value</li>
+            <li>Created using factory methods: <code>Optional.&lt;T&gt;empty()</code>, 
+                <code>Optional.&lt;T&gt;of()</code>, and <code>Optional.&lt;T&gt;ofNullable()</code></li>           
+            <pre><code class="codeblock">
+import java.util.Optional;
+// ...
+
+public static Optional&lt;Double&gt; average(int... scores) {
+    if (scores.length==0) {
+        return Optional.empty();
+    }
+    int sum = 0;
+    for (final var s : scores) sum += s;
+    return Optional.of((double) sum / scores.length);
+}
+            </code></pre>
+            <li>Must check if optional is not empty before calling <code>Optional::get</code> or a <code>NoSuchElementException</code> will be thrown</li>
+            <li><code>Optional::isPresent</code> or <code>Optional::isEmpty</code> can be used to check if a value is available for the <code>get()</code> method.</li>
+            <p class="tableheader">Common <code>Optional</code> methods</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr><th>Method</th> <th>When <code>Optional</code> is empty</th> <th>When <code>Optional</code> contains value</th></tr>
+                    <tr>
+                        <td><code>T get()</code></td> <td>Throws exception</td> <td>returns value</td>
+                    </tr>
+                    <tr>
+                        <td><code>void ifPresent(Consumer&lt;? super T&gt; c)</code></td> <td>does nothing</td>
+                        <td>calls <code>Consumer</code> with value</td>
+                    </tr>
+                    <tr>
+                        <td><code>boolean isPresent()</code></td> <td>returns <code>false</code></td> <td>returns <code>true</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>T orElse(T other)</code></td> <td>returns <code>other</code> param</td> <td>returns value</td>
+                    </tr>
+                    <tr>
+                        <td><code>T orElseGet(Supplier&lt;? extends T&gt; s)</code></td> <td>returns result of calling <code>Supplier</code></td>
+                        <td>returns value</td>
+                    </tr>
+                    <tr>
+                        <td><code>T orElseThrow()</code></td> <td>throws <code>NoSuchElementException</code></td> <td>returns value</td>
+                    </tr>
+                    <tr>
+                        <td><code>T orElseThrow(Supplier&lt;? extends Throwable&gt; st)</code></td> <td>throws exception created from calling <code>Supplier</code></td>
+                        <td>returns value</td>
+                    </tr>
+                </table>
+            </div>
+        </ul>
+        <h2 id="stream-section">Using Streams</h2>
+        <ul>
+            <li>Located in the <code>java.util.stream</code> package</li>
+            <li>A <i>stream</i> is a sequence of data</li>
+            <li>A <i>stream pipeline</i> consists of operators that run on a stream to produce a result.</li>
+            <li><i>Stream operations</i> are typically found in funcitonal programming, and data is often created using
+                <i>lazy evaluation</i></li>
+            <li>Stream pipeline parts:
+                <ol>
+                    <li>Source:  where the stream originates</li>
+                    <li>Intermediate operations: operators that can transform the contents and type of stream</li>
+                    <li>Terminal operation: produces a result.  Streams can only be used once, so they are no longer valid
+                        after the termianl operation completes.
+                    </li>
+                </ol>
+            </li>
+            <li><b>Creating Stream Sources</b>
+                <ul>
+                    <li>The <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html#stream-method"><code>Collection</code></a> 
+                        Interface defines the method <code>public Stream&lt;E&gt; stream()</code> which will provide a 
+                        stream composed of all the collection's elements</li>
+                    <li>The <code>Stream</code> class has several <code>static</code> factory methods for creating stream sources</li>
+                    <li>Infinite streams can be created using the <code>Stream.generate()</code> and <code>Stream.iterate()</code> methods.
+                        Random streams can also be created using <code>java.util.Random</code> class's <code>ints()</code>, 
+                        <code>doubles()</code>, and <code>longs()</code> methods</li>
+                </ul>
+                <p class="tableheader"><code>Stream</code> Creation Methods</p>
+                <div class="tablecontainer">
+                    <table style="max-width: 90%;">
+                        <tr> <th>Method</th> <th>Finite or Infinite?</th> <th>Description</th></tr>
+                        <tr>
+                            <td><code>Stream&lt;E&gt; collection.stream()</code></td> <td>finite</td> <td>creates a <code>Stream</code> from <code>Collection</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;E&gt; collection.parallelStream()</code></td> <td>finite</td> <td>creates parallel <code>Stream</code> from <code>Collection</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;T&gt; Stream.empty()</code></td> <td>finite</td> <td>creates <code>Stream</code> with zero elements</td>
+                        </tr>
+                        <tr>
+                            <td><code>Stream&lt;E&gt; Stream.of(E... elements)<code></code></td> <td>finite</td> <td>creates <code>Stream</code> from elements listed</td>
+                        </tr>
+                        <tr>
+                            <td><code>Stream&lt;T&gt; Stream.generate(Supplier&lt;? extends T&gt; s)</code></td>
+                            <td>infinite</td> <td>creates <code>Stream</code> by calling <code>Supplier</code> for each element upon request</td>
+                        </tr>
+                        <tr>
+                            <td><code>Stream&lt;T&gt; iterate(T seed, UnaryOperator&lt;T&gt; f)</code></td>
+                            <td>infinite</td> <td>creates <code>Stream</code> by using seed for first element and then calling
+                                <code>UnaryOperator</code> for each subsequent element upon request.</td>
+                        </tr>
+                        <tr>
+                            <td><code>Stream&lt;T&gt; iterate(T seed, Predicate&lt;? super T&gt; hasNext, UnaryOperator&lt;T&gt; next)</code></td>
+                            <td>finite or infinite</td> <td>creates <code>Stream</code> by using seed for first element and then calling
+                                <code>UnaryOperator</code> for each subsequent element upon request.  Stops if <code>Predicate</code>
+                                returns false.</td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+            <li><b>Terminal Operations</b>
+                <ul>
+                    <li>Terminal operations are required for stream pipelines</li>
+                    <li><i>Reductions</i> are terminal operations where all of the contents of the stream are combined into a 
+                        single primitive or object</li>
+                    <p class="tableheader">Common terminal stream operations</p>
+                    <div class="tablecontainer">
+                        <table style="max-width: 90%;">
+                            <tr> <th>Method</th> <th>What happens for infinite streams?</th> <th>Return value</th> <th>Reduction</th></tr>
+                            <tr>
+                                <td><code>count()</code></td> <td>does not terminate</td> <td><code>long</code> value of number of elements</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><code>min(Comparator&lt;? super T&gt; c)
+                                    <br>max(Comparator&lt;? super T&gt; c)</code></td> <td>does not terminate</td> <td><code>Optional&lt;T&gt;</code></td> <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><code>findAny()<br>findFirst()</code></td> <td>terminates</td> <td><code>Optional&lt;T&gt;</code></td> <td>no</td>
+                            </tr>
+                            <tr>
+                                <td><code>allMatch(Predicate&lt;? super T&gt; p)<br>
+                                    anyMatch(Predicate&lt;? super T&gt; p)<br>
+                                    noneMatch(Predicate&lt;? super T&gt; p)</code></td> <td>sometimes terminates</td>
+                                <td><code>boolean</code></td> <td>no</td>
+                            </tr>
+                            <tr>
+                                <td><code>forEach(Consumer&lt;? super T&gt; c)</code></td> <td>does not terminate</td> <td><code>void</code> (iterates over elements)</td>
+                                <td><code>no</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>reduce(BinaryOperator&lt;T&gt; accum)<br>
+                                    reduce(T identity, BinaryOperator&lt;T&gt; accum)<br>
+                                    reduce(U identity, BiFunction&lt;U,? super T,U&gt; accum, BinaryOperator&lt;U&gt; combiner)<br></code></td> <td>does not terminate</td> <td>varies, perform custom reduction ops</td> <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><code>collect(Collector&lt;? super T,A,R&gt; collector)<br>
+                                    collect(Supplier&lt;R&gt; supplier, BiConsumer&lt;R,? super T&gt; accumulator, BiConsumer&lt;R,R&gt; combiner)</code></td> <td>does not terminate</td> <td>varies, performs <i>mutable reductions</i></td> <td>Yes</td>
+                            </tr>                      
+                        </table>
+                    </div>
+                </ul>
+                <pre><code class="codeblock">
+                    
+                </code></pre>
+            </li>
+        </ul>
+    </body>
+</html>

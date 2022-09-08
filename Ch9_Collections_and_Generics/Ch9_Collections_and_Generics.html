@@ -9,7 +9,7 @@
         <nav class="navbar">
             <a href="../Ch8_Lambdas_And_Functional_Interfaces/Ch8_Lambdas_And_Functional_Interfaces.html">&leftarrow; Ch8 Lambdas and Functional Interfaces</a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch10 Streams &rightarrow;</a>
+            <a href="../Ch10_Streams/Ch10_Streams.html">Ch10 Streams &rightarrow;</a>
         </nav>
         <h2 id="common-collections-section">Common Collection APIs</h2>
         <ul>
@@ -88,7 +88,7 @@ final var listobj = new ArrayList&lt;&gt;();
                     <td>returns an iterator for the given <code>Collection</code></td>
                     <td>returns an implementation of the <code>Iterator interface</code></td>
                 </tr>
-                <tr>
+                <tr id="stream-method">
                     <td><code>Stream&lt;E&gt; stream()</code></td> <td>returns a <code>Stream</code> of this <code>Collection</code></td>
                     <td>returns a sequential <code>Stream</code> from the elements in this <code>Collection</code>, see <a>Ch10 Streams</a></td>
                 </tr>
@@ -741,8 +741,8 @@ public static &lt;T&gt; void prepare(final T t) { // do stuff}
 
 // method calls later:
 MyClass.prepare("myString");
-MyClass.&lt;String&gt;("myString");
-MyClass.&lt;String[]&gt;(args);
+MyClass.&lt;String&gt;prepare("myString");
+MyClass.&lt;String[]&gt;prepare(args);
                 </code></pre>
             </li>
             <li>Generic Records
