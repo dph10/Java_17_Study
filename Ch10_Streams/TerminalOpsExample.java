@@ -32,8 +32,13 @@ public class TerminalOpsExample {
 		System.out.println(listNum.stream().reduce(1, (a,b)-> a*b)); // product= 1296000;
 		System.out.println(listNum.stream().reduce((a,b) -> a+b).get()); // sum = 113
 		System.out.println(listString.stream().reduce("", String::concat)); // danJennycooperbrandycalbigs
+		System.out.println(listString.stream().reduce(0, (i,s)->i+s.length(), Integer::sum)); // 27
 		
 		System.out.println("collect");
+		System.out.println(listNum.stream().collect(TreeSet::new,TreeSet::add,TreeSet::addAll).toString());
+		// [-12, -1, 3, 4, 9, 10, 100]
+		System.out.println(listString.stream().collect(Collectors.toCollection(TreeSet::new)).toString()); 
+		// [Jenny, bigs, brandy, cal, cooper, dan]
 	}
 }
 
