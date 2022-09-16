@@ -33,7 +33,7 @@ public static Optional&lt;Double&gt; average(int... scores) {
     return Optional.of((double) sum / scores.length);
 }
             </code></pre>
-            <li>Must check if optional is not empty before calling <code>Optional::get</code> or a <code>NoSuchElementException</code> will be thrown</li>
+            <li>Should check if optional is not empty before calling <code>Optional::get</code> or a <code>NoSuchElementException</code> will be thrown</li>
             <li><code>Optional::isPresent</code> or <code>Optional::isEmpty</code> can be used to check if a value is available for the <code>get()</code> method.</li>
             <p class="tableheader">Common <code>Optional</code> methods</p>
             <div class="tablecontainer">
@@ -223,8 +223,7 @@ public class TerminalOpsExample {
         </ul>
         <h2 id="intermediate-ops">Common Intermediate Operations</h2>
         <ul>
-            <li>Intermediate operations produce streams as their results</li>
-        </ul>
+            <li>Intermediate operations produce streams as their results</li>        
         <p class="tableheader">Common Intermediate Operations</p>
         <div class="tablecontainer">
             <table style="max-width: 90%">
@@ -265,5 +264,308 @@ public class TerminalOpsExample {
                 </tr>
             </table>
         </div>
+        </ul>
+        <h2 id="primitive-streams">Primitive Streams</h2>
+        <ul>
+            <li>There are 3 types of primitive streams:
+                <ol>
+                    <li><code>IntStream</code>: used for primitive types <code>int, short, byte,</code> and <code>char</code></li>
+                    <li><code>LongStream</code>: used for the primitive type <code>long</code></li>
+                    <li><code>DoubleStream</code>: use for primitive types <code>double</code> and <code>float</code></li>
+                </ol>
+            </li>
+            <li>These class have <code>static</code> factory methods for creating streams, such as <code>DoubleStream.empty();</code>
+                and <code>IntStream.of(1,10,33);</code></li>
+            <li>There are also mapping methods to and from the primitive streams:</li>
+            <p class="tableheader">Mapping methods between stream types</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr>
+                        <th>Source<br>stream class</th> <th>To create<br><code>Stream</code></th> <th>To create<br><code>DoubleStream</code></th>
+                        <th>To create<br><code>IntStream</code></th> <th>To create<br><code>LongStream</code></th>
+                    </tr>
+                    <tr>
+                        <td><code>Stream&lt;T&gt;</code></td> <td><code>map(Function&lt;T,R&gt; f)</code></td> <td><code>mapToDouble(ToDoubleFunction&lt;T&gt; f)</code></td> 
+                        <td><code>mapToInt(ToIntFunction&lt;T&gt; f)</code></td> <td><code>mapToLong(ToLongFunction&lt;T&gt; f)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>DoubleStream</code></td> <td><code>mapToObj(DoubleFunction&lt;R&gt; f)</code></td> <td><code>map(DoubleUnaryOperator f)</code></td>
+                        <td><code>mapToInt(DoubleToIntFunction f)</code></td> <td><code>mapToLong(DoubleToLongFunction f)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>IntStream</code></td> <td><code>mapToObj(IntFunction&lt;R&gt; f)</code></td> <td><code>mapToDouble(IntToDoubleFunction f)</code></td> <td><code>map(IntUnaryOperator f)</code></td>
+                        <td><code>mapToLong(IntToLongFunction f)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>LongStream</code></td> <td><code>mapToObj(LongFunction&lt;R&gt; f)</code></td> <td><code>mapToDouble(LongToDoubleFunction f)</code></td>
+                        <td><code>mapToInt(LongToIntFunction f)</code></td> <td><code>map(LongUnaryOperator)</code></td>
+                    </tr>
+                </table>
+            </div>
+            <p class="tableheader">Common primitive stream methods</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <colgroup>
+                        <col style="width: 45%;"><col><col>
+                    </colgroup>
+                    <tr> <th>Method</th> <th>Primitive stream</th> <th>Description</th></tr>
+                    <tr>
+                        <td><code>OptionalDouble average()</code></td> <td><code>IntStream<br> LongStream<br> DoubleStream</code></td>
+                        <td>Arithmetic mean of elements</td>
+                    </tr>
+                    <tr>
+                        <td><code>Stream&lt;T&gt; boxed()</code></td> <td><code>IntStream<br> LongStream<br> DoubleStream</code></td>
+                        <td>stream where <code>T</code> is wrapper class associated with primitive value</td>
+                    </tr>
+                    <tr>
+                        <td><code>OptionalInt max() <br>OptionalLong max()<br>OptionalDouble max()</code></td> <td><code>IntStream<br> LongStream<br> DoubleStream</code></td>
+                        <td>Maximum element of stream</td>
+                    </tr>
+                    <tr>
+                        <td><code>OptionalInt min() <br>OptionalLong min()<br>OptionalDouble min()</code></td> <td><code>IntStream<br> LongStream<br> DoubleStream</code></td>
+                        <td>Minimum element of stream</td>
+                    </tr>
+                    <tr>
+                        <td><code>IntStream range(int a, int b)<br>LongStream range(long a, long b)</code></td>
+                        <td><code>IntStream<br>LongStream</code></td>
+                        <td>Returns a primitive stream from <code>a</code> (inclusive) to <code>b</code> (exclusive)</td>
+                    </tr>
+                    <tr>
+                        <td><code>IntStream rangeClosed(int a, intb)<br>LongStream range(long a, long b)</code></td>
+                        <td><code>IntStream<br>LongStream</code></td>
+                        <td>Returns primitive stream from <code>a</code> to <code>b</code> (limits are inclusive)</td>
+                    </tr>
+                    <tr>
+                        <td><code>int sum()<br>long sum()<br>double sum()</code></td>
+                        <td><code>IntStream<br>LongStream<br>DoubleStream</code></td>
+                        <td>Returns sum of elements in stream</td>
+                    </tr>
+                    <tr>
+                        <td><code>IntSummaryStatistics summaryStatistics()<br>
+                            LongSummaryStatistics summaryStatistics()<br>
+                            DoubleSummaryStatistics summaryStatistics()
+                            </code></td>
+                        <td><code>IntStream<br>LongStream<br>DoubleStream</code></td>
+                        <td>Returns object contains numerous stream statistics such as average, min, max, etc.</td>
+                    </tr>
+                </table>
+            </div>
+            <li>There are also primitive <code>Optional</code> types which are commonly returned by primitive stream operations</li>
+            <p class="tableheader">Optional types for primitives</p>
+            <div class="tablecontainer">
+                <table>
+                    <tr><th></th> <th><code>OptionalDouble</code></th> <th><code>OptionalInt</code></th> <th><code>OptionalLong</code></th></tr>
+                    <tr>
+                        <td>Getting as primtive</td> <td><code>getAsDouble()</code></td> <td><code>getAsInt()</code></td>
+                        <td>getAsLong()</td>
+                    </tr>
+                    <tr>
+                        <td><code>orElseGet()</code> parameter type</td> <td><code>DoubleSupplier</code></td> <td><code>IntSupplier</code></td>
+                        <td><code>LongSupplier</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Return type of <code>min()</code> and <code>max()</code></td> <td><code>OptionalDouble</code></td>
+                        <td><code>OptionalInt</code></td> <td><code>OptionalLong</code></td>
+                    </tr>
+                    <tr>
+                        <td>Return type of <code>sum()</code></td> <td><code>double</code></td> <td><code>int</code></td> <td><code>long</code></td>
+                    </tr>
+                    <tr>
+                        <td>Return type of <code>average()</code></td> <td><code>OptionalDouble</code></td> <td><code>OptionalDouble</code></td> <td><code>OptionalDouble</code></td>
+                    </tr>
+                </table>
+            </div>
+            <pre><code class="codeblock">
+final LongStream longs = LongStream.of(5,10);
+final long sum = longs.sum(); // 15
+final DoubleStream doubles = DoubleStream.generate(() -> Math.PI);
+final OptionalDouble min = doubles.limit(5).min().getAsDouble();
+            </code></pre>
+            <li>Summarizing statistics classes are provided for each primitive stream type with
+                the following methods:
+                <ul>
+                    <li><code>getCount()</code> - returns a <code>long</code> representing the number of values</li>
+                    <li><code>getAverage()</code> - returns a <code>double</code> representing the average, or <code>0</code> if the stream is empty</li>
+                    <li><code>getSum()</code> - returns sum as the underlying primitive type for each stream type</li>
+                    <li><code>getMin()</code> - returns the minimum number as the underlying primitive type</li>
+                    <li><code>getMax()</code> - returns the maximum number as the underlying primitive type</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="advanced-streams">Advanced Stream Pipeline Concepts</h2>
+        <ul>
+            <li>Streams are linked to their source collection until they are evaluated (since they are evaluated lazily)</li>
+            <li>Optionals can be chained with the following useful methods which are only evaluated if the optional is not empty:
+                <ul>
+                    <li><code> Optional&lt;U&gt; map(Function&lt;? super T,? extends U&gt; mapper)</code></li>
+                    <li><code>Optional&lt;U&gt; flatMap(Function&lt;? super T,? extends Optional&lt;? extends U&gt;&gt; mapper)</code></li>
+                    <li><code>Optional&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate)</code></li>
+                </ul>
+            </li>
+            <pre><code class="codeblock">
+public static void threeDigit(final Optional&lt;Integer&gt; opt) {
+    opt.map(Integer::toString)
+        .filter(s -> s.length()==3)
+        .ifPresent(System.out::println);
+}
+            </code></pre>
+            <li>Most functional interfaces do not allow checked exceptions.  Create a wrapper function with a 
+                try/catch block if you want to use a a method that throws a checked exception for a functional interface
+            </li>
+            <li>A <code>Spliterator</code> implements the interface and for divying up collection elements for stream operations</li>
+            <p class="tableheader"><code>Spliterator</code> methods</p>
+            <div class="tableheader">
+                <table>
+                    <tr> <th>Method</th> <th>Description</th></tr>
+                    <tr>
+                        <td><code>Spliterator&lt;T&gt; trySplit()</code></td> <td>Returns spliterator containing ideally half
+                            of the data, which is removed from the current spliterator.  This can be called multiple times and will
+                            eventually return <code>null</code> when data is no longer splittable
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>void forEachRemaining(Consumer&lt;T&gt; c)</code></td>
+                        <td>Processes remaining elements in <code>Spliterator</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>boolean tryAdvance(Consumer&lt;T&gt; c)</code></td>
+                        <td>processes single element from spliterator if any remain. Returns whether element was processed.</td>
+                    </tr>
+                </table>
+            </div>
+            <pre><code class="codeblock">
+final var stream = List.of("bird-", "bunny-", "cat-", "dog-", "fish-", "lamb-", "mouse-");
+final Spliterator&lt;String&gt; originalBag = stream.spliterator();
+final Spliterator&lt;String&gt; emmasBag = originalBag.trySplit();
+emmasBag.forEachRemaining(System.out::println); // bird-bunny-cat-
+
+final var Spliterator&lt;String&gt; jillsBag = originalBag.trySplit();
+jillsBag.tryAdvance(System.out::println); // dog-
+jillsBag.forEachRemaining(System.out::println); // fish-
+
+originalBag.forEachRemaining(System.out::println); // lamb-mouse-
+            </code></pre>
+            <li><b>Collecting results</b>
+                <ul>
+                    <li>Implemented with the <code>java.util.stream.Collector</code> Interface:
+                        <ul>
+                            <li>Interface <code>Collector&lt;T,A,R&gt;</code><br>
+                                <code>T</code> - the type of input elements to the reduction<br>
+                                <code>A</code> - the mutable accumulation type of the reduction operation<br>
+                                <code>R</code> - the result type of the reduction operation
+                                <ul>
+                                    <li><code>Supplier&lt;A&gt; supplier()</code> - creates and returns a new mutable result container.</li>
+                                    <li><code>BiConsumer&lt;A,T&gt; accumulator()</code> - 
+                                        function that accumulates a value into a mutable result container.</li>
+                                    <li><code>BinaryOperator&lt;A&gt; combiner() </code> - function that accepts two partial results and merges them.</li>
+                                    <li><code>Function&lt;A,R&gt; finisher()</code> - 
+                                        performs the final transformation from the intermediate accumulation type A to the final result type R.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <p class="tableheader">Common grouping/partitioning collectors</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <colgroup>
+                        <col >
+                        <col>
+                        <col style="width: 20%;">
+                    </colgroup>
+                    <tr> <th>Collector</th> <th>Description</th> <th>Return value when<br>passed to <code>collect</code></th></tr>
+                    <tr>
+                        <td><code>averagingDouble(ToDoubleFunction f)<br>
+                            averagingInt(ToIntFunction f)<br>
+                            averagingLong(ToLongFunction f)</code></td>
+                        <td>calculates average for 3 core primitive types</td> <td><code>Double</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>counting()</code></td> <td>Counts number of elements</td> <td><code>Long</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>filtering(Predicate p,<br> Collector dc)</code></td>
+                        <td>Applies filter before calling downstream collector</td> <td><code>R</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>groupingBy(Function f)<br>
+                            groupingBy(Function f, Collector dc)<br>
+                            groupingBy(Function f, Supplier s, Collector cs)</code></td>
+                        <td>creates a map grouping by specified function with optional map type supplier and optional downstream collector</td>
+                        <td><code>Map&lt;K, List&lt;T&gt;&gt;</code> or <br>
+                            <code>Map&lt;K,D&gt;</code> where <code>D</code> is specified by the downstream collector</td>
+                    </tr>
+                    <tr>
+                        <td><code>joining(CharSequence delimiter)</code></td> 
+                        <td>Creates single <code>String</code> using delimeter between elements if specified</td>
+                        <td><code>String</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>maxBy(Comparator C)<br>
+                            minBy(Comparator c)</code></td>
+                        <td>finds largest/smallest element</td> <td><code>Optional&lt;T&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>mapping(Function f, Collector dc)</code></td>
+                        <td>adds another level of collectors after mapping data types</td>
+                        <td><code>Collector</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>partitioningBy(Predicate p)<br>
+                            partitioningBy(Predicate p, Collector dc)</code></td>
+                        <td>Creates map grouping by specified predicate with optional further downstream collector</td>
+                        <td><code>Map&lt;Boolean, List&lt;T&gt;&gt;</code> or <br>
+                            <code>Map&lt;Boolean, D&gt;</code> where <code>D</code> is specified by downstream collector</td>
+                    </tr>
+                    <tr>
+                        <td><code>summarizingDouble(ToDoubleFunction f)<br>
+                            summarizingInt(ToIntFunction f)<br>
+                            summarizingLong(ToLongFunction f)</code></td>
+                        <td>Calculates summarizing statistics</td>
+                        <td><code>DoubleSummaryStatistics<br>
+                            IntSummaryStatistics<br>
+                            LongSummaryStatistics</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>summingDouble(ToDoubleFunction f)<br>
+                            summingInt(ToIntFunction f)<br>
+                            summingLong(ToLongFunction f)</code></td>
+                        <td>calculates sum for our three core primitive types</td>
+                        <td><code>Double<br>
+                            Integer<br>
+                            Long</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>teeing(Collector c1,<br>
+                             Collector c2, BiFunction f)</code></td>
+                        <td>works with results of two collectors to create new type</td>
+                        <td><code>R</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>toList()<br>
+                            toSet()</code></td>
+                        <td>Creates arbitrary type of list or set</td>
+                        <td><code>List<br>Set</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>toCollection(Supplier s)</code></td>
+                        <td>creates <code>Collection</code> of specified type</td>
+                        <td><code>Collection</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>toMap(Function k, Function v)<br>
+                            toMap(Function k, Function v, BinaryOperator m)<br>
+                            toMap(Function k, Function v, BinaryOperator m,<br>
+                            Supplier s)</code></td>
+                        <td>creates map using functions to map keys, values, optional merge function,
+                            and optional map type supplier
+                        </td>
+                        <td><code>Map</code></td>
+                    </tr>
+                </table>
+                <p>&Tab;*above functions are static methods in the <code>java.util.stream.Collectors</code> class</p>
+            </div>
+        </ul>
     </body>
 </html>
