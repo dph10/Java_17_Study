@@ -127,7 +127,7 @@ System.out.println(nae.substring(3,8)); // throws IndexOutOfBoundsException
                                     <td><code>"I spent $%.2e".formatted(5.2); // I spent $5.20e+00</code></td>
                                 </tr>
                                 <tr>
-                                    <td><code>%n</code></td> <td>Inserts system-dependent line break</td> <td><code>"I ran%nfar".formatted(); // ran<br>far</code></td>
+                                    <td><code>%n</code></td> <td>Inserts system-dependent line break</td> <td><code>"I ran%nfar".formatted(); <br>// I ran<br>// far</code></td>
                                 </tr>
                             </table>
                         </div>
@@ -421,8 +421,8 @@ for(final int[] outer : arr2D) {
                         <li><code>final var t0 = ZonedDateTime.now();</code></li>
                         <li><code>final var t1 = ZonedDateTime.of(int year, int month, int monthDay, int hour, int minute, int second,
                             int nanos, ZoneId zone);</code></li>
-                        <li><code>final var t2 = ZonedDateTime.of(LocalDate date, LocalTime time, ZonedId zone);</code></li>
-                        <li><code>final var t3 = ZonedDateTime.of(LocalDateTime dateTime, ZonedId zone);</code></li>
+                        <li><code>final var t2 = ZonedDateTime.of(LocalDate date, LocalTime time, ZoneId zone);</code></li>
+                        <li><code>final var t3 = ZonedDateTime.of(LocalDateTime dateTime, ZoneId zone);</code></li>
                         <li>Get the <code>UTC</code> absolute timestamp:
                             <pre><code class="codeblock">
 final var t0 = ZonedDateTime.now(ZoneId.of("UTC"));

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch11: Exceptions and Localization</h1>
+        <nav class="navbar">
+            <a href="../Ch10_Streams/Ch10_Streams.html">&leftarrow; Ch10 Streams</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch12 Modules &rightarrow;</a>
+        </nav>
+        <h2 id="exceptions-section">Exceptions</h2>
+        <ul>
+            <li>
+                <i><code>Exception</code></i> - an event that alters the normal program flow
+            </li>
+            <li>Classes are all derived from parent class <code>Throwable</code></li>
+            <li><i>Checked exception</i> - exception that must be declared or handled by the application (inherits from <code>Exception</code>).
+                These methods must either be wraped incompatible <code>try</code>/<code>catch</code> blocks or dclared in the method
+                signature</li>
+            <li>The <i><code>throws</code></i> keyword is part of the <a href="../Ch5_Methods/Ch5_Methods.html#exception">method declaration</a></li>
+            <li>The <i><code>throw</code></i> keyword tells Java to throw an <code>Exception</code></li>
+            <li>An <i>unchecked exception</i> extends <i><code>RuntimeException</code></i> and is not required to be handled or
+                declared in the method declaration (extends <code>Exception</code>)</li>
+            <li>An <i><code>Error</code></i> is declared when something goes wrong and the code should not
+                attempt to recover from it (extends <code>Exception</code>)</li>
+            <li>Code in a method that comes after a thrown exception that is <i>always</i> thrown in <i>unreachable</i> 
+                and can cause a compiler error</li>
+            <li>Another compiler error can occur if the <code>try</code>/<code>catch</code> codeblock catches a checked
+                exception but the code in the <code>try</code> block is not capable of throwing that exception</li>                
+            <pre><code class="codeblock">
+try {
+    throw new RuntimeException();
+    throw new ArrayIndexOutOfBoundsException(); // unreachable compiler error
+} catch(Exception e) {}
+            </code></pre>
+            <p class="tableheader">Types of exceptions and errors</p>
+            <div class="tablecontainer">
+                <table>
+                    <tr><th>Type</th> <th>Inheritance</th> <th>Ok to catch?</th> <th>Required to declare<br> or handle?</th></tr>
+                    <tr>
+                        <td>Unchecked exception</td> <td>subclass of <code>RuntimeException</code></td> <td>Yes</td> <td>no</td>
+                    </tr>
+                    <tr>
+                        <td>Checked exception</td> <td>subclass of <code>Exception</code> but not <code>RuntimeException</code></td>
+                        <td>Yes</td> <td>Yes</td>
+                    </tr>
+                    <tr><td>Error</td> <td>Subclass of <code>Error</code></td> <td>no</td> <td>no</td></tr>
+                </table>
+            </div>
+            <li>
+                Overriding methods with Exceptions:
+                <ul>
+                    <li>An override method may not declare any <i>new</i> or <i>broader</i> checked exceptions than
+                        the method it inherits</li>
+                    <li>An overrideen method in a subclass  can declare fewer exceptions that the superclass method.  This is legal
+                        because callers are already handling them
+                    </li>
+                </ul>
+            </li>
+            <li>Printing an exception:
+                <ul>
+                    <li>Java can call the <code>toString()</code> method, you can print just the message with <code>getMessage()</code>
+                        , or print where the stack traces come from (<code>e.printStackTrace()</code>)</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="exception-types">Types of Exception Classes</h2>
+        <ul>
+            <p class="tableheader"><code>RuntimeException</code> classes</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr> <th>Unchecked exception</th> <th>Description</th></tr>
+                    <tr>
+                        <td><code>ArithmeticException</code></td> <td>thrown when code attempts to divide by zero</td>
+                    </tr>
+                    <tr>
+                        <td><code>ArrayIndexOutOfBoundsException</code></td> <td>thrown when code uses illegal index to access array</td>
+                    </tr>
+                    <tr>
+                        <td><code>ClassCastException</code></td> <td>thrown when attempt is made to cast object to class of which it is not an exception</td>
+                    </tr>
+                    <tr>
+                        <td><code>NullPointerException</code></td> 
+                        <td>thrown when there is a <code>null</code> reference whenere an object is required.  If it occurs on local variable
+                            or method parameter in the order it appears in the method, such as <code>&lt;local2&gt;</code> or <code>&lt;parameter4&gt;</code>
+                            The code can be compiled with the <code>-g:vars</code> flag which add debug info with the variable names.</td>
+                    </tr>
+                    <tr>
+                        <td><code>IllegalArgumentException</code></td> <td>Thrown by programmer to indicate that method has been passed illegal
+                            or innappropriate argument
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>NumberFormatException</code></td> <td>Subclass of <code>IllegalArgumentException</code>.  Thrown when attempt is made to convert <code>String</code>
+                            to numeric type but <code>String</code> doesn't have appropriate format</td>
+                    </tr>
+                </table>
+            </div>
+        </ul>
+        <ul>
+            <p class="tableheader">Checked exceptions</p>
+            <div class="tablecontainer">
+                <table style="max-width: 90%;">
+                    <tr> <th>Checked exception</th> <th>Description</th></tr>
+                    <tr>
+                        <td><code>FileNotFoundException</code></td> <td>subclass of <code>IOException</code>, thrown
+                         programmatically when code tries to reference file that does not exist</td>
+                    </tr>
+                    <tr>
+                        <td><code>IOException</code></td> <td>thrown programmatically when problem reading or writing file</td>
+                    </tr>
+                    <tr>
+                        <td><code>NotSerializableException</code></td> <td>subclass of <code>IOException</code>, thrown programmatically 
+                            when attempting to serialize or deserialize non-serializable class</td>
+                    </tr>
+                    <tr>
+                        <td><code>ParseException</code></td> <td>indicates problem parsing input</td>
+                    </tr>
+                    <tr>
+                        <td><code>SQLException</code></td> <td>thrown when error related to accessing database</td>
+                    </tr>
+                </table>
+            </div>
+        </ul>
+        <ul>
+            <p class="tableheader">Error classes</p>
+            <div class="tablecontainer">
+                <table>
+                    <tr> <th>Error class</th> <th>Description</th></tr>
+                    <tr>
+                        <td><code>ExceptionInInitializationError</code></td>
+                        <td>thrown when <code>static</code> initializer throws exception and doesn't handle it</td>
+                    </tr>
+                    <tr>
+                        <td><code>StackOverflowError</code></td>
+                        <td>thrown when method class itself too many times (called infinite recursion) because
+                            method typically calls itself without end
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>NoClassDefFoundError</code></td>
+                        <td>Thrown when class that code uses is available at compile time but not runtime</td>
+                    </tr>
+                </table>
+            </div>
+        </ul>
+        <h2 id="handling-exceptions">Handling Exceptions</h2>
+        <ul>
+            <li><b><code>try</code> and <code>catch</code> statements</b>
+                <ul>
+                    <li>A <code>catch block</code> is required immediately after the <code>try </code> block</li>
+                    <li>Braces are always required for both blocks</li>
+                </ul>
+                <pre><code class="codeblock">
+try {   // try keyword, braces required
+
+    // try block,
+    // if catch type is a checked exception
+    // then try block must be capable of throwing it
+
+} catch(ExceptionType ex) { // braces required
+    // catch clause/block to handle exception
+}
+                </code></pre>
+            </li>
+            <li><b>Chaining <code>catch</code> blocks</b>
+                <ul>
+                    <li>Multiple <code>catch</code> blocks can be specified after a <code>try</code> blocks</li>
+                    <li>A specific order is required: superclass exceptions must come <i>after</i> subclass exception types</li>
+                    <li>Compiler errors are triggered by redundant types or unreachable catch blocks</li>
+                </ul>
+            </li>
+            <pre><code class="codeblock">
+try {
+    processFile(file);
+} catch (FileNotFoundException ex1) {  // subclass exception
+    // do something
+} catch (IOException ex2) { // superclass exception
+    // more general handler
+}
+            </code></pre>
+            <li><b>Multicatch blocks</b>
+                <ul>
+                    <li>Multiple exception types can be specified and caught with a single <code>catch</code> block</li>
+                    <li>Compiler errors are triggered by redundant types or unreachable catch blocks (cannot use subclasses!)</li>
+                    <li>The pipe symbol (<code>|</code>) is used to separate types, and only a single identifier is specified for
+                        all of the exception types</li>
+                    <li>The type of the caught exception at runtime is usally <code>Exception</code></li>            
+                </ul>
+            </li>
+            <pre><code class="codeblock">
+try {
+    // protected code
+} catch (Exception1 | Exception2 | Exception 3 ex) {
+    ex.printStackTrace();
+}
+            </code></pre>
+            <li><b>The <code>finally</code> block</b>
+                <ul>
+                    <li>Allows code to <i>always</i> be run at the end of <code>try</code> or <code>try/catch</code> block whether
+                        or not an exception occurs.  This does not mean the <code>finally</code> block will necessarily finish, as execution will stop if a 
+                        <code>RuntimeException</code> occurs</li>
+                    <li>Note that a <code>catch</code> block is not required if there is a <code>finally</code> block</li>
+                    <li>A return value from a <code>finally</code> block will always be the return value of the enclosing method</li>
+                </ul>
+            </li>
+            <pre><code class="codeblock">
+try {
+    loadFile(file);
+} catch (final IOException ex) {
+    // handle exception
+} finally {
+    // clean up resources
+}
+
+try {
+    maybeFail();
+} finally {
+
+}
+            </code></pre>
+        </ul>
+        <h2 id="resource-management">Automaticing Resource Management</h2>
+        <ul>
+            <li>Code often interfaces with files, databases, network sockets, and other <i>resources</i></li>
+            <li>A <i>resource leak</i> occurs when a program fails to release its connection to a resource, causing it
+                to be inaccessible</li>
+            <li>Resources <i>are not</i> automically closed when their identifier goes out of scope</li>
+            <li>Before try-with-resources (require a nested <code>try/catch</code> block!):
+                <pre><code class="codeblock">
+public void readFile(String file) {
+    FileInputStream is = null;
+    try {
+        is = new FileInputStream(file);
+        // read file ...
+    } catch (IOException ex) {
+        ex.printStackTrace();
+    } finally {
+        if (is!=null) {
+            try {
+                is.close();
+            } catch (IOException ex2) {
+                ex2.printStackTrace();
+            }
+        }
+    }
+}
+                </code></pre>
+            </li>
+            <li><i>Try-with-resources</i> performs automatic resource management:
+                <pre><code class="codeblock">
+public void readFile(final String file) {
+
+    try(final FileInputStream is = new FileInputStream(file)) {
+        // read file data
+    } catch(final IOException ex) {
+        ex.printStackTrace();
+    }
+}
+                </code></pre>
+            </li>
+            <li>The compiler automatically replace a try-with-resources with a <code>try</code>
+                and <code>finally</code> block similar to the first code example.  This 
+                "hidden" code is the <i>implicit</i> <code>finally</code> block, which is 
+                automatically called first before a user-provided <code>finally</code> block</li>
+            <li>Multiple resources can be acquired by separating them with a semi-colon (<code>;</code>).  A multiple variable declaration is not allowed in this case.</li>
+            <li>Multiple resources are close in the reverse order in which they are created <i>before</i> a user provide <code>catch</code> or <code>finally</code> block</li>
+            <li>A resource can also be specified <i>before</i> the try-with-resources block as Long
+                as they are <code>final</code> or are effectively final. Note that this resource <i>should not</i>
+                be accessed after the try-with-resource block has closed it.</li>
+            <li>Note that a <code>catch</code> block <i>is not required</i> for try-with-resources</li>
+            <li>Only classes that implement <code>AutoCloseable</code> interface can be used
+                as a resource.  A implementing subclass must provide an implementation of <code>public void close() throws Exception</code></li>
+            <li>The resources created in the <code>try</code> resources clause are only in socpe within the <code>try</code> block</li>
+            <li>If mulitple exception occur in the <code>try</code> block (say from the <code>try</code> block and then another when closing the resource), then
+                the first exception is considered the <i>primiary</i> exception and all after that are <code>suppressed</code>.
+                The suppressed exceptions can be retrieved from the primary exception by calling: <code>Throwable[] getSuppressed()</code>
+            <li>Note that if the <code>catch</code> clause does not catch the type of the primary exception it will be passed to the caller</li>
+            </li>
+        </ul>
+        <h2 id="formatting-values">Formatting Values</h2>
+        <ul>
+            <li>Formatting numbers
+                <ul>
+                    <li>The <code>java.text.NumberFormat</code> interface is available for when more control is needed
+                    than String::formatted provides</li>
+                    <li>This interface is implemented by <code>java.text.DecimalFormat</code>:
+                        <ul>
+                            <li>Constructor: <code>public DecimalFormat(String pattern)</code></li>
+                            <li><code>public final String format(double number)</code></li>
+                            <li><code>public final String format(long number)</code></li>
+                            <li>Symbol <code>#</code>: omit position if no digit exists for it</li>
+                            <li>Symbol <code>0</code>: put <code>0</code> in position if no digit exists for it</li>
+                        </ul>
+                    </li>
+                </ul>
+                <pre><code class="codeblock">
+final double d = 1234.567;
+final var f1 = new DecimalFormat("###,###,###.0");
+System.out.println(f1.format(d)); // 1,234.6
+
+final var f2 = new DecimalFormat("000,000,000.00000");
+System.out.println(f2.format(d)); // 000,001,234.56700
+                </code></pre>
+            </li>
+            <li>Formatting Dates and Times
+                <ul>
+                    <li>The class <code>java.time.format.DateTimeFormatter</code> is available to display standard date/time formats</li>
+                    <li>It contains predefined fields for commonly used formats, such as <code>DateTimeFormatter.ISO_LOCAL_DATE, 
+                        DateTimeFormatter.ISO_LOCAL_TIME, DateTimeFormatter.ISO_LOCAL_DATE_TIME, DateTimeFormatter.ISO_INSTANT
+                    </code>, etc.</li>
+                    <li>The date/time classes contain a formatting method: <code>String format(DateTimeFormatter f)</code>, 
+                        while the <code>DateTimeFormatter</code> has a format method that takes a date/time: 
+                        <code>String format(TemporalAccessor t)</code></li>
+                    <pre><code class="codeblock">
+final var date = LocalDate.of(2022, Month.OCTOBER, 20);
+final var time = LocalTime.of(11,12,34);
+final var dt = ZonedDateTime.of(date,time,ZoneId.of("US/Eastern"));
+System.out.println(date.format(DateTimeFormatter.ISO_LOCAL_DATE)); // 2022-10-20
+System.out.println(time.format(DateTimeFormatter.ISO_LOCAL_TIME)); // 11:12:34
+System.out.println(dt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)); // 2022-10-20T11:12:34
+System.out.println(dt.format(DateTimeFormatter.ISO_INSTANT)); // 2022-10-20T15:12:34Z
+                    </code></pre>
+                    <li>Custom formats are also suported using <code>DateTimeFormatter.ofPattern(timePattern)</code></li>
+                    <p class="tableheader">Common date/time symbols</p>
+                    <div class="tablecontainer">
+                        <table style="max-width: 90%;">
+                            <tr> <th>Symbol</th> <th>Meaning</th> <th>Examples</th> <th>Compatible With</th> </tr>
+                            <tr>
+                                <td><code>y(yyy)</code></td> <td>Year</td> <td><code>22,2022</code></td>
+                                <td><code>LocalDate, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>M(MMM)</code></td> <td>Month</td> <td><code>1, 01, Jan, January</code></td>
+                                <td><code>LocalDate, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>d(d)</code></td> <td>Day</td> <td><code>5, 05</code></td>
+                                <td><code>LocalDate, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>h(h)</code></td> <td>Hour</td> <td><code>9, 09</code></td>
+                                <td><code>LocalTime, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>mm</code></td> <td>Minute</td> <td><code>45</code></td>
+                                <td><code>LocalTime, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>ss</code></td> <td>Second</td> <td><code>52</code></td>
+                                <td><code>LocalTime, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>SSS</code></td> <td>Fraction of second</td> <td><code>978</code></td>
+                                <td><code>LocalTime, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>a</code></td> <td>a.m./p.m.</td> <td><code>AM, PM</code></td>
+                                <td><code>LocalTime, LocalDateTime, ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>zzz(z)</code></td> <td>Time zone name</td> <td><code>EST, Eastern Standard Time</code></td>
+                                <td><code>ZonedDateTime</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>Z</code></td> <td>Time zone offset</td> <td><code>-0400</code></td>
+                                <td><code>ZonedDateTime</code></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <li>Custom text can be added to the formatter by escaping it with a pair of quotes (<code>'text here'</code>)</li>
+                </ul>
+            </li>
+        </ul>
+        <h2 id="localization">Supporting Internationalization and Localization</h2>
+        <ul>
+            <li><i>Internationalization</i> is the process of designing programs so they can be adapted</li>
+            <li>Involves placing strings in a properties file and ensuring that the proper data formatters are used</li>
+            <li><i>Localization</i> means supporting multiple locales or geographic regions (a language and country pairing)</li>
+            <li><b>Picking a locale</b>
+                <ul>
+                    <li>The class <code>java.util.Locale</code> is used to determine and change locations</li>
+                    <li><code>final Locale l = Locale.getDefault(); // en_US</code> - used to get the users current locale</li>
+                    <li><code>Locale</code> language format: <code>fr</code> or <code>en</code>, uses a lowercase language code</li>
+                    <li><code>Locale</code> language/country format: <code>en_US</code>, uses a lowercase language code and uppercase country code</li>
+                    <li>The <code>Locale</code> class has <code>static</code> fields for commonly used language and language/country codes</li>
+                    <pre><code class="codeblock">
+System.out.println(Locale.GERMAN); // de
+System.out.println(Locale.GERMANY); // de_DE
+System.out.println(Locale.CHINA); // zh_CN
+                    </code></pre>
+                    <li>The <code>Locale</code> class constructor can also be used to create a new object with 
+                        a language or language/country format: <code>new Locale("fr");</code>, <code>new Locale("hi","IN");</code></li>
+                    <li>A builder can also be used to create a <code>Locale</code> object:</li>
+                    <pre><code class="codeblock">
+final var l1 = new Locale.Builder().setRegion("US")
+                    .setLanguage("en").build();
+                    </code></pre>
+                    <li>Java offers 2 formatting options for the default locale: <code>Locale.setDefault(Locale.Category category, Local local)</code>
+                         where the category is either <code>Locale.Category.DISPLAY</code> or <code>Local.Category.FORMAT</code>
+                         <ul>
+                            <li><code>DISPLAY</code> category is for displaying user interfaces</li>
+                            <li><code>FORMAT</code> is for formatting dates, numbers, currencies, etc.</li>
+                         </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><b>Localizing numbers</b>
+                <ul>
+                    <li>The class <code>java.text.NumberFormat</code> can be used for localization of numbers for various
+                        uses:</li>
+                    <p class="tableheader">Factory methods for <code>NumberFormat</code> localization</p>
+                    <div class="tablecontainer">
+                        <table>
+                            <tr><th>Description</th> <th>Using default <code>Locale</code> and a specified <code>Locale</code></th></tr>
+                            <tr>
+                                <td>General-pupose formatter</td> <td><code>NumberFormat.getInstance()<br>NumberFormat.getInstance(Locale locale)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Same as <code>getInstance()</code></td> <td><code>NumberFormat.getNumberInstance()<br>NumberFormat.getNumberInstance(Locale locale)</code></td>
+                            </tr>
+                            <tr>    
+                                <td>For formatting monetary amounts</td> <td><code>NumberFormat.getCurrencyInstance()<br>NumberFormat.getCurrencyInstance(Locale locale)</code></td>
+                            </tr>    
+                            <tr>
+                                <td>For formatting percentages</td> <td><code>NumberFormat.getPercentInstance()<br>NumberFormat.getPercentInstance(Locale locale)</code></td>
+                            </tr>
+                            <tr>    
+                                <td>Rounds decimal values before displaying</td> <td><code>NumberFormat.getIntegerInstance()<br>NumberFormat.getIntegerInstance(Locale locale)</code></td>
+                            </tr>
+                            <tr>    
+                                <td>Returns compact number formatter</td> <td><code>NumberFormat.getCompactNumberInstance()<br>
+                                    NumberFormat.getCompactNumberInstance(<br> Locale locale, NumberFormat.Style formatStyle)</code></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <li><code>String NumberFormat.parse()</code> is used to parse a <code>String</code> representation for a specified locale</li>
+                    <li>The class <code>java.text.CompactNumberFormat</code> is new to Java 17 and is used where print space
+                        may be limited
+                        <ul>
+                            <li>Rules:
+                                <ul>
+                                    <li>first it determines the highest range for the number (such as thousand (K) or million (M))</li>
+                                    <li>It then returns up to the first three digits of that range, rounding the last digit as needed</li>
+                                    <li>Finally it prints an identifier.  If <code>SHORT</code> is used for the style a symbol is returned,
+                                        and if <code>LONG</code> is used a space followed by word is used</li>
+                                </ul>
+                            </li>
+                        </ul>    
+                    </li>
+                    <li>The available styles are <code>java.text.NumberFormat.Style.SHORT</code> (default) and <code>java.text.NumberFormat.Style.LONG</code></li>
+                    <pre><code class="codeblock">
+final var f1 = NumberFormat.getCompactNumberInstance();
+final var f2 = NumberFormat.getCompactNumberInstance(Locale.getDefault(), Numberformat.Style.LONG);
+System.out.println(f1.format(314_900_000)); // 315M
+System.out.println(f2.format(314_900_000)); // 315 million
+                    </code></pre>
+                </ul>
+            </li>
+            <li><b>Localizing Dates</b>
+                <ul>
+                    <li><code>DateTimeFormatter</code> can also be used for localizing the format</li>
+                    <li><code>FormatStyle</code> can be <code>SHORT, MEDIUM, LONG, FULL</code></li>
+                    <li>The call to <code>DateTimeFormatter.format()</code> can be prepended with <code>withLocale(locale)</code> 
+                        to specify a locale: <code>dtf.withLocale(locale).format(dateTime)</code></li>
+                </ul>
+                <p class="tableheader">Factory methods for <code>DateTimeFormatter</code> localization</p>
+                <div class="tablecontainer">
+                    <table>
+                        <tr> <th>Description</th> <th>Using default <code>Locale</code></th></tr>
+                        <tr>
+                            <td>For formatting dates</td> <td><code>DateTimeFormatter.ofLocalizedDate(FormatStyle dateStyle)</code></td>
+                        </tr>
+                        <tr>
+                            <td>For formatting times</td> <td><code>DateTimeFormatter.ofLocalizedTime(FormatStyle timeStyle)</code></td>
+                        </tr>
+                        <tr>
+                            <td>For formatting dates and times</td> <td><code>DateTimeFormatter.ofLocalizedDateTime(FormatStyle dateStyle, FormatStyle timeStyle)<br>
+                                DateTimeFormatter.ofLocalizedDateTime(FormatStyle dateTimeStyle)</code></td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+        </ul>
+        <h2 id="resource-bundles">Loading Properties with Resource Bundles</h2>
+        <ul>
+            <li>A <i>resource bundle</i> contains the locale-specific objects to be used by the program and is
+                similar to a map with keys and values</li>
+            <li>A <i>properties file</i> is a text file in a specific format with key/value pairs</li>
+            <li><b>Creating a resource bundle</b>
+                <ul>
+                    <li>1 resource bundle is used to support multiple locales</li>
+                    <li>Allows for decoupling of application code from the locale-specific data</li>
+                    <li>A property file is created for each locale.  The filename should contain the 
+                        resource bundle name, followed by an underscore (<code>_</code>), followed by the target
+                        locale, ending with <code>.properties</code> file extension
+                    </li>
+                    <li>The file contents consist of key value pairs.  The key and value are separated by an equals (<code>=</code>) or
+                        colon (<code>:</code>).  The map pairs are separted by new-lines in the file</li>
+                    <pre><code class="codeblock">
+<b>Zoo_en.properties</b> // first file
+hello=Hello
+open=The zoo is open
+
+<b>Zoo_fr.properties</b> // second filename
+hello=Bonjour
+open=Le zoo est ouvert
+
+// code to load everything:
+public static void printWelcome(Locale locale) {
+    final var rb = ResourceBundle.getBundle("Zoo", locale);
+    System.out.println(rb.getString("hello") + ", " + rb.getString("open"));
+}
+
+public static void main(final String[] args) {
+    final var us = new Locale("en", "US");
+    final var fr = new ISO_LOCAL_DATE("fr", "FR");
+    printWelcomeMessage(us); // Hello, The zoo is open
+    printWelcomeMessage(fr); // Bonjour, Le zoo est ouvert
+}
+                    </code></pre>
+                <li>the resource bundle provides a <code>keySet()</code> methods to get a set of all its keys:</li>
+                <pre><code class="codeblock">
+rb.keySet.stream()
+    .map(k -> k+ ": " + rb.getString(k))
+    .forEach(System.out::println);
+                </code></pre>
+                </ul>
+            </li>
+            <li><b>Picking a resource bundle</b>
+                <ul>
+                    <li>Using the default locale: <code>ResourceBundle.getBundle("name");</code></li>
+                    <li>Specifying the locale: <code>ResourceBundle.getBundle("name", locale);</code></li>
+                    <li>Order of searching for a specified property/locale:
+                        <ol>
+                            <li>Exact requested locale</li>
+                            <li>Language we requested with no country</li>
+                            <li>Default locale</li>
+                            <li>Default locale's language with no country</li>
+                            <li>No locale at all-default bundle</li>
+                            <li>No locale or default bundle available- throws <code>MissingResourceException</code></li>
+                        </ol>
+                    </li>
+                </ul>
+                <li><b>Resource bundle Hierarchies</b>
+                    <ul>
+                        <li>Hierachies of resource bundles can be created</li>
+                        <li>A parent resource bundle in the hierarchy just removes components of the name
+                            until it gets to the top:<br>
+                            <code>Zoo.properties, Zoo_fr.properties, Zoo_fr_FR.properties</code>
+                        </li>
+                    </ul>
+                </li>
+                <li><b>Formatting messages</b>
+                    <ul>
+                        <li>The class <code>java.text.MessageFormat</code> can be used to substitute variables in the 
+                            middle of a resource bundle string</li>
+                        <li>Values inside of braces represent variables: <code>{0}</code>, <code>{1}</code>, etc.</li>
+                        <li>The second argument to is a varargs witht he variables</li>
+                        <pre><code class="codeblock">
+// inside properties file:
+helloByName=Hello, {0} and {1}
+
+// java code
+final var format = rb.getString("helloByName");
+System.out.print(MessageFormat.format(format, "Tammy", "Henry"));
+// Hello, Tammy and Henry
+                        </code></pre>
+                    </ul>
+                </li>
+                <li><b>The <code>Properties</code> class</b>
+                    <li>The <code>java.util.Properties</code> class is like a map with <code>String</code> keys and values</li>
+                </li>
+                <pre><code class="codeblock">
+final var props = new Properties();
+props.setProperty("name", "Dan");
+props.setProperty("open", "10am");
+
+System.out.println(props.getProperty("camel")); // null
+System.out.println(props.getProperty("camel", "Bob")); // Bob, allows for default value 
+                                                       // if prop does not exist
+System.out.println(props.getProperty("open")); // 10am
+System.out.println(props.get("name")); // Dan, cannot provide a default value with get()
+                </code></pre>
+            </li>
+        </ul>
+    </body>
+</html>

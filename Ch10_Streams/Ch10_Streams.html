@@ -9,7 +9,7 @@
         <nav class="navbar">
             <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html">&leftarrow; Ch9 Collections and Generics</a>
             <a href="../MAIN_index.html">Home</a>
-            <a>Ch11 Exceptions and Localization &rightarrow;</a>
+            <a href="../Ch11_Exceptions_and_Localization/Ch11_Exception_and_Localization.html">Ch11 Exceptions and Localization &rightarrow;</a>
         </nav>
         <p>The Stream API can be used for functional programming, using <a href="../Ch8_Lambdas_And_Functional_Interfaces/Ch8_Lambdas_And_Functional_Interfaces.html">lambdas, functional interfaces</a>, 
             and <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html">collection interfaces</a></p>
@@ -71,21 +71,21 @@ public static Optional&lt;Double&gt; average(int... scores) {
             <li>Located in the <code>java.util.stream</code> package</li>
             <li>A <i>stream</i> is a sequence of data</li>
             <li>A <i>stream pipeline</i> consists of operators that run on a stream to produce a result.</li>
-            <li><i>Stream operations</i> are typically found in funcitonal programming, and data is often created using
+            <li><i>Stream operations</i> are typically found in functional programming, and data is often created using
                 <i>lazy evaluation</i></li>
             <li>Stream pipeline parts:
                 <ol>
                     <li>Source:  where the stream originates</li>
                     <li>Intermediate operations: operators that can transform the contents and type of stream</li>
                     <li>Terminal operation: produces a result.  Streams can only be used once, so they are no longer valid
-                        after the termianl operation completes.
+                        after the terminal operation completes.
                     </li>
                 </ol>
             </li>
             <li><b>Creating Stream Sources</b>
                 <ul>
                     <li>The <a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html#stream-method"><code>Collection</code></a> 
-                        Interface defines the method <code>public Stream&lt;E&gt; stream()</code> which will provide a 
+                        Interface defines the method <code>public Stream&lt;E&gt; stream()</code> which provides a 
                         stream composed of all the collection's elements</li>
                     <li>The <code>Stream</code> class has several <code>static</code> factory methods for creating stream sources</li>
                     <li>Infinite streams can be created using the <code>Stream.generate()</code> and <code>Stream.iterate()</code> methods.
@@ -144,7 +144,7 @@ public static Optional&lt;Double&gt; average(int... scores) {
                                 <td>Yes</td>
                             </tr>
                             <tr>
-                                <td><code>min(Comparator&lt;? super T&gt; c)
+                                <td><code>min(<a href="../Ch9_Collections_and_Generics/Ch9_Collections_and_Generics.html#comparator-interface">Comparator</a>&lt;? super T&gt; c)
                                     <br>max(Comparator&lt;? super T&gt; c)</code></td> <td>does not terminate</td> <td><code>Optional&lt;T&gt;</code></td> <td>Yes</td>
                             </tr>
                             <tr>
@@ -259,7 +259,7 @@ public class TerminalOpsExample {
                 </tr>
                 <tr>
                     <td><code>public Stream&lt;T&gt; peek(Consumer&lt;? super T&gt; action)</code></td>
-                    <td>intermediate version of <code>forEach</code>, can be useful for debugging.  Be careful to
+                    <td>intermediate version of <code>forEach</code>, can be useful for debugging.  Be careful not
                     too change state of the stream or or its source here!</td>
                 </tr>
             </table>
@@ -348,8 +348,23 @@ public class TerminalOpsExample {
                         <td><code>IntStream<br>LongStream<br>DoubleStream</code></td>
                         <td>Returns object contains numerous stream statistics such as average, min, max, etc.</td>
                     </tr>
+                    <tr>
+                        <td><code>R collect(Supplier&lt;R&gt; supplier, ObjIntConsumer&lt;R&gt; accumulator, BiConsumer&lt;R,R&gt; combiner)</td>
+                        <td><code>IntStream<br>LongStream<br>DoubleStream</code></td>
+                        <td>Returns an object of the specified reduction <code>R</code> type</td>
+                    </tr>
+                    <tr>
+                        <td><code>int[] toArray()<br>
+                        long[] toArray()<br>
+                        double[] toArray()</code></td>
+                        <td><code>IntStream<br>LongStream<br>DoubleStream</code></td>
+                        <td>Converts stream elements to a primitive array</td>
+                    </tr>
                 </table>
             </div>
+            <li>Note that the primitive streams <i>DO NOT</i> have an overloaded <code>collect(Collector c)</code> method that takes
+                a collector directly or from the static methods in the <code>Collectors</code> class, need to call <code>boxed()</code>
+                first to use this functionality</li>
             <li>There are also primitive <code>Optional</code> types which are commonly returned by primitive stream operations</li>
             <p class="tableheader">Optional types for primitives</p>
             <div class="tablecontainer">
@@ -364,7 +379,7 @@ public class TerminalOpsExample {
                         <td><code>LongSupplier</code></td>
                     </tr>
                     <tr>
-                        <td><code>Return type of <code>min()</code> and <code>max()</code></td> <td><code>OptionalDouble</code></td>
+                        <td>Return type of <code>min()</code> and <code>max()</code></td> <td><code>OptionalDouble</code></td>
                         <td><code>OptionalInt</code></td> <td><code>OptionalLong</code></td>
                     </tr>
                     <tr>
@@ -394,7 +409,7 @@ final OptionalDouble min = doubles.limit(5).min().getAsDouble();
         </ul>
         <h2 id="advanced-streams">Advanced Stream Pipeline Concepts</h2>
         <ul>
-            <li>Streams are linked to their source collection until they are evaluated (since they are evaluated lazily)</li>
+            <li>Streams are linked to their source collection until they are evaluated for a result (since they are evaluated lazily)</li>
             <li>Optionals can be chained with the following useful methods which are only evaluated if the optional is not empty:
                 <ul>
                     <li><code> Optional&lt;U&gt; map(Function&lt;? super T,? extends U&gt; mapper)</code></li>
@@ -412,9 +427,9 @@ public static void threeDigit(final Optional&lt;Integer&gt; opt) {
             <li>Most functional interfaces do not allow checked exceptions.  Create a wrapper function with a 
                 try/catch block if you want to use a a method that throws a checked exception for a functional interface
             </li>
-            <li>A <code>Spliterator</code> implements the interface and for divying up collection elements for stream operations</li>
+            <li>A <code>Spliterator</code> is used for divying up collection elements for stream operations</li>
             <p class="tableheader"><code>Spliterator</code> methods</p>
-            <div class="tableheader">
+            <div class="tablecontainer">
                 <table>
                     <tr> <th>Method</th> <th>Description</th></tr>
                     <tr>
