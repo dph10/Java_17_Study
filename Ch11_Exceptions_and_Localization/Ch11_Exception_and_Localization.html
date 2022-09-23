@@ -18,7 +18,7 @@
             </li>
             <li>Classes are all derived from parent class <code>Throwable</code></li>
             <li><i>Checked exception</i> - exception that must be declared or handled by the application (inherits from <code>Exception</code>).
-                These methods must either be wraped incompatible <code>try</code>/<code>catch</code> blocks or dclared in the method
+                These methods must either be wrapped in compatible <code>try</code>/<code>catch</code> blocks or declared in the method
                 signature</li>
             <li>The <i><code>throws</code></i> keyword is part of the <a href="../Ch5_Methods/Ch5_Methods.html#exception">method declaration</a></li>
             <li>The <i><code>throw</code></i> keyword tells Java to throw an <code>Exception</code></li>
@@ -54,8 +54,8 @@ try {
                 Overriding methods with Exceptions:
                 <ul>
                     <li>An override method may not declare any <i>new</i> or <i>broader</i> checked exceptions than
-                        the method it inherits</li>
-                    <li>An overrideen method in a subclass  can declare fewer exceptions that the superclass method.  This is legal
+                        the method it inherits.  That means the declared exceptions must be of the same class or a subclass</li>
+                    <li>An overridden method in a subclass  can declare fewer exceptions that the superclass method.  This is legal
                         because callers are already handling them
                     </li>
                 </ul>
@@ -74,27 +74,27 @@ try {
                 <table style="max-width: 90%;">
                     <tr> <th>Unchecked exception</th> <th>Description</th></tr>
                     <tr>
-                        <td><code>ArithmeticException</code></td> <td>thrown when code attempts to divide by zero</td>
+                        <td><code>java.lang.ArithmeticException</code></td> <td>thrown when code attempts to divide by zero</td>
                     </tr>
                     <tr>
-                        <td><code>ArrayIndexOutOfBoundsException</code></td> <td>thrown when code uses illegal index to access array</td>
+                        <td><code>java.lang.ArrayIndexOutOfBoundsException</code></td> <td>thrown when code uses illegal index to access array</td>
                     </tr>
                     <tr>
-                        <td><code>ClassCastException</code></td> <td>thrown when attempt is made to cast object to class of which it is not an exception</td>
+                        <td><code>java.lang.ClassCastException</code></td> <td>thrown when attempt is made to cast object to class of which it is not compatible with</td>
                     </tr>
                     <tr>
-                        <td><code>NullPointerException</code></td> 
+                        <td><code>java.lang.NullPointerException</code></td> 
                         <td>thrown when there is a <code>null</code> reference whenere an object is required.  If it occurs on local variable
                             or method parameter in the order it appears in the method, such as <code>&lt;local2&gt;</code> or <code>&lt;parameter4&gt;</code>
                             The code can be compiled with the <code>-g:vars</code> flag which add debug info with the variable names.</td>
                     </tr>
                     <tr>
-                        <td><code>IllegalArgumentException</code></td> <td>Thrown by programmer to indicate that method has been passed illegal
+                        <td><code>java.lang.IllegalArgumentException</code></td> <td>Thrown by programmer to indicate that method has been passed illegal
                             or innappropriate argument
                         </td>
                     </tr>
                     <tr>
-                        <td><code>NumberFormatException</code></td> <td>Subclass of <code>IllegalArgumentException</code>.  Thrown when attempt is made to convert <code>String</code>
+                        <td><code>java.lang.NumberFormatException</code></td> <td>Subclass of <code>IllegalArgumentException</code>.  Thrown when attempt is made to convert <code>String</code>
                             to numeric type but <code>String</code> doesn't have appropriate format</td>
                     </tr>
                 </table>
@@ -106,21 +106,21 @@ try {
                 <table style="max-width: 90%;">
                     <tr> <th>Checked exception</th> <th>Description</th></tr>
                     <tr>
-                        <td><code>FileNotFoundException</code></td> <td>subclass of <code>IOException</code>, thrown
+                        <td><code>java.io.FileNotFoundException</code></td> <td>subclass of <code>IOException</code>, thrown
                          programmatically when code tries to reference file that does not exist</td>
                     </tr>
                     <tr>
-                        <td><code>IOException</code></td> <td>thrown programmatically when problem reading or writing file</td>
+                        <td><code>java.io.IOException</code></td> <td>thrown programmatically when problem reading or writing file</td>
                     </tr>
                     <tr>
-                        <td><code>NotSerializableException</code></td> <td>subclass of <code>IOException</code>, thrown programmatically 
+                        <td><code>java.io.NotSerializableException</code></td> <td>subclass of <code>IOException</code>, thrown programmatically 
                             when attempting to serialize or deserialize non-serializable class</td>
                     </tr>
                     <tr>
-                        <td><code>ParseException</code></td> <td>indicates problem parsing input</td>
+                        <td><code>java.text.ParseException</code></td> <td>indicates problem parsing input</td>
                     </tr>
                     <tr>
-                        <td><code>SQLException</code></td> <td>thrown when error related to accessing database</td>
+                        <td><code>java.sql.SQLException</code></td> <td>thrown when error related to accessing database</td>
                     </tr>
                 </table>
             </div>
@@ -136,7 +136,7 @@ try {
                     </tr>
                     <tr>
                         <td><code>StackOverflowError</code></td>
-                        <td>thrown when method class itself too many times (called infinite recursion) because
+                        <td>thrown when method calls itself too many times (called infinite recursion) because
                             method typically calls itself without end
                         </td>
                     </tr>
@@ -168,7 +168,7 @@ try {   // try keyword, braces required
             </li>
             <li><b>Chaining <code>catch</code> blocks</b>
                 <ul>
-                    <li>Multiple <code>catch</code> blocks can be specified after a <code>try</code> blocks</li>
+                    <li>Multiple <code>catch</code> blocks can be specified after a <code>try</code> block</li>
                     <li>A specific order is required: superclass exceptions must come <i>after</i> subclass exception types</li>
                     <li>Compiler errors are triggered by redundant types or unreachable catch blocks</li>
                 </ul>
@@ -203,7 +203,8 @@ try {
                     <li>Allows code to <i>always</i> be run at the end of <code>try</code> or <code>try/catch</code> block whether
                         or not an exception occurs.  This does not mean the <code>finally</code> block will necessarily finish, as execution will stop if a 
                         <code>RuntimeException</code> occurs</li>
-                    <li>Note that a <code>catch</code> block is not required if there is a <code>finally</code> block</li>
+                    <li>Note that a <code>catch</code> block is not required if there is a <code>finally</code> block, but if the
+                        <code>try</code> block throws a checked exception then it must be declared</li>
                     <li>A return value from a <code>finally</code> block will always be the return value of the enclosing method</li>
                 </ul>
             </li>
@@ -228,7 +229,7 @@ try {
             <li>Code often interfaces with files, databases, network sockets, and other <i>resources</i></li>
             <li>A <i>resource leak</i> occurs when a program fails to release its connection to a resource, causing it
                 to be inaccessible</li>
-            <li>Resources <i>are not</i> automically closed when their identifier goes out of scope</li>
+            <li>Resources <i>are not</i> automatically closed when their identifier goes out of scope</li>
             <li>Before try-with-resources (require a nested <code>try/catch</code> block!):
                 <pre><code class="codeblock">
 public void readFile(String file) {
@@ -265,18 +266,19 @@ public void readFile(final String file) {
             <li>The compiler automatically replace a try-with-resources with a <code>try</code>
                 and <code>finally</code> block similar to the first code example.  This 
                 "hidden" code is the <i>implicit</i> <code>finally</code> block, which is 
-                automatically called first before a user-provided <code>finally</code> block</li>
+                automatically called first before a user-provided <code>catch</code> or <code>finally</code> block</li>
             <li>Multiple resources can be acquired by separating them with a semi-colon (<code>;</code>).  A multiple variable declaration is not allowed in this case.</li>
             <li>Multiple resources are close in the reverse order in which they are created <i>before</i> a user provide <code>catch</code> or <code>finally</code> block</li>
             <li>A resource can also be specified <i>before</i> the try-with-resources block as Long
                 as they are <code>final</code> or are effectively final. Note that this resource <i>should not</i>
                 be accessed after the try-with-resource block has closed it.</li>
-            <li>Note that a <code>catch</code> block <i>is not required</i> for try-with-resources</li>
+            <li>Note that a <code>catch</code> block <i>is not required</i> for try-with-resources, but then
+                the exception <i>must be</i> declared by the enclosing method</li>
             <li>Only classes that implement <code>AutoCloseable</code> interface can be used
                 as a resource.  A implementing subclass must provide an implementation of <code>public void close() throws Exception</code></li>
             <li>The resources created in the <code>try</code> resources clause are only in socpe within the <code>try</code> block</li>
-            <li>If mulitple exception occur in the <code>try</code> block (say from the <code>try</code> block and then another when closing the resource), then
-                the first exception is considered the <i>primiary</i> exception and all after that are <code>suppressed</code>.
+            <li>If mulitple exceptions occur in the <code>try</code> block (say from the <code>try</code> block and then another when closing the resource), then
+                the first exception is considered the <i>primary</i> exception and all after that are <code>suppressed</code>.
                 The suppressed exceptions can be retrieved from the primary exception by calling: <code>Throwable[] getSuppressed()</code>
             <li>Note that if the <code>catch</code> clause does not catch the type of the primary exception it will be passed to the caller</li>
             </li>
@@ -324,7 +326,7 @@ System.out.println(time.format(DateTimeFormatter.ISO_LOCAL_TIME)); // 11:12:34
 System.out.println(dt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)); // 2022-10-20T11:12:34
 System.out.println(dt.format(DateTimeFormatter.ISO_INSTANT)); // 2022-10-20T15:12:34Z
                     </code></pre>
-                    <li>Custom formats are also suported using <code>DateTimeFormatter.ofPattern(timePattern)</code></li>
+                    <li>Custom formats are also supported using <code>DateTimeFormatter.ofPattern(timePattern)</code></li>
                     <p class="tableheader">Common date/time symbols</p>
                     <div class="tablecontainer">
                         <table style="max-width: 90%;">
@@ -405,6 +407,9 @@ final var l1 = new Locale.Builder().setRegion("US")
                             <li><code>DISPLAY</code> category is for displaying user interfaces</li>
                             <li><code>FORMAT</code> is for formatting dates, numbers, currencies, etc.</li>
                          </ul>
+                    </li>
+                    <li>Setting the default locale only lasts for the single duration of the program, it does 
+                        not change the system locale
                     </li>
                 </ul>
             </li>
@@ -551,6 +556,9 @@ rb.keySet.stream()
                         <li>A parent resource bundle in the hierarchy just removes components of the name
                             until it gets to the top:<br>
                             <code>Zoo.properties, Zoo_fr.properties, Zoo_fr_FR.properties</code>
+                        </li>
+                        <li>Once a resource bundle has been chosen, it can only use other bundles
+                            within its own hiearchy!
                         </li>
                     </ul>
                 </li>
