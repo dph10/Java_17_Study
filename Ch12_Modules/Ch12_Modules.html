@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../style/mystyle.css">
+    </head>
+    <body>
+        <h1>Ch12: Modules</h1>
+        <nav class="navbar">
+            <a href="../Ch11_Exceptions_and_Localization/Ch11_Exception_and_Localization.html">&leftarrow; Ch11 Exceptions and Localization</a>
+            <a href="../MAIN_index.html">Home</a>
+            <a>Ch13 Concurrency &rightarrow;</a>
+        </nav>
+        <h2>Modules Overview</h2>
+        <ul>
+            <li>Packages can be grouped into modules</li>
+            <li>The complex chain of software library dependencies and minimum versions is referred to as <i>JAR hell</i>, 
+                which can lead to incompatible versions causing unexpected results, or <code>ClassNotFoundException</code></li>
+            <li>The <i>Java Platform Module System (JPMS)</i> groups code at a higher level to provide groups of related
+                that offer more functionaility and control to developers by choosing which packages are accessible outside the module</li>
+            <li>A <i>module</i> is a group of one or more packaages plus a special file called <code>module-info.java</code>
+                which consists of the <i>module declaration</i>.  Dependencies exists when modules depend on other modules</li>    
+            <li>Contents of the Java Platform Module System:
+                <ul>
+                    <li>A format for module JAR files</li>
+                    <li>Partitioining of the JDK into modules</li>
+                    <li>Addition command-line options for Java tools</li>
+                </ul>
+            </li>
+            <li>Benefits of Modules:
+                <ul>
+                    <li>Better access control but limiting external excess to certain packages</li>
+                    <li>Clearer dependency managment by throwing exceptions at program startup rather than later when needed at runtime</li>
+                    <li>Custom Java builds to create a runtime that has only the parts of the JDK that is required by the program,
+                        rather than including the entired JRE
+                    </li>
+                    <li>Improved security since unneccessary dependencies with possible vulnerabilities are not required</li>
+                    <li>Improved performance due to smaller memory footprints and shorter startup times</li>
+                    <li>Unique package enforcement since modules specify exposed packages to ensure each package only comes from one module</li>
+                </ul>
+            </li>
+        </ul>
+        <h2>Creating and Running Modular Programs</h2>
+        <ul>
+            <li>The module declaration:
+                <ul>
+                    <li>Consists of the contents of the <code>modle-info.java</code> file</li>
+                    <li>Must be int he root directory of the module</li>
+                    <li>uses the keyword <code>module</code></li>
+                    <li>The module name uses the same naming rules for package names/<a href="../Ch1_Introduction/Ch1_Study_Guide.html#identifier-rules-section">identifiers</a> and often includes
+                        periods (<code>.</code>) in its name.  
+                    </li>
+                    <li>Dashes (<code>-</code>) are <i>not allowed</i> in the module name</li>
+                </ul>
+            </li>
+            <li>Compiling the module:
+                <ul>
+                    <li><code>--module-path</code> option is used to specify the location of any custom module files.  The shorthand
+                        option for module path is <code>-p</code></li>
+                    <li><code>-d</code> option is used for specifying the class files directory</li>
+                    <pre><code class="codeblock">
+javac --module-path &lt;moduleFilePath&gt; -d &lt;classFolderPath&gt; 
+    com.packageA/*.java com.packageB/*.java &lt;moduleFilePath&gt;/module-info.java
+                    </code></pre>
+                </ul>
+            </li>
+            <li>Running the module:
+                <ul>
+                <li><code>--module &lt;name&gt;</code> is used to specify the module name.  
+                    The shorthand version of this option is <code>-m &lt;name&gt;</code></li>
+                    <pre><code class="codeblock">
+java --module-path &lt;moduleFilePath&gt; --module &lt;moduleName&gt;/&lt;packageName&gt;.&lt;className&gt;
+                    </code></pre>
+                </ul>
+            </li>
+            <li>Packaging the module:
+                <ul>
+                    <li>The compiled module needs to be packaged into a JAR file</li>
+                    <pre><code class="codeblock">
+jar -cvf &lt;jarDirectory&gt;/&lt;jarName&gt;.jar -C &lt;classFileDirectory&gt;
+java -p &lt;modulePath&gt; -m &lt;moduleName&gt;/&lt;packageName&gt;.&lt;className&gt;
+                    </code></pre>
+                </ul>
+            </li>
+        </ul>
+        <h2>Module Declaration</h2>
+        <ul>
+            <li>Module directives can appear in any order in the module declaration (the <code>module-info.java</code> file)</li>
+            <li>Exporting a package:
+                <ul>
+                    <li><code>exports <i>packageName</i></code> - exports a package to other modules</li>
+                    <li>Can also specify to which modules a package is exported to: <code>exports <i>packageName</i> to <i>moduleName</i></code></li>
+                    <li>Exporting a package means all <code>public</code> classes, interfaces, enums, and records are exported.  Any
+                        <code>public</code> and <code>protected</code> fields and methods of these exports are visible.  Note That
+                        <code>private</code> and package access fields/methods are not visible as they are not accessible outside the class or package, respectively</li>
+                    
+                </ul>
+            </li>
+            <li>Requiring a module:
+                <ul>
+                    <li><code>requires <i>moduleName</i></code> - specifies the current module depends on the other module <i>moduleName</i></li>
+                    <li><code>requires transitive <i>moduleName</i></code> - species that any module that requires the current moduel also requires
+                        <i>moduleName</i></li>
+                    <li>Effects of <code><i>requires transitive</i></code>:
+                        <ul>
+                            <li>It is not required for another module to explicitly state they required the transitive module</li>
+                            <li>The other module cannot be compiled without the transitive module</li>
+                        </ul>
+                    </li>
+                    <li>Note that duplicate <code>requires/transitive</code> statements are <i>not allowed</i></li>
+                </ul>
+            </li>
+            <li>Opening a package:
+                <ul>
+                    <li><code>opens <i>packageName</i></code> - opens the specified package to enable <i>reflection</i></li>
+                </ul>
+            </li>
+            <li>An entire module can be opened be including the keyword <code>open</code> in the module declaration: <br>
+                <code>open module myModule {}</code>.  This opens the entired module to reflection, and any other
+                <code>opens</code> directives in the module declaration will cause a compiler error as they are already open</li>
+        </ul>
+        <h2>Services and Consumers</h2>
+        <ul>
+            <li><i>Loose coupling</i> is the concept of separating different components into stand-alone pieces so that
+                it can easily be updated with minimal changes to the clients</li>
+            <li>A <i>service</i> is composed of an interface and any of its dependencies.  The <i>service provider interface</i>
+                consists of its API defined by the methods of the interface</li>
+            <li>A <i>service locator</i> can find any classes that implement the service provider interface, typically
+                using the <code>java.util.ServiceLoader</code> class with its <code>load(InterfaceName.class)</code> method</li>
+            <li>The <code>java.util.ServiceLoader</code> class:
+                <li><code>public static &lt;S&gt; ServiceLoader&lt;S&gt; load(Class&lt;S&gt; service)</code> - static factory method
+                that loads the interface and returns a <code>ServiceLoader</code> instance</li>
+                <li><code>public Stream&lt;ServiceLoader.Provider&lt;S&gt;&gt; stream()</code> - provides a stream of all the loaded classes
+                    that implement the service interface.  The <code>Provider</code> class has a <code> S get()</code> method that returns the service
+                    and a <code>Class&lt;? extends S&gt; type()</code> that returns the class type of the implementer</li>
+                <li><code>public Iterator&lt;S&gt; iterator()</code> - provides iterator that can be used with the enhanced for loop</li>
+            </li>
+            <li>Consuming a service for a module requires using 2 directives:
+                <ul>
+                    <li><code>requires module.name;</code> - needed for compilation</li>
+                    <li><code>uses package.name.ServiceInterface;</code> - needed for looking up the provider</li>
+                </ul>
+            </li>
+            <li>Providing a service uses the <code>provides</code> and <code>with</code> directives:<br>
+                <code>provides package.name.ServiceInterface with package.name.ServiceImpl;</code><br>
+                If the interface is in a different module than a <code>requires</code> directive to that module
+                is also needed in its module declaration
+            </li>
+        </ul>
+        <h2>Discovering Modules</h2>
+        <ul>
+            <li>The Java JDK is modularized</li>
+            <li>The <code>java.base</code> module contains most of the packages seen thus far, and is automatically 
+                included in all modules so a <code>required</code> directive is not needed</li>
+            <li><code>java</code> command line options:
+                <ul>
+                    <li><code>--describe-module</code> command line option prints out info about the module. Its
+                        shorthand version is <code>-d</code></li>
+                </ul>
+            </li>
+        </ul>
+    </body>
+</html>
